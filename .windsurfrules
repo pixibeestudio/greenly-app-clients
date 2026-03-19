@@ -24,4 +24,4 @@ You are acting as the AI coder, but the user will run and compile the app inside
 - Always comment code and write error messages and user interface (UI) in Vietnamese.
 - Explain code concisely, focusing on the result.
 - Always run code or commands using PowerShell.
-- Communicate with me in Vietnamese.
+- Always speak to me in Vietnamese.
