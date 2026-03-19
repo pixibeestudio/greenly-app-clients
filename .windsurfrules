@@ -1,0 +1,27 @@
+# Greenly Android App - Workspace Rules
+
+## 1. Core Technology Stack
+- **Language:** Java (STRICTLY NO Kotlin. Never generate Kotlin code).
+- **UI Toolkit:** Standard Android XML Layouts (STRICTLY NO Jetpack Compose).
+- **Architecture:** MVC / MVP (Keep logic clean and separated from UI).
+
+## 2. Hybrid Workflow Rules (Windsurf + Android Studio)
+You are acting as the AI coder, but the user will run and compile the app inside Android Studio. You MUST follow these rules to prevent breaking the build:
+
+- **Rule 2.1 - DO NOT Execute Builds:** Never suggest or attempt to run terminal commands like `./gradlew build` or `./gradlew run`. The user will handle execution in Android Studio.
+- **Rule 2.2 - Explicit Imports (CRITICAL):** Whenever you generate or update Java code, you MUST include the full and correct `import` statements at the top of the file (e.g., `import android.widget.TextView;`). Do not assume auto-import will fix it.
+- **Rule 2.3 - XML ID Consistency:** - Never modify existing `@+id/` values in XML files unless explicitly asked.
+  - When writing Java code (e.g., `findViewById(R.id.my_button)`), ensure the ID exactly matches the one defined in the XML.
+- **Rule 2.4 - Gradle Synchronization & Kotlin DSL:** The project uses Kotlin DSL (`build.gradle.kts`) for Gradle configuration. When suggesting dependencies to add, you MUST use Kotlin DSL syntax (e.g., `implementation("com.example:library:1.0.0")` with double quotes and parentheses, NOT single quotes). Remind the user to click "Sync Now" in Android Studio after updating.
+- **Rule 2.5 - Context & Toast:** Always ensure you pass the correct `Context` (e.g., `MainActivity.this` or `getContext()`) when creating Intents, Dialogs, or Toasts.
+
+## 3. Code Style & Best Practices
+- Add clear comments for complex logic (API calls, data parsing).
+- Use proper naming conventions: `camelCase` for Java variables, `snake_case` for XML IDs and resource files.
+- Handle potential NullPointerExceptions gracefully.
+
+## 4. Language and Communication
+- Always comment code and write error messages and user interface (UI) in Vietnamese.
+- Explain code concisely, focusing on the result.
+- Always run code or commands using PowerShell.
+- Communicate with me in Vietnamese.
