@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ImageButton;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +19,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.google.android.material.appbar.AppBarLayout;
 
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.ui.adapter.BannerAdapter;
@@ -45,9 +50,13 @@ public class HomeFragment extends Fragment {
     private RecyclerView rvTop100Products;
     private RecyclerView rvAllProducts;
 
-    // Các view trong header (chưa dùng logic nhưng nên để để kiểm tra)
-    // ImageButton icFavorite, icNotification;
-    // EditText edtSearch;
+    // Header logic
+    private AppBarLayout appBarLayout;
+    private ConstraintLayout layoutHeaderExpanded;
+    private ConstraintLayout layoutHeaderPinned;
+    private Button btnFilterBy, btnCategoryFilter, btnDiscountFilter, btnResetFilter;
+
+    // Handler và Runnable cho auto-slide banner
     private final Handler bannerHandler = new Handler(Looper.getMainLooper());
     private final Runnable bannerRunnable = new Runnable() {
         @Override
@@ -77,6 +86,9 @@ public class HomeFragment extends Fragment {
         // Ánh xạ các view
         initViews(view);
 
+        // Thiết lập header cross-fade và filter logic
+        setupHeaderLogic();
+
         // Thiết lập từng phần giao diện
         setupCategories();
         setupBanner();
@@ -97,6 +109,49 @@ public class HomeFragment extends Fragment {
         rvDiscountProducts = view.findViewById(R.id.rv_discount_products);
         rvTop100Products = view.findViewById(R.id.rv_top100_products);
         rvAllProducts = view.findViewById(R.id.rv_all_products);
+
+        // Header Views
+        appBarLayout = view.findViewById(R.id.app_bar_layout);
+        layoutHeaderExpanded = view.findViewById(R.id.layoutHeaderExpanded);
+        layoutHeaderPinned = view.findViewById(R.id.layoutHeaderPinned);
+
+        // Filter Buttons
+        btnFilterBy = view.findViewById(R.id.btnFilterBy);
+        btnCategoryFilter = view.findViewById(R.id.btnCategoryFilter);
+        btnDiscountFilter = view.findViewById(R.id.btnDiscountFilter);
+        btnResetFilter = view.findViewById(R.id.btnResetFilter);
+    }
+
+    /**
+     * Thiết lập logic làm mờ Header và mở Filter Dialog.
+     */
+    private void setupHeaderLogic() {
+        if (appBarLayout != null && layoutHeaderExpanded != null && layoutHeaderPinned != null) {
+            appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
+                int totalScroll = appBarLayout1.getTotalScrollRange();
+                float percentage = (float) Math.abs(verticalOffset) / totalScroll;
+                
+                // Khi cuộn lên, percentage tăng từ 0 lên 1
+                layoutHeaderPinned.setAlpha(percentage);
+                layoutHeaderExpanded.setAlpha(1f - percentage);
+                
+                // Tắt/bật touch event để tránh click nhầm khi mờ
+                if (percentage > 0.1f) {
+                    layoutHeaderPinned.setVisibility(View.VISIBLE);
+                } else {
+                    layoutHeaderPinned.setVisibility(View.GONE);
+                }
+            });
+        }
+
+        // Bắt sự kiện click mở Filter Dialog
+        View.OnClickListener showFilterListener = v -> {
+            new FilterDialogFragment().show(getChildFragmentManager(), "FilterDialog");
+        };
+
+        if (btnFilterBy != null) btnFilterBy.setOnClickListener(showFilterListener);
+        if (btnCategoryFilter != null) btnCategoryFilter.setOnClickListener(showFilterListener);
+        if (btnDiscountFilter != null) btnDiscountFilter.setOnClickListener(showFilterListener);
     }
 
     // ======================== DANH MỤC ========================

@@ -6,4 +6,15 @@
     </style>
 
     <style name="Theme.Greenlyappclients" parent="Base.Theme.Greenlyappclients" />
+
+    <style name="DialogAnimationTop">
+        <item name="android:windowEnterAnimation">@anim/slide_in_top</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_top</item>
+    </style>
+
+    <style name="FullScreenDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="android:windowAnimationStyle">@style/DialogAnimationTop</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
 </resources>

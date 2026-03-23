@@ -17,10 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="@color/header_bg_green">
+            app:contentScrim="@color/header_bg_green"
+            app:titleEnabled="false">
 
             <!-- Container chính của Header: Nền xanh, bo góc 35dp ở đáy, cao 187dp -->
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutHeaderExpanded"
                 android:layout_width="match_parent"
                 android:layout_height="187dp"
                 android:background="@drawable/header_background"
@@ -138,6 +140,163 @@
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Sticky Toolbar (Được ghim khi cuộn) -->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarSticky"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_collapseMode="pin"
+                app:contentInsetStart="0dp">
+
+                <!-- Giao diện Sticky Header ẩn mặc định -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutHeaderPinned"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:paddingTop="36dp"
+                    android:paddingBottom="8dp"
+                    android:alpha="0"
+                    android:visibility="gone">
+
+                    <!-- Hàng 1: Thanh Tìm kiếm và 2 nút -->
+                    <LinearLayout
+                        android:id="@+id/row1Sticky"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="16dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <LinearLayout
+                            android:id="@+id/searchBarSticky"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="40dp"
+                            android:background="@drawable/search_bar_background"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="12dp"
+                            android:elevation="2dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_search"
+                                app:tint="#757575" />
+
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="8dp"
+                                android:background="@null"
+                                android:hint="Tìm kiếm..."
+                                android:inputType="text"
+                                android:textColor="@color/text_black"
+                                android:textColorHint="#9E9E9E"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/ibFavSticky"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="12dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_favorite_border"
+                            app:tint="@color/header_bg_green" />
+
+                        <ImageButton
+                            android:id="@+id/ibNotifSticky"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="4dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_notifications"
+                            app:tint="@color/header_bg_green" />
+                    </LinearLayout>
+
+                    <!-- Hàng 2: Scroll ngang Filter -->
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="none"
+                        app:layout_constraintTop_toBottomOf="@id/row1Sticky"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:gravity="center_vertical">
+
+                            <!-- Filter Icon -->
+                            <ImageButton
+                                android:id="@+id/btnSortIcon"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="8dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:src="@android:drawable/ic_menu_sort_by_size"
+                                app:tint="@color/black" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFilterBy"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Lọc theo"
+                                android:textColor="@color/black"
+                                app:strokeColor="#E0E0E0"
+                                app:cornerRadius="16dp"
+                                android:layout_marginEnd="8dp"
+                                android:minHeight="0dp"
+                                android:paddingVertical="4dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCategoryFilter"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Loại hàng"
+                                android:textColor="@color/black"
+                                app:strokeColor="#E0E0E0"
+                                app:cornerRadius="16dp"
+                                android:layout_marginEnd="8dp"
+                                android:minHeight="0dp"
+                                android:paddingVertical="4dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnDiscountFilter"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Giảm giá"
+                                android:textColor="@color/black"
+                                app:strokeColor="#E0E0E0"
+                                app:cornerRadius="16dp"
+                                android:layout_marginEnd="8dp"
+                                android:minHeight="0dp"
+                                android:paddingVertical="4dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnResetFilter"
+                                style="@style/Widget.MaterialComponents.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Reset"
+                                android:textColor="@color/header_bg_green"
+                                android:minHeight="0dp"
+                                android:paddingVertical="4dp" />
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
