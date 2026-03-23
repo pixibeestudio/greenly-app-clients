@@ -2,6 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="text_black">#000000</color>
+
+    <!-- Màu cho Header -->
+    <color name="header_bg_green">#2E5948</color>
+    <color name="icon_bg_white_10">#1AFFFFFF</color>
 
     <!-- Màu cho Bottom Navigation -->
     <color name="nav_bg_dark">#1B5E20</color>

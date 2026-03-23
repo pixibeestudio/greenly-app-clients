@@ -45,7 +45,9 @@ public class HomeFragment extends Fragment {
     private RecyclerView rvTop100Products;
     private RecyclerView rvAllProducts;
 
-    // Handler và Runnable cho auto-slide banner
+    // Các view trong header (chưa dùng logic nhưng nên để để kiểm tra)
+    // ImageButton icFavorite, icNotification;
+    // EditText edtSearch;
     private final Handler bannerHandler = new Handler(Looper.getMainLooper());
     private final Runnable bannerRunnable = new Runnable() {
         @Override
