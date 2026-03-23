@@ -50,6 +50,8 @@ dependencies {
 
     // Glide
     implementation("com.github.bumptech.glide:glide:5.0.5")
+    implementation(libs.recyclerview)
+    implementation(libs.fragment)
     annotationProcessor("com.github.bumptech.glide:compiler:5.0.5")
 
     // AndroidX Lifecycle (ViewModel & LiveData cho Java)
