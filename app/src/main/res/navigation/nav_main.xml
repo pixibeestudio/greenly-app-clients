@@ -41,4 +41,22 @@
         android:label="Trang chủ"
         tools:layout="@layout/fragment_home" />
 
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.MessageFragment"
+        android:label="Tin nhắn"
+        tools:layout="@layout/fragment_message" />
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.CartFragment"
+        android:label="Giỏ hàng"
+        tools:layout="@layout/fragment_cart" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.ProfileFragment"
+        android:label="Cá nhân"
+        tools:layout="@layout/fragment_profile" />
+
 </navigation>
