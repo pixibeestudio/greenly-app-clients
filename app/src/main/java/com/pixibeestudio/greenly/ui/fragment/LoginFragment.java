@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -39,9 +41,11 @@ public class LoginFragment extends Fragment {
         btnLogin = view.findViewById(R.id.btn_login);
         tvRegister = view.findViewById(R.id.tv_register);
 
-        // Xử lý sự kiện nhấn nút Đăng nhập
+        // Xử lý sự kiện nhấn nút Đăng nhập -> Chuyển sang Trang chủ
         btnLogin.setOnClickListener(v -> {
             Toast.makeText(requireContext(), "Đang xử lý đăng nhập...", Toast.LENGTH_SHORT).show();
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.action_login_to_home);
         });
 
         // Xử lý sự kiện nhấn dòng chữ Đăng ký
