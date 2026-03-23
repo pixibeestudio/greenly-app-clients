@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Màu khi item được chọn: trắng sáng -->
+    <item android:color="@color/nav_item_active" android:state_checked="true" />
+    <!-- Màu khi item chưa được chọn: trắng mờ 50% -->
+    <item android:color="@color/nav_item_inactive" />
+</selector>

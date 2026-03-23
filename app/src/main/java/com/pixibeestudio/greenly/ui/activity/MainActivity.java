@@ -26,14 +26,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Xử lý hiển thị tràn viền (Edge-to-Edge)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        View mainView = findViewById(R.id.main);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+
+        ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            
+            // Chỉ padding top cho main view (để tránh status bar)
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+            
+            // Padding bottom cho BottomNavigationView (để tránh system navigation bar)
+            bottomNavigationView.setPadding(0, 0, 0, systemBars.bottom);
+            
             return insets;
         });
-
-        // Ánh xạ BottomNavigationView
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
 
         // Lấy NavController từ NavHostFragment
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
