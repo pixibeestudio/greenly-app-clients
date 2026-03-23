@@ -36,7 +36,7 @@ public class SplashFragment extends Fragment {
             // Kiểm tra Fragment còn gắn với NavController không trước khi điều hướng
             if (isAdded()) {
                 NavController navController = Navigation.findNavController(view);
-                navController.navigate(R.id.action_splash_to_login);
+                navController.navigate(R.id.action_splashFragment_to_homeFragment);
             }
         }, SPLASH_DELAY_MS);
     }

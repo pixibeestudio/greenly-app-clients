@@ -38,7 +38,7 @@ public class LoginFragment extends Fragment {
         // Ánh xạ các view
         edtEmail = view.findViewById(R.id.edt_email);
         edtPassword = view.findViewById(R.id.edt_password);
-        btnLogin = view.findViewById(R.id.btn_login);
+        MaterialButton btnLogin = view.findViewById(R.id.btn_login);
         tvRegister = view.findViewById(R.id.tv_register);
 
         // Xử lý sự kiện nhấn nút Đăng nhập -> Chuyển sang Trang chủ
