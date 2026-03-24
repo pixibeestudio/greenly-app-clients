@@ -15,6 +15,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,7 @@ import com.pixibeestudio.greenly.ui.adapter.BannerAdapter;
 import com.pixibeestudio.greenly.ui.adapter.CategoryAdapter;
 import com.pixibeestudio.greenly.ui.adapter.ProductGridAdapter;
 import com.pixibeestudio.greenly.ui.adapter.ProductHorizontalAdapter;
+import com.pixibeestudio.greenly.ui.viewmodel.HomeViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +58,8 @@ public class HomeFragment extends Fragment {
     private ConstraintLayout layoutHeaderPinned;
     private Button btnFilterBy, btnCategoryFilter, btnDiscountFilter, btnResetFilter;
 
+    private HomeViewModel homeViewModel;
+
     // Handler và Runnable cho auto-slide banner
     private final Handler bannerHandler = new Handler(Looper.getMainLooper());
     private final Runnable bannerRunnable = new Runnable() {
@@ -83,19 +87,37 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Khởi tạo ViewModel
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
         // Ánh xạ các view
         initViews(view);
 
         // Thiết lập header cross-fade và filter logic
         setupHeaderLogic();
 
+        // Observe Data từ ViewModel
+        observeData();
+
         // Thiết lập từng phần giao diện
-        setupCategories();
         setupBanner();
         setupPopularProducts();
         setupDiscountProducts();
         setupTop100Products();
         setupAllProducts();
+    }
+
+    /**
+     * Quan sát dữ liệu từ ViewModel và cập nhật UI.
+     */
+    private void observeData() {
+        homeViewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(), categories -> {
+            if (categories != null && !categories.isEmpty()) {
+                rvCategories.setLayoutManager(
+                        new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                rvCategories.setAdapter(new CategoryAdapter(categories));
+            }
+        });
     }
 
     /**
@@ -152,21 +174,6 @@ public class HomeFragment extends Fragment {
         if (btnFilterBy != null) btnFilterBy.setOnClickListener(showFilterListener);
         if (btnCategoryFilter != null) btnCategoryFilter.setOnClickListener(showFilterListener);
         if (btnDiscountFilter != null) btnDiscountFilter.setOnClickListener(showFilterListener);
-    }
-
-    // ======================== DANH MỤC ========================
-
-    /**
-     * Thiết lập RecyclerView danh mục sản phẩm (cuộn ngang).
-     */
-    private void setupCategories() {
-        List<String> categories = Arrays.asList(
-                "Rau củ", "Trái cây", "Thịt tươi", "Hải sản",
-                "Sữa & Trứng", "Đồ uống", "Gia vị", "Đồ khô"
-        );
-        rvCategories.setLayoutManager(
-                new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvCategories.setAdapter(new CategoryAdapter(categories));
     }
 
     // ======================== BANNER ========================

@@ -8,21 +8,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.pixibeestudio.greenly.R;
+import com.pixibeestudio.greenly.data.model.Category;
 
 import java.util.List;
 
 /**
  * Adapter hiển thị danh sách danh mục sản phẩm (cuộn ngang).
- * Sử dụng mock data gồm tên danh mục.
  */
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
-    private final List<String> categoryNames;
+    private final List<Category> categories;
 
-    public CategoryAdapter(List<String> categoryNames) {
-        this.categoryNames = categoryNames;
+    public CategoryAdapter(List<Category> categories) {
+        this.categories = categories;
     }
 
     @NonNull
@@ -35,12 +38,21 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-        holder.tvCategoryName.setText(categoryNames.get(position));
+        Category category = categories.get(position);
+        holder.tvCategoryName.setText(category.getName());
+        
+        // Dùng Glide để load ảnh tròn
+        Glide.with(holder.itemView.getContext())
+             .load(category.getImage())
+             .placeholder(R.drawable.bg_circle_green)
+             .error(R.drawable.bg_circle_green)
+             .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+             .into(holder.imgCategory);
     }
 
     @Override
     public int getItemCount() {
-        return categoryNames != null ? categoryNames.size() : 0;
+        return categories != null ? categories.size() : 0;
     }
 
     static class CategoryViewHolder extends RecyclerView.ViewHolder {
