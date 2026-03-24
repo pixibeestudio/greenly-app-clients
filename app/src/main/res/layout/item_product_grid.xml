@@ -27,6 +27,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Overlay Bán hết -->
+        <FrameLayout
+            android:id="@+id/layoutSoldOut"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#66FFFFFF"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/ivProductImage"
+            app:layout_constraintEnd_toEndOf="@id/ivProductImage"
+            app:layout_constraintStart_toStartOf="@id/ivProductImage"
+            app:layout_constraintTop_toTopOf="@id/ivProductImage">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_sold_out"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="Bán hết"
+                android:textColor="#757575"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
         <!-- Nhãn giảm giá -->
         <TextView
             android:id="@+id/tvDiscountBadge"

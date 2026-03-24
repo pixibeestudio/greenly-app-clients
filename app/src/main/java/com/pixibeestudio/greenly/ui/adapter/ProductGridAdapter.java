@@ -51,6 +51,31 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         
         holder.tvProductUnit.setText("/ " + product.getUnit());
 
+        // Xử lý trạng thái Bán hết (Stock <= 0)
+        if (product.getStockQuantity() <= 0) {
+            // TRẠNG THÁI BÁN HẾT
+            holder.layoutSoldOut.setVisibility(View.VISIBLE);
+            
+            // Đổi ảnh thành đen trắng (Grayscale)
+            android.graphics.ColorMatrix matrix = new android.graphics.ColorMatrix();
+            matrix.setSaturation(0); // 0 = đen trắng
+            holder.ivProductImage.setColorFilter(new android.graphics.ColorMatrixColorFilter(matrix));
+            
+            // Vô hiệu hóa nút Add Cart và làm mờ
+            holder.btnAddCart.setEnabled(false);
+            holder.btnAddCart.setAlpha(0.5f);
+        } else {
+            // CÒN HÀNG
+            holder.layoutSoldOut.setVisibility(View.GONE);
+            
+            // Xóa bộ lọc màu, trả lại ảnh gốc
+            holder.ivProductImage.clearColorFilter();
+            
+            // Kích hoạt lại nút Add Cart
+            holder.btnAddCart.setEnabled(true);
+            holder.btnAddCart.setAlpha(1.0f);
+        }
+
         // Xử lý giá tiền và khuyến mãi
         double originalPrice = product.getPrice();
         double discountPrice = product.getDiscountPrice();
@@ -118,6 +143,7 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
 
     static class GridViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProductImage;
+        android.widget.FrameLayout layoutSoldOut;
         ImageView ivFavorite;
         TextView tvDiscountBadge;
         TextView tvProductName;
@@ -131,6 +157,7 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         GridViewHolder(@NonNull View itemView) {
             super(itemView);
             ivProductImage = itemView.findViewById(R.id.ivProductImage);
+            layoutSoldOut = itemView.findViewById(R.id.layoutSoldOut);
             ivFavorite = itemView.findViewById(R.id.ivFavorite);
             tvDiscountBadge = itemView.findViewById(R.id.tvDiscountBadge);
             tvProductName = itemView.findViewById(R.id.tvProductName);

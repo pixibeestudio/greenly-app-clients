@@ -13,8 +13,11 @@ public class Product {
     
     private String unit;
     private String origin;
+    
+    @SerializedName("stock_quantity")
+    private int stockQuantity;
 
-    public Product(int id, String name, String image, double price, double discountPrice, String unit, String origin) {
+    public Product(int id, String name, String image, double price, double discountPrice, String unit, String origin, int stockQuantity) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -22,6 +25,7 @@ public class Product {
         this.discountPrice = discountPrice;
         this.unit = unit;
         this.origin = origin;
+        this.stockQuantity = stockQuantity;
     }
 
     public int getId() {
@@ -78,5 +82,13 @@ public class Product {
 
     public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    public int getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 }
