@@ -12,9 +12,12 @@
         <item name="android:windowExitAnimation">@anim/slide_out_top</item>
     </style>
 
-    <style name="FullScreenDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+    <style name="FullScreenDialogTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/DialogAnimationTop</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>
