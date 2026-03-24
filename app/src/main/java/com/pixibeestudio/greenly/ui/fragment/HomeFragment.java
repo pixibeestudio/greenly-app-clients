@@ -118,6 +118,13 @@ public class HomeFragment extends Fragment {
                 rvCategories.setAdapter(new CategoryAdapter(categories));
             }
         });
+
+        homeViewModel.getProductsLiveData().observe(getViewLifecycleOwner(), products -> {
+            if (products != null && !products.isEmpty()) {
+                rvAllProducts.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+                rvAllProducts.setAdapter(new ProductGridAdapter(products));
+            }
+        });
     }
 
     /**
@@ -284,11 +291,11 @@ public class HomeFragment extends Fragment {
 
     /**
      * Thiết lập RecyclerView tất cả sản phẩm (Grid 2 cột).
+     * Dữ liệu thật sẽ được nạp qua observeData()
      */
     private void setupAllProducts() {
-        List<String[]> products = generateMockProducts("Sản phẩm", 20);
         rvAllProducts.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        rvAllProducts.setAdapter(new ProductGridAdapter(products));
+        rvAllProducts.setAdapter(new ProductGridAdapter(new ArrayList<>()));
     }
 
     // ======================== TIỆN ÍCH ========================
