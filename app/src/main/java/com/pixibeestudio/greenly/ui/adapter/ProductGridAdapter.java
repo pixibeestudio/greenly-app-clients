@@ -51,14 +51,55 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         
         holder.tvProductUnit.setText("/ " + product.getUnit());
 
-        // Format giá tiền
+        // Xử lý giá tiền và khuyến mãi
+        double originalPrice = product.getPrice();
+        double discountPrice = product.getDiscountPrice();
+
         try {
             Locale vnLocale = new Locale.Builder().setLanguage("vi").setRegion("VN").build();
             NumberFormat format = NumberFormat.getCurrencyInstance(vnLocale);
-            String formattedPrice = format.format(product.getPrice());
-            holder.tvProductPrice.setText(formattedPrice);
+            
+            String formattedOriginalPrice = format.format(originalPrice);
+
+            if (discountPrice > 0 && discountPrice < originalPrice) {
+                // TRẠNG THÁI CÓ KHUYẾN MÃI
+                String formattedDiscountPrice = format.format(discountPrice);
+                
+                holder.tvProductOriginalPrice.setVisibility(View.VISIBLE);
+                holder.tvDiscountBadge.setVisibility(View.VISIBLE);
+
+                // Gạch ngang giá gốc
+                holder.tvProductOriginalPrice.setPaintFlags(holder.tvProductOriginalPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.tvProductOriginalPrice.setText(formattedOriginalPrice);
+
+                // Set giá khuyến mãi
+                holder.tvProductDiscountPrice.setText(formattedDiscountPrice);
+
+                // Tính toán % giảm
+                int percent = (int) Math.round(((originalPrice - discountPrice) / originalPrice) * 100);
+                holder.tvDiscountBadge.setText("-" + percent + "%");
+            } else {
+                // TRẠNG THÁI BÌNH THƯỜNG
+                holder.tvProductOriginalPrice.setVisibility(View.GONE);
+                holder.tvDiscountBadge.setVisibility(View.GONE);
+                holder.tvProductDiscountPrice.setText(formattedOriginalPrice);
+            }
         } catch (Exception e) {
-            holder.tvProductPrice.setText(product.getPrice() + "đ");
+            // Fallback nếu lỗi format
+            if (discountPrice > 0 && discountPrice < originalPrice) {
+                holder.tvProductOriginalPrice.setVisibility(View.VISIBLE);
+                holder.tvDiscountBadge.setVisibility(View.VISIBLE);
+                holder.tvProductOriginalPrice.setPaintFlags(holder.tvProductOriginalPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.tvProductOriginalPrice.setText(originalPrice + "đ");
+                holder.tvProductDiscountPrice.setText(discountPrice + "đ");
+                
+                int percent = (int) Math.round(((originalPrice - discountPrice) / originalPrice) * 100);
+                holder.tvDiscountBadge.setText("-" + percent + "%");
+            } else {
+                holder.tvProductOriginalPrice.setVisibility(View.GONE);
+                holder.tvDiscountBadge.setVisibility(View.GONE);
+                holder.tvProductDiscountPrice.setText(originalPrice + "đ");
+            }
         }
 
         // Load hình ảnh bằng Glide
@@ -78,10 +119,12 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
     static class GridViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProductImage;
         ImageView ivFavorite;
+        TextView tvDiscountBadge;
         TextView tvProductName;
         TextView tvProductOrigin;
         TextView tvProductRating;
-        TextView tvProductPrice;
+        TextView tvProductOriginalPrice;
+        TextView tvProductDiscountPrice;
         TextView tvProductUnit;
         ImageView btnAddCart;
 
@@ -89,10 +132,12 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
             super(itemView);
             ivProductImage = itemView.findViewById(R.id.ivProductImage);
             ivFavorite = itemView.findViewById(R.id.ivFavorite);
+            tvDiscountBadge = itemView.findViewById(R.id.tvDiscountBadge);
             tvProductName = itemView.findViewById(R.id.tvProductName);
             tvProductOrigin = itemView.findViewById(R.id.tvProductOrigin);
             tvProductRating = itemView.findViewById(R.id.tvProductRating);
-            tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
+            tvProductOriginalPrice = itemView.findViewById(R.id.tvProductOriginalPrice);
+            tvProductDiscountPrice = itemView.findViewById(R.id.tvProductDiscountPrice);
             tvProductUnit = itemView.findViewById(R.id.tvProductUnit);
             btnAddCart = itemView.findViewById(R.id.btnAddCart);
         }

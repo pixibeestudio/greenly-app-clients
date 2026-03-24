@@ -27,6 +27,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Nhãn giảm giá -->
+        <TextView
+            android:id="@+id/tvDiscountBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_badge_discount"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="-15%" />
+
         <!-- Nút Yêu thích -->
         <ImageView
             android:id="@+id/ivFavorite"
@@ -127,37 +140,57 @@
             app:layout_constraintTop_toBottomOf="@id/tvProductName"
             app:tint="#FFFFFF" />
 
-        <!-- Giá sản phẩm -->
-        <TextView
-            android:id="@+id/tvProductPrice"
+        <!-- Layout Giá sản phẩm (Xếp chồng) -->
+        <LinearLayout
+            android:id="@+id/llPriceContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="8dp"
-            android:textColor="#E55B49"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/tvProductUnit"
-            app:layout_constraintEnd_toStartOf="@id/btnAddCart"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btnAddCart"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:text="180.000đ" />
-
-        <!-- Đơn vị -->
-        <TextView
-            android:id="@+id/tvProductUnit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp"
-            android:textColor="#9E9E9E"
-            android:textSize="11sp"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@id/btnAddCart"
             app:layout_constraintEnd_toStartOf="@id/btnAddCart"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvProductPrice"
-            tools:text="/ Hộp 500g" />
+            app:layout_constraintTop_toTopOf="@id/btnAddCart">
+
+            <!-- Giá gốc (Bị gạch ngang) -->
+            <TextView
+                android:id="@+id/tvProductOriginalPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#9E9E9E"
+                android:textSize="11sp"
+                tools:text="200.000đ" />
+
+            <!-- Layout Giá KM & Đơn vị -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom">
+                
+                <!-- Giá hiện tại / Khuyến mãi -->
+                <TextView
+                    android:id="@+id/tvProductDiscountPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#2E5948"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:text="180.000đ" />
+
+            </LinearLayout>
+            <!-- Đơn vị -->
+            <TextView
+                android:id="@+id/tvProductUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textColor="#9E9E9E"
+                android:textSize="11sp"
+                android:paddingBottom="2dp"
+                tools:text="/ Hộp 500g" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
