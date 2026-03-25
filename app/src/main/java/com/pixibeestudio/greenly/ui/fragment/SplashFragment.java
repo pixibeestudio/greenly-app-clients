@@ -31,12 +31,12 @@ public class SplashFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Sau 2 giây, chuyển sang màn hình Đăng nhập
+        // Sau 2 giây, chuyển sang màn hình Welcome
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             // Kiểm tra Fragment còn gắn với NavController không trước khi điều hướng
             if (isAdded()) {
                 NavController navController = Navigation.findNavController(view);
-                navController.navigate(R.id.action_splashFragment_to_homeFragment);
+                navController.navigate(R.id.action_splashFragment_to_welcomeFragment);
             }
         }, SPLASH_DELAY_MS);
     }
