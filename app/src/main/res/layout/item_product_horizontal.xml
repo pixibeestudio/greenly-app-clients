@@ -1,81 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="140dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="160dp"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="4dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
-    app:strokeWidth="0dp">
+    android:layout_margin="8dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#EAEAEA"
+    app:strokeWidth="1dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:paddingBottom="12dp">
 
-        <!-- Khung ảnh sản phẩm -->
+        <!-- Ảnh sản phẩm -->
+        <ImageView
+            android:id="@+id/ivProductImage"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:background="#F5F5F5"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Overlay Bán hết -->
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="120dp">
+            android:id="@+id/layoutSoldOut"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#66FFFFFF"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/ivProductImage"
+            app:layout_constraintEnd_toEndOf="@id/ivProductImage"
+            app:layout_constraintStart_toStartOf="@id/ivProductImage"
+            app:layout_constraintTop_toTopOf="@id/ivProductImage">
 
-            <ImageView
-                android:id="@+id/img_product"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#F5F5F5"
-                android:contentDescription="Ảnh sản phẩm"
-                android:scaleType="centerCrop" />
-
-            <!-- Icon Trái tim (góc trên phải) -->
-            <ImageView
-                android:id="@+id/ic_heart"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="top|end"
-                android:layout_margin="6dp"
-                android:contentDescription="Yêu thích"
-                android:src="@drawable/ic_favorite_red"
-                android:visibility="gone" />
-
-            <!-- Icon Thêm vào giỏ (góc dưới phải) -->
-            <ImageView
-                android:id="@+id/ic_add_cart"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="6dp"
-                android:contentDescription="Thêm vào giỏ"
-                android:src="@drawable/ic_add_circle"
-                android:visibility="gone" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_sold_out"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="Bán hết"
+                android:textColor="#757575"
+                android:textSize="12sp"
+                android:textStyle="bold" />
         </FrameLayout>
 
-        <!-- Thông tin sản phẩm -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Nhãn giảm giá -->
+        <TextView
+            android:id="@+id/tvDiscountBadge"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:background="@drawable/bg_badge_discount"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="-15%" />
 
+        <!-- Nút Yêu thích -->
+        <ImageView
+            android:id="@+id/ivFavorite"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_circle_white_shadow"
+            android:padding="7dp"
+            android:src="@drawable/ic_favorite_border"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#9E9E9E" />
+
+        <!-- Layout Nguồn gốc & Đánh giá -->
+        <LinearLayout
+            android:id="@+id/llOriginRating"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivProductImage">
+
+            <!-- Icon Location -->
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_location_on"
+                app:tint="#9E9E9E" />
+
+            <!-- Text Nguồn gốc -->
             <TextView
-                android:id="@+id/tv_product_name"
-                android:layout_width="match_parent"
+                android:id="@+id/tvProductOrigin"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
                 android:ellipsize="end"
-                android:maxLines="2"
-                android:text="Tên sản phẩm"
-                android:textColor="#333333"
-                android:textSize="13sp" />
+                android:maxLines="1"
+                android:textColor="#9E9E9E"
+                android:textSize="12sp"
+                tools:text="Mộc Châu Farm" />
 
+            <!-- Icon Star -->
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_star"
+                app:tint="#FFC107" />
+
+            <!-- Text Đánh giá -->
             <TextView
-                android:id="@+id/tv_product_price"
-                android:layout_width="match_parent"
+                android:id="@+id/tvProductRating"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="50.000đ"
-                android:textColor="#2E7D32"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_marginStart="4dp"
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="4.9" />
         </LinearLayout>
 
-    </LinearLayout>
+        <!-- Tên sản phẩm -->
+        <TextView
+            android:id="@+id/tvProductName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="12dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="#1A3B2A"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llOriginRating"
+            tools:text="Dâu Tây Mộc Châu" />
+
+        <!-- Nút Thêm vào giỏ -->
+        <ImageView
+            android:id="@+id/btnAddCart"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_rounded_green_add"
+            android:padding="8dp"
+            android:src="@drawable/ic_add"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvProductName"
+            app:tint="#FFFFFF" />
+
+        <!-- Layout Giá sản phẩm (Xếp chồng) -->
+        <LinearLayout
+            android:id="@+id/llPriceContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/btnAddCart"
+            app:layout_constraintEnd_toStartOf="@id/btnAddCart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btnAddCart">
+
+            <!-- Giá gốc (Bị gạch ngang) -->
+            <TextView
+                android:id="@+id/tvProductOriginalPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#9E9E9E"
+                android:textSize="11sp"
+                tools:text="200.000đ" />
+
+            <!-- Layout Giá KM & Đơn vị -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom">
+                
+                <!-- Giá hiện tại / Khuyến mãi -->
+                <TextView
+                    android:id="@+id/tvProductDiscountPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#2E5948"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:text="180.000đ" />
+
+            </LinearLayout>
+            <!-- Đơn vị -->
+            <TextView
+                android:id="@+id/tvProductUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textColor="#9E9E9E"
+                android:textSize="11sp"
+                android:paddingBottom="2dp"
+                tools:text="/ Hộp 500g" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </com.google.android.material.card.MaterialCardView>

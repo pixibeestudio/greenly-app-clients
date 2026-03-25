@@ -16,6 +16,7 @@ public class HomeViewModel extends ViewModel {
     
     private LiveData<List<Category>> categoriesLiveData;
     private LiveData<List<Product>> productsLiveData;
+    private LiveData<List<Product>> discountedProductsLiveData;
 
     public HomeViewModel() {
         categoryRepository = new CategoryRepository();
@@ -34,5 +35,12 @@ public class HomeViewModel extends ViewModel {
             productsLiveData = productRepository.getProducts();
         }
         return productsLiveData;
+    }
+
+    public LiveData<List<Product>> getDiscountedProductsLiveData() {
+        if (discountedProductsLiveData == null) {
+            discountedProductsLiveData = productRepository.getDiscountedProducts();
+        }
+        return discountedProductsLiveData;
     }
 }

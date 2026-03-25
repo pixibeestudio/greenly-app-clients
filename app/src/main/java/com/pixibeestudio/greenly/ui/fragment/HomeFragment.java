@@ -25,6 +25,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.appbar.AppBarLayout;
 
 import com.pixibeestudio.greenly.R;
+import com.pixibeestudio.greenly.data.model.Product;
 import com.pixibeestudio.greenly.ui.adapter.BannerAdapter;
 import com.pixibeestudio.greenly.ui.adapter.CategoryAdapter;
 import com.pixibeestudio.greenly.ui.adapter.ProductGridAdapter;
@@ -123,6 +124,14 @@ public class HomeFragment extends Fragment {
             if (products != null && !products.isEmpty()) {
                 rvAllProducts.setLayoutManager(new GridLayoutManager(requireContext(), 2));
                 rvAllProducts.setAdapter(new ProductGridAdapter(products));
+            }
+        });
+
+        homeViewModel.getDiscountedProductsLiveData().observe(getViewLifecycleOwner(), discountedProducts -> {
+            if (discountedProducts != null && !discountedProducts.isEmpty()) {
+                rvDiscountProducts.setLayoutManager(
+                        new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(discountedProducts));
             }
         });
     }
@@ -256,22 +265,22 @@ public class HomeFragment extends Fragment {
      * Thiết lập RecyclerView sản phẩm nổi bật (cuộn ngang, không hiển thị icon).
      */
     private void setupPopularProducts() {
-        List<String[]> products = generateMockProducts("Rau sạch", 10);
+        List<Product> products = generateMockProducts("Rau sạch", 10);
         rvPopularProducts.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvPopularProducts.setAdapter(new ProductHorizontalAdapter(products, false));
+        rvPopularProducts.setAdapter(new ProductHorizontalAdapter(products));
     }
 
     // ======================== ĐANG GIẢM GIÁ ========================
 
     /**
      * Thiết lập RecyclerView sản phẩm đang giảm giá (cuộn ngang, không hiển thị icon).
+     * Dữ liệu thật sẽ được nạp qua observeData()
      */
     private void setupDiscountProducts() {
-        List<String[]> products = generateMockProducts("Trái cây", 10);
         rvDiscountProducts.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(products, false));
+        rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(new ArrayList<>()));
     }
 
     // ======================== TOP 100 BÁN CHẠY ========================
@@ -280,11 +289,11 @@ public class HomeFragment extends Fragment {
      * Thiết lập RecyclerView Top 100 sản phẩm bán chạy (cuộn ngang, CÓ hiển thị icon).
      */
     private void setupTop100Products() {
-        List<String[]> products = generateMockProducts("Thực phẩm", 10);
+        List<Product> products = generateMockProducts("Thực phẩm", 10);
         rvTop100Products.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        // showIcons = true: hiển thị icon trái tim + nút thêm giỏ hàng
-        rvTop100Products.setAdapter(new ProductHorizontalAdapter(products, true));
+        // Hiện tại ProductHorizontalAdapter đã đồng bộ giao diện Grid, bỏ qua showIcons logic cũ
+        rvTop100Products.setAdapter(new ProductHorizontalAdapter(products));
     }
 
     // ======================== TẤT CẢ SẢN PHẨM (GRID) ========================
@@ -304,16 +313,19 @@ public class HomeFragment extends Fragment {
      * Tạo danh sách sản phẩm giả lập để test giao diện.
      * @param prefix Tiền tố tên sản phẩm
      * @param count Số lượng sản phẩm
-     * @return Danh sách mảng [tên, giá]
+     * @return Danh sách Product mock
      */
-    private List<String[]> generateMockProducts(String prefix, int count) {
-        List<String[]> products = new ArrayList<>();
+    private List<Product> generateMockProducts(String prefix, int count) {
+        List<Product> products = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
             String name = prefix + " " + i;
             // Giá ngẫu nhiên từ 15.000đ đến 150.000đ
             int price = (int) (Math.random() * 135 + 15) * 1000;
-            String priceStr = String.format("%,dđ", price);
-            products.add(new String[]{name, priceStr});
+            // Fake discount
+            int discountPrice = (Math.random() > 0.5) ? (int)(price * 0.8) : 0;
+            
+            // public Product(int id, String name, String image, double price, double discountPrice, String unit, String origin, int stockQuantity)
+            products.add(new Product(i, name, "https://via.placeholder.com/150", price, discountPrice, "Hộp 500g", "Mộc Châu", 10));
         }
         return products;
     }

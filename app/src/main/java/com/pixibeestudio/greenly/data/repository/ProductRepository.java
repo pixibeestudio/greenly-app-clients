@@ -41,4 +41,33 @@ public class ProductRepository {
 
         return data;
     }
+
+    public MutableLiveData<List<Product>> getDiscountedProducts() {
+        MutableLiveData<List<Product>> data = new MutableLiveData<>();
+
+        RetrofitClient.getApiService().getDiscountedProducts().enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().isSuccess()) {
+                        data.setValue(response.body().getData());
+                    } else {
+                        Log.e(TAG, "Lỗi API giảm giá trả về success = false");
+                        data.setValue(null);
+                    }
+                } else {
+                    Log.e(TAG, "Lỗi kết nối hoặc dữ liệu giảm giá rỗng: " + response.code());
+                    data.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                Log.e(TAG, "Lỗi mạng hoặc parse dữ liệu giảm giá: " + t.getMessage());
+                data.setValue(null);
+            }
+        });
+
+        return data;
+    }
 }

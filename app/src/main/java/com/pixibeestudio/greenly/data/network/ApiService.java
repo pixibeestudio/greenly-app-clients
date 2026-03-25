@@ -11,4 +11,7 @@ public interface ApiService {
 
     @GET("api/products")
     Call<ProductResponse> getProducts();
+
+    @GET("api/products/discounted")
+    Call<ProductResponse> getDiscountedProducts();
 }
