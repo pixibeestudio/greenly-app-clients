@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#ffffff">
 
     <!-- Fixed Toolbar (Top) -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -250,6 +250,352 @@
                         android:padding="8dp"
                         android:src="@drawable/ic_favorite_border"
                         app:tint="#9E9E9E" />
+                </LinearLayout>
+
+                <!-- KHỐI 1: Nguồn gốc và Nhà cung cấp -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardSupplier"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#E0E0E0"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:background="@color/white">
+
+                        <!-- Header Nhà cung cấp -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_location_on"
+                                app:tint="#2E5948" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="Nguồn gốc và Nhà cung cấp"
+                                android:textColor="#1A3B2A"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- Thông tin NCC -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_indicator_inactive"
+                                android:gravity="center"
+                                android:text="NCC"
+                                android:textColor="#2E5948"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvSupplierNameDetail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#000000"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    tools:text="Mộc Châu High-Tech Farm" />
+
+                                <TextView
+                                    android:id="@+id/tvSupplierAddressDetail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:textColor="#757575"
+                                    android:textSize="12sp"
+                                    tools:text="Tiểu khu Vườn Đào, TT. Nông Trường Mộc Châu" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- Chứng chỉ -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/bg_certificate"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_certificate"
+                                app:tint="#2E5948" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Chứng nhận chất lượng"
+                                    android:textColor="#757575"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/tvSupplierCertDetail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#2E5948"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    tools:text="VietGAP" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- KHỐI 2: Đánh giá (Mock Data) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Đánh giá"
+                            android:textColor="#1A3B2A"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="Xem tất cả"
+                            android:textColor="#FF5722"
+                            android:textSize="14sp" />
+                    </RelativeLayout>
+
+                    <!-- Filter đánh giá -->
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_search_bar"
+                                android:backgroundTint="#2E5948"
+                                android:paddingHorizontal="16dp"
+                                android:paddingVertical="8dp"
+                                android:text="Tất cả"
+                                android:textColor="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_search_bar"
+                                android:backgroundTint="#F5F5F5"
+                                android:paddingHorizontal="16dp"
+                                android:paddingVertical="8dp"
+                                android:text="Có ảnh/Video"
+                                android:textColor="#424242" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_search_bar"
+                                android:backgroundTint="#F5F5F5"
+                                android:drawablePadding="4dp"
+                                android:paddingHorizontal="16dp"
+                                android:paddingVertical="8dp"
+                                android:text="5 sao"
+                                android:textColor="#424242"
+                                app:drawableStartCompat="@drawable/ic_star"
+                                app:drawableTint="#FFC107" />
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+                    <!-- Item đánh giá giả lập -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#E0E0E0"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:background="@color/white">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/ivAvatarMock"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:background="@drawable/bg_circle_white_shadow"
+                                    android:backgroundTint="#9E9E9E" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_toEndOf="@id/ivAvatarMock"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Nguyễn Văn A"
+                                        android:textColor="#000000"
+                                        android:textStyle="bold" />
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@drawable/ic_star" app:tint="#FFC107" />
+                                        <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@drawable/ic_star" app:tint="#FFC107" />
+                                        <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@drawable/ic_star" app:tint="#FFC107" />
+                                        <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@drawable/ic_star" app:tint="#FFC107" />
+                                        <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@drawable/ic_star" app:tint="#FFC107" />
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:text="16/10/2025"
+                                    android:textColor="#9E9E9E"
+                                    android:textSize="12sp" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:lineSpacingExtra="4dp"
+                                android:text="Dâu rất tươi, cuống còn xanh ngắt. Mình mua về làm bánh kem cho sinh nhật con gái thì tuyệt vời lắm. Sẽ ủng hộ shop là..."
+                                android:textColor="#424242"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:orientation="horizontal">
+
+                                <View
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:background="#E0E0E0" />
+
+                                <RelativeLayout
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:layout_marginStart="8dp"
+                                    android:background="#E0E0E0">
+                                    <View
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_centerInParent="true"
+                                        android:background="@drawable/bg_circle_white_shadow"
+                                        android:backgroundTint="#9E9E9E" />
+                                </RelativeLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- KHỐI 3: Mô tả sản phẩm -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mô tả sản phẩm"
+                        android:textColor="#1A3B2A"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvDescriptionDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:ellipsize="end"
+                        android:lineSpacingExtra="6dp"
+                        android:maxLines="3"
+                        android:textColor="#424242"
+                        android:textSize="14sp"
+                        tools:text="Dâu tây giống Nhật, quả to đều, màu đỏ tươi căng mọng. Vị ngọt thanh, chua nhẹ tự nhiên. Sản phẩm được trồng theo quy trình an toàn." />
+
+                    <TextView
+                        android:id="@+id/tvToggleDescriptionDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:padding="8dp"
+                        android:text="Xem thêm >"
+                        android:textColor="#FF5722"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>

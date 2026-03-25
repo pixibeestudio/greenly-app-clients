@@ -21,6 +21,12 @@ public class Product {
 
     @SerializedName("all_images")
     private List<String> allImages;
+    
+    @SerializedName("description")
+    private String description;
+    
+    @SerializedName("supplier")
+    private Supplier supplier;
 
     public Product(int id, String name, String image, double price, double discountPrice, String unit, String origin, int stockQuantity) {
         this.id = id;
@@ -103,5 +109,21 @@ public class Product {
 
     public void setAllImages(List<String> allImages) {
         this.allImages = allImages;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
     }
 }

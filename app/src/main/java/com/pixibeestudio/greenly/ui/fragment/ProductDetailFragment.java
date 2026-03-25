@@ -47,6 +47,15 @@ public class ProductDetailFragment extends Fragment {
     private TextView tvQuantity;
     private ImageButton btnIncreaseQty;
     private MaterialButton btnAddToCart;
+    
+    // Phase 2 views
+    private View cardSupplier;
+    private TextView tvSupplierNameDetail;
+    private TextView tvSupplierAddressDetail;
+    private TextView tvSupplierCertDetail;
+    
+    private TextView tvDescriptionDetail;
+    private TextView tvToggleDescriptionDetail;
 
     private int productId = -1;
     private int currentQuantity = 1;
@@ -94,6 +103,15 @@ public class ProductDetailFragment extends Fragment {
         tvQuantity = view.findViewById(R.id.tvQuantity);
         btnIncreaseQty = view.findViewById(R.id.btnIncreaseQty);
         btnAddToCart = view.findViewById(R.id.btnAddToCart);
+        
+        // Phase 2 views
+        cardSupplier = view.findViewById(R.id.cardSupplier);
+        tvSupplierNameDetail = view.findViewById(R.id.tvSupplierNameDetail);
+        tvSupplierAddressDetail = view.findViewById(R.id.tvSupplierAddressDetail);
+        tvSupplierCertDetail = view.findViewById(R.id.tvSupplierCertDetail);
+        
+        tvDescriptionDetail = view.findViewById(R.id.tvDescriptionDetail);
+        tvToggleDescriptionDetail = view.findViewById(R.id.tvToggleDescriptionDetail);
         
         tvQuantity.setText(String.valueOf(currentQuantity));
     }
@@ -205,5 +223,37 @@ public class ProductDetailFragment extends Fragment {
                 tvProductDiscountPriceDetail.setText(originalPrice + "đ");
             }
         }
+
+        // ================= PHASE 2 BINDING =================
+
+        // 1. Nhà cung cấp
+        if (product.getSupplier() != null) {
+            cardSupplier.setVisibility(View.VISIBLE);
+            tvSupplierNameDetail.setText(product.getSupplier().getName());
+            tvSupplierAddressDetail.setText(product.getSupplier().getAddress());
+            tvSupplierCertDetail.setText(product.getSupplier().getCertificate());
+        } else {
+            cardSupplier.setVisibility(View.GONE);
+        }
+
+        // 2. Mô tả sản phẩm
+        if (product.getDescription() != null && !product.getDescription().isEmpty()) {
+            tvDescriptionDetail.setText(product.getDescription());
+        } else {
+            tvDescriptionDetail.setText("Chưa có mô tả cho sản phẩm này.");
+        }
+
+        // 3. Logic Xem thêm / Thu gọn
+        final boolean[] isExpanded = {false};
+        tvToggleDescriptionDetail.setOnClickListener(v -> {
+            if (isExpanded[0]) {
+                tvDescriptionDetail.setMaxLines(3);
+                tvToggleDescriptionDetail.setText("Xem thêm >");
+            } else {
+                tvDescriptionDetail.setMaxLines(Integer.MAX_VALUE);
+                tvToggleDescriptionDetail.setText("Thu gọn ^");
+            }
+            isExpanded[0] = !isExpanded[0];
+        });
     }
 }
