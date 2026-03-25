@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -16,6 +17,7 @@ import com.pixibeestudio.greenly.data.model.Product;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import android.os.Bundle;
 
 /**
  * Adapter hiển thị sản phẩm dạng cuộn ngang.
@@ -158,6 +160,13 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
                     .error(R.drawable.img_placeholder)
                     .centerCrop()
                     .into(productHolder.ivProductImage);
+
+            // Sự kiện click vào toàn bộ item sản phẩm
+            productHolder.itemView.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putInt("productId", product.getId());
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_productDetailFragment, bundle);
+            });
         }
     }
 

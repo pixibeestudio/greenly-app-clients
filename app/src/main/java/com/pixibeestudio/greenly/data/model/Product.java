@@ -2,6 +2,8 @@ package com.pixibeestudio.greenly.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Product {
     private int id;
     private String name;
@@ -16,6 +18,9 @@ public class Product {
     
     @SerializedName("stock_quantity")
     private int stockQuantity;
+
+    @SerializedName("all_images")
+    private List<String> allImages;
 
     public Product(int id, String name, String image, double price, double discountPrice, String unit, String origin, int stockQuantity) {
         this.id = id;
@@ -90,5 +95,13 @@ public class Product {
 
     public void setStockQuantity(int stockQuantity) {
         this.stockQuantity = stockQuantity;
+    }
+
+    public List<String> getAllImages() {
+        return allImages;
+    }
+
+    public void setAllImages(List<String> allImages) {
+        this.allImages = allImages;
     }
 }
