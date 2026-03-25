@@ -93,6 +93,9 @@ public class HomeFragment extends Fragment {
 
         // Ánh xạ các view
         initViews(view);
+        
+        // Khởi tạo LayoutManager và Adapter rỗng cho các danh sách để tránh reset vị trí cuộn
+        setupInitialLists();
 
         // Thiết lập header cross-fade và filter logic
         setupHeaderLogic();
@@ -103,9 +106,21 @@ public class HomeFragment extends Fragment {
         // Thiết lập từng phần giao diện
         setupBanner();
         setupPopularProducts();
-        setupDiscountProducts();
         setupTop100Products();
-        setupAllProducts();
+    }
+    
+    /**
+     * Khởi tạo khung layout cho các danh sách ngay từ đầu để giữ vị trí cuộn
+     */
+    private void setupInitialLists() {
+        rvCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        rvCategories.setAdapter(new CategoryAdapter(new ArrayList<>()));
+        
+        rvDiscountProducts.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(new ArrayList<>()));
+        
+        rvAllProducts.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        rvAllProducts.setAdapter(new ProductGridAdapter(new ArrayList<>()));
     }
 
     /**
@@ -114,23 +129,18 @@ public class HomeFragment extends Fragment {
     private void observeData() {
         homeViewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(), categories -> {
             if (categories != null && !categories.isEmpty()) {
-                rvCategories.setLayoutManager(
-                        new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
                 rvCategories.setAdapter(new CategoryAdapter(categories));
             }
         });
 
         homeViewModel.getProductsLiveData().observe(getViewLifecycleOwner(), products -> {
             if (products != null && !products.isEmpty()) {
-                rvAllProducts.setLayoutManager(new GridLayoutManager(requireContext(), 2));
                 rvAllProducts.setAdapter(new ProductGridAdapter(products));
             }
         });
 
         homeViewModel.getDiscountedProductsLiveData().observe(getViewLifecycleOwner(), discountedProducts -> {
             if (discountedProducts != null && !discountedProducts.isEmpty()) {
-                rvDiscountProducts.setLayoutManager(
-                        new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
                 rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(discountedProducts));
             }
         });

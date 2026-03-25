@@ -36,6 +36,7 @@ public class ProductDetailFragment extends Fragment {
     private ImageButton btnShare;
     private ImageButton btnCart;
     private ViewPager2 vpProductImages;
+    private TextView tvImageCounter;
     private TextView tvProductNameDetail;
     private TextView tvProductRatingDetail;
     private TextView tvProductOriginalPriceDetail;
@@ -81,6 +82,7 @@ public class ProductDetailFragment extends Fragment {
         btnCart = view.findViewById(R.id.btnCart);
         
         vpProductImages = view.findViewById(R.id.vpProductImages);
+        tvImageCounter = view.findViewById(R.id.tvImageCounter);
         tvProductNameDetail = view.findViewById(R.id.tvProductNameDetail);
         tvProductRatingDetail = view.findViewById(R.id.tvProductRatingDetail);
         tvProductOriginalPriceDetail = view.findViewById(R.id.tvProductOriginalPriceDetail);
@@ -144,6 +146,23 @@ public class ProductDetailFragment extends Fragment {
         }
         ProductImageSliderAdapter imageAdapter = new ProductImageSliderAdapter(images);
         vpProductImages.setAdapter(imageAdapter);
+        
+        // Cài đặt bộ đếm ảnh
+        if (images.size() > 1) {
+            tvImageCounter.setVisibility(View.VISIBLE);
+            tvImageCounter.setText("1/" + images.size());
+            
+            final int totalImages = images.size();
+            vpProductImages.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    tvImageCounter.setText((position + 1) + "/" + totalImages);
+                }
+            });
+        } else {
+            tvImageCounter.setVisibility(View.GONE);
+        }
         
         // Set tên và đơn vị
         tvProductNameDetail.setText(product.getName());
