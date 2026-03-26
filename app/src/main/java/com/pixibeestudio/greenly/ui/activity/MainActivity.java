@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                                              @NonNull NavDestination destination,
                                              Bundle arguments) {
                 // Ẩn bottom nav khi đang ở màn hình Splash hoặc Chi tiết sản phẩm
-                if (destination.getId() == R.id.splashFragment || destination.getId() == R.id.productDetailFragment || destination.getId() == R.id.welcomeFragment) {
+                if (destination.getId() == R.id.splashFragment || destination.getId() == R.id.productDetailFragment || destination.getId() == R.id.welcomeFragment || destination.getId() == R.id.loginFragment) {
                     bottomNavigationView.setVisibility(View.GONE);
                 } else {
                     bottomNavigationView.setVisibility(View.VISIBLE);
