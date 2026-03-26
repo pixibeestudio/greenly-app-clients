@@ -56,4 +56,39 @@ public class AuthRepository {
 
         return result;
     }
+
+    public MutableLiveData<Resource<JsonObject>> login(com.pixibeestudio.greenly.data.model.LoginRequest request) {
+        MutableLiveData<Resource<JsonObject>> result = new MutableLiveData<>();
+        result.setValue(Resource.loading());
+
+        apiService.loginUser(request).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.setValue(Resource.success(response.body()));
+                } else {
+                    // Xử lý lỗi từ API, đặc biệt là lỗi 422 Validation
+                    if (response.code() == 422 && response.errorBody() != null) {
+                        try {
+                            String errorString = response.errorBody().string();
+                            ErrorResponse errorResponse = new Gson().fromJson(errorString, ErrorResponse.class);
+                            result.setValue(Resource.error("Lỗi xác thực dữ liệu", errorResponse));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            result.setValue(Resource.error("Có lỗi xảy ra khi xử lý lỗi từ server.", null));
+                        }
+                    } else {
+                        result.setValue(Resource.error("Lỗi đăng nhập. Vui lòng kiểm tra lại thông tin.", null));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                result.setValue(Resource.error("Không thể kết nối đến máy chủ. Vui lòng kiểm tra mạng.", null));
+            }
+        });
+
+        return result;
+    }
 }

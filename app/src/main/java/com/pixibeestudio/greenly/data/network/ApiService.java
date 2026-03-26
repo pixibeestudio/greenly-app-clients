@@ -27,5 +27,8 @@ public interface ApiService {
 
     @POST("api/register")
     Call<JsonObject> registerUser(@Body RegisterRequest request);
+
+    @POST("api/login")
+    Call<JsonObject> loginUser(@Body com.pixibeestudio.greenly.data.model.LoginRequest request);
 }
 

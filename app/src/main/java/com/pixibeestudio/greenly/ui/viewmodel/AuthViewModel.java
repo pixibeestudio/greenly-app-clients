@@ -21,4 +21,9 @@ public class AuthViewModel extends ViewModel {
         RegisterRequest request = new RegisterRequest(fullname, email, password, passwordConfirmation);
         return authRepository.register(request);
     }
+
+    public LiveData<Resource<JsonObject>> login(String email, String password) {
+        com.pixibeestudio.greenly.data.model.LoginRequest request = new com.pixibeestudio.greenly.data.model.LoginRequest(email, password);
+        return authRepository.login(request);
+    }
 }

@@ -64,19 +64,34 @@
         app:layout_constraintBottom_toTopOf="@+id/llActionLogin"
         app:layout_constraintTop_toBottomOf="@+id/llBrandLogin">
 
+        <!-- Label Email -->
+        <TextView
+            android:id="@+id/tvLabelEmailLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="8dp"
+            android:text="EMAIL"
+            android:textColor="#2E5948"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <!-- Cụm nhập Email -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilEmailLogin"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             app:boxCornerRadiusBottomEnd="12dp"
             app:boxCornerRadiusBottomStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusTopStart="12dp"
             app:boxStrokeColor="#2E5948"
             app:hintEnabled="false"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/tvLabelEmailLogin">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtEmailLogin"
@@ -90,17 +105,31 @@
                 android:textColorHint="#9E9E9E" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Label Mật khẩu -->
+        <TextView
+            android:id="@+id/tvLabelPasswordLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:text="MẬT KHẨU"
+            android:textColor="#2E5948"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilEmailLogin" />
+
         <!-- Quên mật khẩu? -->
         <TextView
             android:id="@+id/tvForgotPasswordDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="Quên mật khẩu?"
             android:textColor="#FF5722"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tvLabelPasswordLogin"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tilEmailLogin" />
+            app:layout_constraintTop_toTopOf="@id/tvLabelPasswordLogin" />
 
         <!-- Cụm nhập Mật khẩu -->
         <com.google.android.material.textfield.TextInputLayout
@@ -115,7 +144,7 @@
             app:boxCornerRadiusTopStart="12dp"
             app:boxStrokeColor="#2E5948"
             app:hintEnabled="false"
-            app:layout_constraintTop_toBottomOf="@id/tvForgotPasswordDetail">
+            app:layout_constraintTop_toBottomOf="@id/tvLabelPasswordLogin">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtPasswordLogin"
