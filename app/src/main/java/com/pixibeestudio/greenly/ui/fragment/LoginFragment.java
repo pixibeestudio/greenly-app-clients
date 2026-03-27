@@ -17,11 +17,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pixibeestudio.greenly.R;
+import com.pixibeestudio.greenly.data.local.SessionManager;
 import com.pixibeestudio.greenly.data.model.ErrorResponse;
+import com.pixibeestudio.greenly.data.model.LoginResponse;
 import com.pixibeestudio.greenly.ui.viewmodel.AuthViewModel;
 
 import java.util.List;
@@ -40,6 +44,7 @@ public class LoginFragment extends Fragment {
 
     private boolean isPasswordVisible = false;
     private AuthViewModel authViewModel;
+    private SessionManager sessionManager;
 
     @Nullable
     @Override
@@ -51,8 +56,9 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Khởi tạo ViewModel
+        // Khởi tạo ViewModel và SessionManager
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        sessionManager = new SessionManager(requireContext());
 
         // Ánh xạ View
         tilEmailLogin = view.findViewById(R.id.tilEmailLogin);
@@ -102,11 +108,37 @@ public class LoginFragment extends Fragment {
                         break;
                     case SUCCESS:
                         btnLoginMain.setEnabled(true);
-                        Toast.makeText(requireContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                        
-                        // Điều hướng về Home và xóa backstack để không back lại trang đăng nhập được nữa
-                        NavController navController = Navigation.findNavController(view);
-                        navController.navigate(R.id.action_login_to_home);
+                        if (resource.data != null) {
+                            try {
+                                // Parse JsonObject thành LoginResponse
+                                Gson gson = new Gson();
+                                LoginResponse loginResponse = gson.fromJson(resource.data, LoginResponse.class);
+
+                                if (loginResponse != null && loginResponse.isSuccess()) {
+                                    // Lưu thông tin vào SessionManager
+                                    sessionManager.setLoginState(true);
+                                    sessionManager.saveAuthToken(loginResponse.getToken());
+                                    
+                                    if (loginResponse.getUser() != null) {
+                                        sessionManager.saveUser(
+                                            loginResponse.getUser().getFullname(), 
+                                            loginResponse.getUser().getAvatar()
+                                        );
+                                    }
+                                    
+                                    sessionManager.setGuestMode(false);
+
+                                    Toast.makeText(requireContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                                    
+                                    // Điều hướng về Home
+                                    NavController navController = Navigation.findNavController(view);
+                                    navController.navigate(R.id.action_login_to_home);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(requireContext(), "Lỗi xử lý dữ liệu đăng nhập", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                         break;
                     case ERROR:
                         btnLoginMain.setEnabled(true);

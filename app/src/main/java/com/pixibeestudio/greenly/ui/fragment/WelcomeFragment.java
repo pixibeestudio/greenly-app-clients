@@ -13,11 +13,13 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;
 import com.pixibeestudio.greenly.R;
+import com.pixibeestudio.greenly.data.local.SessionManager;
 
 public class WelcomeFragment extends Fragment {
 
     private MaterialButton btnWelcomeLogin;
     private MaterialButton btnWelcomeGuest;
+    private SessionManager sessionManager;
 
     @Nullable
     @Override
@@ -28,6 +30,8 @@ public class WelcomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        sessionManager = new SessionManager(requireContext());
 
         initViews(view);
         setupListeners();
@@ -45,6 +49,7 @@ public class WelcomeFragment extends Fragment {
         });
 
         btnWelcomeGuest.setOnClickListener(v -> {
+            sessionManager.setGuestMode(true);
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.action_welcomeFragment_to_homeFragment);
         });

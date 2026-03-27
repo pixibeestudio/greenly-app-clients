@@ -14,11 +14,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.pixibeestudio.greenly.R;
+import com.pixibeestudio.greenly.data.local.SessionManager;
 
 public class SplashFragment extends Fragment {
 
     // Thời gian hiển thị màn hình Splash (2 giây)
     private static final int SPLASH_DELAY_MS = 2000;
+    private SessionManager sessionManager;
 
     @Nullable
     @Override
@@ -31,12 +33,21 @@ public class SplashFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Sau 2 giây, chuyển sang màn hình Welcome
+        sessionManager = new SessionManager(requireContext());
+
+        // Sau 2 giây, chuyển sang màn hình phù hợp
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             // Kiểm tra Fragment còn gắn với NavController không trước khi điều hướng
             if (isAdded()) {
                 NavController navController = Navigation.findNavController(view);
-                navController.navigate(R.id.action_splashFragment_to_welcomeFragment);
+                
+                if (sessionManager.isLoggedIn() || sessionManager.isGuestMode()) {
+                    // Đã đăng nhập hoặc đã từng chọn Guest -> Vào thẳng Home
+                    navController.navigate(R.id.action_splashFragment_to_homeFragment);
+                } else {
+                    // Lần đầu tải app -> Vào Welcome
+                    navController.navigate(R.id.action_splashFragment_to_welcomeFragment);
+                }
             }
         }, SPLASH_DELAY_MS);
     }

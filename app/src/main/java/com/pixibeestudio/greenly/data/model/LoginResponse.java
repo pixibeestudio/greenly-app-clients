@@ -58,6 +58,9 @@ public class LoginResponse {
         @SerializedName("email")
         private String email;
 
+        @SerializedName("avatar")
+        private String avatar;
+
         public int getId() {
             return id;
         }
@@ -80,6 +83,14 @@ public class LoginResponse {
 
         public void setEmail(String email) {
             this.email = email;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
         }
     }
 }
