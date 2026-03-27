@@ -30,17 +30,22 @@ Executing tasks: [:app:assembleDebug] in project D:\finalyear-project\greenly-ap
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
 > Task :app:generateDebugRFile
-> Task :app:compileDebugKotlin NO-SOURCE
 > Task :app:mergeDebugResources
+> Task :app:compileDebugKotlin NO-SOURCE
 
 > Task :app:compileDebugJavaWithJavac
 Note: [1] Wrote GeneratedAppGlideModule with: []
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\data\repository\AuthRepository.java:9: error: cannot find symbol
-import com.pixibeestudio.greenly.data.network.ApiClient;
-                                             ^
-  symbol:   class ApiClient
-  location: package com.pixibeestudio.greenly.data.network
-1 error
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\HomeFragment.java:231: error: cannot find symbol
+        tvGreeting = view.findViewById(R.id.tv_greeting);
+                                           ^
+  symbol:   variable tv_greeting
+  location: class id
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\HomeFragment.java:233: error: cannot find symbol
+        ivAvatar = view.findViewById(R.id.iv_avatar);
+                                         ^
+  symbol:   variable iv_avatar
+  location: class id
+2 errors
 
 > Task :app:compileDebugJavaWithJavac FAILED
 > Task :app:processDebugResources
@@ -52,13 +57,18 @@ FAILURE: Build failed with an exception.
 * What went wrong:
 Execution failed for task ':app:compileDebugJavaWithJavac'.
 > Compilation failed; see the compiler output below.
-  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\data\repository\AuthRepository.java:9: error: cannot find symbol
-  import com.pixibeestudio.greenly.data.network.ApiClient;
-                                               ^
-    symbol:   class ApiClient
-    location: package com.pixibeestudio.greenly.data.network
+  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\HomeFragment.java:231: error: cannot find symbol
+          tvGreeting = view.findViewById(R.id.tv_greeting);
+                                             ^
+    symbol:   variable tv_greeting
+    location: class id
+  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\HomeFragment.java:233: error: cannot find symbol
+          ivAvatar = view.findViewById(R.id.iv_avatar);
+                                           ^
+    symbol:   variable iv_avatar
+    location: class id
   Note: [1] Wrote GeneratedAppGlideModule with: []
-  1 error
+  2 errors
 
 * Try:
 > Check your code and dependencies to fix the compilation error(s)
@@ -101,12 +111,17 @@ org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:com
 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
 Caused by: org.gradle.api.internal.tasks.compile.CompilationFailedException: Compilation failed; see the compiler output below.
 Note: [1] Wrote GeneratedAppGlideModule with: []
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\data\repository\AuthRepository.java:9: error: cannot find symbol
-import com.pixibeestudio.greenly.data.network.ApiClient;
-                                             ^
-  symbol:   class ApiClient
-  location: package com.pixibeestudio.greenly.data.network
-1 error
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\HomeFragment.java:231: error: cannot find symbol
+        tvGreeting = view.findViewById(R.id.tv_greeting);
+                                           ^
+  symbol:   variable tv_greeting
+  location: class id
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\HomeFragment.java:233: error: cannot find symbol
+        ivAvatar = view.findViewById(R.id.iv_avatar);
+                                         ^
+  symbol:   variable iv_avatar
+  location: class id
+2 errors
 	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:89)
 	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:50)
 	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.delegateAndHandleErrors(NormalizingJavaCompiler.java:98)
@@ -241,5 +256,5 @@ import com.pixibeestudio.greenly.data.network.ApiClient;
 	... 30 more
 
 
-BUILD FAILED in 12s
+BUILD FAILED in 21s
 27 actionable tasks: 9 executed, 18 up-to-date

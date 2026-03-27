@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ImageButton;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,9 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import com.pixibeestudio.greenly.R;
+import com.pixibeestudio.greenly.data.local.SessionManager;
 import com.pixibeestudio.greenly.data.model.Product;
 import com.pixibeestudio.greenly.ui.adapter.BannerAdapter;
 import com.pixibeestudio.greenly.ui.adapter.CategoryAdapter;
@@ -34,6 +38,7 @@ import com.pixibeestudio.greenly.ui.viewmodel.HomeViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -52,6 +57,12 @@ public class HomeFragment extends Fragment {
     private RecyclerView rvDiscountProducts;
     private RecyclerView rvTop100Products;
     private RecyclerView rvAllProducts;
+
+    // Profile & Greeting
+    private TextView tvGreeting;
+    private TextView tvUserName;
+    private ImageView ivAvatar;
+    private SessionManager sessionManager;
 
     // Header logic
     private AppBarLayout appBarLayout;
@@ -88,11 +99,15 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Khởi tạo ViewModel
+        // Khởi tạo ViewModel và SessionManager
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        sessionManager = new SessionManager(requireContext());
 
         // Ánh xạ các view
         initViews(view);
+        
+        // Cập nhật giao diện theo trạng thái đăng nhập
+        updateUIBasedOnAuth();
         
         // Khởi tạo LayoutManager và Adapter rỗng cho các danh sách để tránh reset vị trí cuộn
         setupInitialLists();
@@ -109,6 +124,60 @@ public class HomeFragment extends Fragment {
         setupTop100Products();
     }
     
+    /**
+     * Cập nhật lời chào và thông tin người dùng dựa trên SessionManager
+     */
+    private void updateUIBasedOnAuth() {
+        // Gắn lời chào theo thời gian thực
+        if (tvGreeting != null) {
+            tvGreeting.setText(getTimeBasedGreeting());
+        }
+
+        if (sessionManager.isLoggedIn()) {
+            // User đã đăng nhập
+            if (tvUserName != null) {
+                tvUserName.setText(sessionManager.getUserName());
+            }
+            
+            // Load avatar bằng Glide
+            if (ivAvatar != null) {
+                String avatarUrl = sessionManager.getUserAvatar();
+                Glide.with(this)
+                     .load(avatarUrl)
+                     .placeholder(R.drawable.ic_default_avatar_placeholder)
+                     .error(R.drawable.ic_default_avatar_placeholder)
+                     .centerCrop()
+                     .into(ivAvatar);
+            }
+        } else if (sessionManager.isGuestMode()) {
+            // Luồng Guest
+            if (tvUserName != null) {
+                tvUserName.setText("Khách");
+            }
+            if (ivAvatar != null) {
+                ivAvatar.setImageResource(R.drawable.ic_default_avatar_placeholder);
+            }
+        }
+    }
+
+    /**
+     * Trả về lời chào dựa trên giờ trong ngày
+     */
+    private String getTimeBasedGreeting() {
+        Calendar c = Calendar.getInstance();
+        int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
+
+        if (timeOfDay >= 0 && timeOfDay < 12) {
+            return "Chào buổi sáng,";
+        } else if (timeOfDay >= 12 && timeOfDay < 15) {
+            return "Chào buổi trưa,";
+        } else if (timeOfDay >= 15 && timeOfDay < 18) {
+            return "Chào buổi chiều,";
+        } else {
+            return "Chào buổi tối,";
+        }
+    }
+
     /**
      * Khởi tạo khung layout cho các danh sách ngay từ đầu để giữ vị trí cuộn
      */
@@ -157,6 +226,11 @@ public class HomeFragment extends Fragment {
         rvDiscountProducts = view.findViewById(R.id.rv_discount_products);
         rvTop100Products = view.findViewById(R.id.rv_top100_products);
         rvAllProducts = view.findViewById(R.id.rv_all_products);
+        
+        // Profile Views
+        tvGreeting = view.findViewById(R.id.tv_greeting);
+        tvUserName = view.findViewById(R.id.tv_user_name);
+        ivAvatar = view.findViewById(R.id.img_avatar);
 
         // Header Views
         appBarLayout = view.findViewById(R.id.app_bar_layout);
