@@ -114,15 +114,17 @@ public class LoginFragment extends Fragment {
                                 Gson gson = new Gson();
                                 LoginResponse loginResponse = gson.fromJson(resource.data, LoginResponse.class);
 
-                                if (loginResponse != null && loginResponse.isSuccess()) {
+                                if (loginResponse != null && loginResponse.isSuccess() && loginResponse.getData() != null) {
                                     // Lưu thông tin vào SessionManager
                                     sessionManager.setLoginState(true);
-                                    sessionManager.saveAuthToken(loginResponse.getToken());
                                     
-                                    if (loginResponse.getUser() != null) {
+                                    LoginResponse.Data data = loginResponse.getData();
+                                    sessionManager.saveAuthToken(data.getToken());
+                                    
+                                    if (data.getUser() != null) {
                                         sessionManager.saveUser(
-                                            loginResponse.getUser().getFullname(), 
-                                            loginResponse.getUser().getAvatar()
+                                            data.getUser().getFullname(), 
+                                            data.getUser().getAvatar()
                                         );
                                     }
                                     

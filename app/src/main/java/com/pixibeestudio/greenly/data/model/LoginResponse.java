@@ -9,11 +9,8 @@ public class LoginResponse {
     @SerializedName("message")
     private String message;
 
-    @SerializedName("token")
-    private String token;
-
-    @SerializedName("user")
-    private User user;
+    @SerializedName("data")
+    private Data data;
 
     public boolean isSuccess() {
         return success;
@@ -31,66 +28,35 @@ public class LoginResponse {
         this.message = message;
     }
 
-    public String getToken() {
-        return token;
+    public Data getData() {
+        return data;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setData(Data data) {
+        this.data = data;
     }
 
-    public User getUser() {
-        return user;
-    }
+    public static class Data {
+        @SerializedName("user")
+        private User user;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+        @SerializedName("token")
+        private String token;
 
-    // Lớp User inner class để chứa thông tin cơ bản của user trả về
-    public static class User {
-        @SerializedName("id")
-        private int id;
-
-        @SerializedName("fullname")
-        private String fullname;
-
-        @SerializedName("email")
-        private String email;
-
-        @SerializedName("avatar")
-        private String avatar;
-
-        public int getId() {
-            return id;
+        public User getUser() {
+            return user;
         }
 
-        public void setId(int id) {
-            this.id = id;
+        public void setUser(User user) {
+            this.user = user;
         }
 
-        public String getFullname() {
-            return fullname;
+        public String getToken() {
+            return token;
         }
 
-        public void setFullname(String fullname) {
-            this.fullname = fullname;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getAvatar() {
-            return avatar;
-        }
-
-        public void setAvatar(String avatar) {
-            this.avatar = avatar;
+        public void setToken(String token) {
+            this.token = token;
         }
     }
 }
