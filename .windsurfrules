@@ -25,3 +25,4 @@ You are acting as the AI coder, but the user will run and compile the app inside
 - Explain code concisely, focusing on the result.
 - Always run code or commands using PowerShell.
 - Always speak to me in Vietnamese.
+- Don't commit and push code directly, let me do it.

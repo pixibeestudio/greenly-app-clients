@@ -112,6 +112,14 @@
             android:name="productId"
             app:argType="integer"
             android:defaultValue="-1" />
+            
+        <action
+            android:id="@+id/action_productDetailFragment_to_cartFragment"
+            app:destination="@id/cartFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
@@ -124,7 +132,12 @@
         android:id="@+id/cartFragment"
         android:name="com.pixibeestudio.greenly.ui.fragment.CartFragment"
         android:label="Giỏ hàng"
-        tools:layout="@layout/fragment_cart" />
+        tools:layout="@layout/fragment_cart">
+        <argument
+            android:name="isFromDetail"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
 
     <fragment
         android:id="@+id/profileFragment"
