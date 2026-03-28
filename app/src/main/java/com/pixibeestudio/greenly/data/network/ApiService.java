@@ -1,6 +1,8 @@
 package com.pixibeestudio.greenly.data.network;
 
 import com.google.gson.JsonObject;
+import com.pixibeestudio.greenly.data.model.CartRequest;
+import com.pixibeestudio.greenly.data.model.CartResponse;
 import com.pixibeestudio.greenly.data.model.CategoryResponse;
 import com.pixibeestudio.greenly.data.model.ProductDetailResponse;
 import com.pixibeestudio.greenly.data.model.ProductResponse;
@@ -8,8 +10,10 @@ import com.pixibeestudio.greenly.data.model.RegisterRequest;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ApiService {
@@ -30,5 +34,21 @@ public interface ApiService {
 
     @POST("api/login")
     Call<JsonObject> loginUser(@Body com.pixibeestudio.greenly.data.model.LoginRequest request);
+
+    // --- CART API ---
+    @GET("api/carts")
+    Call<CartResponse> getCarts();
+
+    @POST("api/carts")
+    Call<JsonObject> addToCart(@Body CartRequest req);
+
+    @PUT("api/carts/{id}")
+    Call<JsonObject> updateCart(@Path("id") int id, @Body CartRequest req);
+
+    @DELETE("api/carts/{id}")
+    Call<JsonObject> deleteCartItem(@Path("id") int id);
+
+    @DELETE("api/carts/clear")
+    Call<JsonObject> clearCart();
 }
 
