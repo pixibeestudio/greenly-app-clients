@@ -124,7 +124,7 @@ public class ProfileFragment extends Fragment {
             // Điều hướng về WelcomeFragment và xóa backstack
             NavController navController = Navigation.findNavController(view);
             NavOptions navOptions = new NavOptions.Builder()
-                    .setPopUpTo(R.id.mobile_navigation, true)
+                    .setPopUpTo(R.id.nav_main, true)
                     .build();
             navController.navigate(R.id.action_profileFragment_to_welcomeFragment, null, navOptions);
         });
