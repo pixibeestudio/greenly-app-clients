@@ -36,6 +36,8 @@ public class CartFragment extends Fragment {
     private SessionManager sessionManager;
     private CartViewModel cartViewModel;
     private CartAdapter cartAdapter;
+    
+    private double currentSubtotal = 0;
 
     // Views
     private ImageButton btnBackCart, btnClearCart;
@@ -150,7 +152,9 @@ public class CartFragment extends Fragment {
         });
 
         btnCheckoutCart.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_cartFragment_to_checkoutFragment);
+            Bundle bundle = new Bundle();
+            bundle.putDouble("subtotal", currentSubtotal);
+            Navigation.findNavController(v).navigate(R.id.action_cartFragment_to_checkoutFragment, bundle);
         });
     }
 
@@ -174,6 +178,7 @@ public class CartFragment extends Fragment {
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("vi-VN"));
         
         cartViewModel.getSubtotalLiveData().observe(getViewLifecycleOwner(), subtotal -> {
+            currentSubtotal = subtotal;
             tvSubtotalCart.setText(format.format(subtotal));
         });
 

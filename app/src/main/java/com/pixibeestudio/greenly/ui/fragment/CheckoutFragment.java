@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.pixibeestudio.greenly.R;
+import com.pixibeestudio.greenly.data.local.SessionManager;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -26,6 +27,8 @@ public class CheckoutFragment extends Fragment {
 
     private ImageButton btnBackCheckout;
     private TextView btnEditAddress;
+    private TextView tvCheckoutNamePhone;
+    private TextView tvCheckoutAddress;
     private RadioGroup rgShippingMethod;
     private RadioGroup rgPaymentMethod;
     private TextInputEditText etCheckoutNote;
@@ -34,9 +37,10 @@ public class CheckoutFragment extends Fragment {
     private TextView tvCheckoutShipping;
     private TextView tvCheckoutGrandTotal;
     private MaterialButton btnPlaceOrder;
+    
+    private SessionManager sessionManager;
 
-    // Mock data
-    private double subtotal = 100000;
+    private double subtotal = 0;
     private double shippingFee = 20000;
 
     @Nullable
@@ -49,14 +53,29 @@ public class CheckoutFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         
+        sessionManager = new SessionManager(requireContext());
+        
+        // Lấy subtotal từ arguments
+        if (getArguments() != null) {
+            subtotal = getArguments().getDouble("subtotal", 0);
+        }
+        
         initViews(view);
         setupListeners();
         updateTotals();
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadShippingInfo();
     }
 
     private void initViews(View view) {
         btnBackCheckout = view.findViewById(R.id.btnBackCheckout);
         btnEditAddress = view.findViewById(R.id.btnEditAddress);
+        tvCheckoutNamePhone = view.findViewById(R.id.tvCheckoutNamePhone);
+        tvCheckoutAddress = view.findViewById(R.id.tvCheckoutAddress);
         rgShippingMethod = view.findViewById(R.id.rgShippingMethod);
         rgPaymentMethod = view.findViewById(R.id.rgPaymentMethod);
         etCheckoutNote = view.findViewById(R.id.etCheckoutNote);
@@ -65,6 +84,21 @@ public class CheckoutFragment extends Fragment {
         tvCheckoutShipping = view.findViewById(R.id.tvCheckoutShipping);
         tvCheckoutGrandTotal = view.findViewById(R.id.tvCheckoutGrandTotal);
         btnPlaceOrder = view.findViewById(R.id.btnPlaceOrder);
+    }
+
+    private void loadShippingInfo() {
+        String phone = sessionManager.getShippingPhone();
+        String address = sessionManager.getShippingAddress();
+        String userName = sessionManager.getUserName();
+        
+        if (address != null && !address.isEmpty() && phone != null && !phone.isEmpty()) {
+            String nameToDisplay = (userName != null && !userName.isEmpty()) ? userName : "Người nhận";
+            tvCheckoutNamePhone.setText(nameToDisplay + " - " + phone);
+            tvCheckoutAddress.setText(address);
+        } else {
+            tvCheckoutNamePhone.setText("Người nhận: Chưa có");
+            tvCheckoutAddress.setText("Vui lòng cập nhật địa chỉ giao hàng");
+        }
     }
 
     private void setupListeners() {

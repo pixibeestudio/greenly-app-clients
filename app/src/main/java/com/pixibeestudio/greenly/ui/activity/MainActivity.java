@@ -30,15 +30,16 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
 
         ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            // Lấy insets của cả system bars (status bar, nav bar) và ime (bàn phím)
+            Insets insetsAll = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
             
-            // Chỉ padding top cho main view (để tránh status bar)
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+            // Áp dụng padding cho toàn bộ main view để không bị bàn phím hay thanh điều hướng che
+            v.setPadding(insetsAll.left, insetsAll.top, insetsAll.right, insetsAll.bottom);
             
-            // Padding bottom cho BottomNavigationView (để tránh system navigation bar)
-            bottomNavigationView.setPadding(0, 0, 0, systemBars.bottom);
+            // Reset padding của bottomNavigationView vì mainView đã xử lý rồi
+            bottomNavigationView.setPadding(0, 0, 0, 0);
             
-            return insets;
+            return WindowInsetsCompat.CONSUMED;
         });
 
         // Lấy NavController từ NavHostFragment
@@ -55,8 +56,12 @@ public class MainActivity extends AppCompatActivity {
             public void onDestinationChanged(@NonNull NavController controller,
                                              @NonNull NavDestination destination,
                                              Bundle arguments) {
-                // Ẩn bottom nav khi đang ở màn hình Splash hoặc Chi tiết sản phẩm hoặc Welcome, Login, Register
-                if (destination.getId() == R.id.splashFragment || destination.getId() == R.id.productDetailFragment || destination.getId() == R.id.welcomeFragment || destination.getId() == R.id.loginFragment || destination.getId() == R.id.registerFragment) {
+                int id = destination.getId();
+                // Ẩn bottom nav khi đang ở các màn hình không cần thiết
+                if (id == R.id.splashFragment || id == R.id.productDetailFragment || 
+                    id == R.id.welcomeFragment || id == R.id.loginFragment || 
+                    id == R.id.registerFragment || id == R.id.checkoutFragment || 
+                    id == R.id.addAddressFragment) {
                     bottomNavigationView.setVisibility(View.GONE);
                 } else {
                     bottomNavigationView.setVisibility(View.VISIBLE);
