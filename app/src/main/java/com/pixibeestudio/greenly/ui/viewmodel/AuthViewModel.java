@@ -1,20 +1,23 @@
 package com.pixibeestudio.greenly.ui.viewmodel;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.google.gson.JsonObject;
 import com.pixibeestudio.greenly.data.model.RegisterRequest;
 import com.pixibeestudio.greenly.data.repository.AuthRepository;
 import com.pixibeestudio.greenly.utils.Resource;
 
-public class AuthViewModel extends ViewModel {
+public class AuthViewModel extends AndroidViewModel {
 
     private final AuthRepository authRepository;
 
-    public AuthViewModel() {
-        authRepository = new AuthRepository();
+    public AuthViewModel(@NonNull Application application) {
+        super(application);
+        authRepository = new AuthRepository(application.getApplicationContext());
     }
 
     public LiveData<Resource<JsonObject>> register(String fullname, String email, String password, String passwordConfirmation) {

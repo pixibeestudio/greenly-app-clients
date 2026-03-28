@@ -1,5 +1,6 @@
 package com.pixibeestudio.greenly.data.repository;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -19,8 +20,8 @@ public class CategoryRepository {
     private static final String TAG = "CategoryRepository";
     private ApiService apiService;
 
-    public CategoryRepository() {
-        apiService = RetrofitClient.getApiService();
+    public CategoryRepository(Context context) {
+        apiService = RetrofitClient.getApiService(context);
     }
 
     public MutableLiveData<List<Category>> getCategories() {

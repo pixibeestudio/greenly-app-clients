@@ -1,16 +1,20 @@
 package com.pixibeestudio.greenly.ui.viewmodel;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.pixibeestudio.greenly.data.model.Product;
 import com.pixibeestudio.greenly.data.repository.ProductRepository;
 
-public class ProductDetailViewModel extends ViewModel {
+public class ProductDetailViewModel extends AndroidViewModel {
     private final ProductRepository productRepository;
 
-    public ProductDetailViewModel() {
-        productRepository = new ProductRepository();
+    public ProductDetailViewModel(@NonNull Application application) {
+        super(application);
+        productRepository = new ProductRepository(application.getApplicationContext());
     }
 
     public LiveData<Product> getProductDetail(int id) {

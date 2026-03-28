@@ -1,5 +1,6 @@
 package com.pixibeestudio.greenly.data.repository;
 
+import android.content.Context;
 import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import com.pixibeestudio.greenly.data.model.Product;
@@ -13,11 +14,16 @@ import retrofit2.Response;
 
 public class ProductRepository {
     private static final String TAG = "ProductRepository";
+    private Context context;
+
+    public ProductRepository(Context context) {
+        this.context = context;
+    }
 
     public MutableLiveData<List<Product>> getProducts() {
         MutableLiveData<List<Product>> data = new MutableLiveData<>();
 
-        RetrofitClient.getApiService().getProducts().enqueue(new Callback<ProductResponse>() {
+        RetrofitClient.getApiService(context).getProducts().enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -46,7 +52,7 @@ public class ProductRepository {
     public MutableLiveData<List<Product>> getDiscountedProducts() {
         MutableLiveData<List<Product>> data = new MutableLiveData<>();
 
-        RetrofitClient.getApiService().getDiscountedProducts().enqueue(new Callback<ProductResponse>() {
+        RetrofitClient.getApiService(context).getDiscountedProducts().enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -75,7 +81,7 @@ public class ProductRepository {
     public MutableLiveData<Product> getProductDetail(int id) {
         MutableLiveData<Product> data = new MutableLiveData<>();
 
-        RetrofitClient.getApiService().getProductDetail(id).enqueue(new Callback<ProductDetailResponse>() {
+        RetrofitClient.getApiService(context).getProductDetail(id).enqueue(new Callback<ProductDetailResponse>() {
             @Override
             public void onResponse(Call<ProductDetailResponse> call, Response<ProductDetailResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {

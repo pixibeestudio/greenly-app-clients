@@ -1,7 +1,10 @@
 package com.pixibeestudio.greenly.ui.viewmodel;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.pixibeestudio.greenly.data.model.Category;
 import com.pixibeestudio.greenly.data.model.Product;
@@ -10,7 +13,7 @@ import com.pixibeestudio.greenly.data.repository.ProductRepository;
 
 import java.util.List;
 
-public class HomeViewModel extends ViewModel {
+public class HomeViewModel extends AndroidViewModel {
     private CategoryRepository categoryRepository;
     private ProductRepository productRepository;
     
@@ -18,9 +21,10 @@ public class HomeViewModel extends ViewModel {
     private LiveData<List<Product>> productsLiveData;
     private LiveData<List<Product>> discountedProductsLiveData;
 
-    public HomeViewModel() {
-        categoryRepository = new CategoryRepository();
-        productRepository = new ProductRepository();
+    public HomeViewModel(@NonNull Application application) {
+        super(application);
+        categoryRepository = new CategoryRepository(application.getApplicationContext());
+        productRepository = new ProductRepository(application.getApplicationContext());
     }
 
     public LiveData<List<Category>> getCategoriesLiveData() {

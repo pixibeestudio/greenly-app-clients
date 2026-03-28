@@ -1,5 +1,7 @@
 package com.pixibeestudio.greenly.data.repository;
 
+import android.content.Context;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
@@ -18,8 +20,8 @@ public class AuthRepository {
 
     private final ApiService apiService;
 
-    public AuthRepository() {
-        apiService = RetrofitClient.getApiService();
+    public AuthRepository(Context context) {
+        apiService = RetrofitClient.getApiService(context);
     }
 
     public MutableLiveData<Resource<JsonObject>> register(RegisterRequest request) {
