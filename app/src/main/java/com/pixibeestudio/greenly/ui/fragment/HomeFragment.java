@@ -12,11 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.ImageButton;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +37,7 @@ import com.pixibeestudio.greenly.ui.adapter.BannerAdapter;
 import com.pixibeestudio.greenly.ui.adapter.CategoryAdapter;
 import com.pixibeestudio.greenly.ui.adapter.ProductGridAdapter;
 import com.pixibeestudio.greenly.ui.adapter.ProductHorizontalAdapter;
+import com.pixibeestudio.greenly.ui.viewmodel.CartViewModel;
 import com.pixibeestudio.greenly.ui.viewmodel.HomeViewModel;
 
 import java.util.ArrayList;
@@ -45,7 +49,7 @@ import java.util.List;
  * Fragment Trang chủ - Hiển thị danh mục, banner, sản phẩm nổi bật,
  * sản phẩm giảm giá, Top 100 và tất cả sản phẩm dạng Grid.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements ProductGridAdapter.OnProductAddCartListener, ProductHorizontalAdapter.OnProductAddCartListener {
 
     // Thời gian tự động chuyển banner (3 giây)
     private static final int BANNER_AUTO_SLIDE_DELAY = 3000;
@@ -71,6 +75,7 @@ public class HomeFragment extends Fragment {
     private Button btnFilterBy, btnCategoryFilter, btnDiscountFilter, btnResetFilter;
 
     private HomeViewModel homeViewModel;
+    private CartViewModel cartViewModel;
 
     // Handler và Runnable cho auto-slide banner
     private final Handler bannerHandler = new Handler(Looper.getMainLooper());
@@ -101,6 +106,7 @@ public class HomeFragment extends Fragment {
 
         // Khởi tạo ViewModel và SessionManager
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
         sessionManager = new SessionManager(requireContext());
 
         // Ánh xạ các view
@@ -186,10 +192,10 @@ public class HomeFragment extends Fragment {
         rvCategories.setAdapter(new CategoryAdapter(new ArrayList<>()));
         
         rvDiscountProducts.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(new ArrayList<>()));
+        rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(new ArrayList<>(), this));
         
         rvAllProducts.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        rvAllProducts.setAdapter(new ProductGridAdapter(new ArrayList<>()));
+        rvAllProducts.setAdapter(new ProductGridAdapter(new ArrayList<>(), this));
     }
 
     /**
@@ -204,13 +210,13 @@ public class HomeFragment extends Fragment {
 
         homeViewModel.getProductsLiveData().observe(getViewLifecycleOwner(), products -> {
             if (products != null && !products.isEmpty()) {
-                rvAllProducts.setAdapter(new ProductGridAdapter(products));
+                rvAllProducts.setAdapter(new ProductGridAdapter(products, this));
             }
         });
 
         homeViewModel.getDiscountedProductsLiveData().observe(getViewLifecycleOwner(), discountedProducts -> {
             if (discountedProducts != null && !discountedProducts.isEmpty()) {
-                rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(discountedProducts));
+                rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(discountedProducts, this));
             }
         });
     }
@@ -352,7 +358,7 @@ public class HomeFragment extends Fragment {
         List<Product> products = generateMockProducts("Rau sạch", 10);
         rvPopularProducts.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvPopularProducts.setAdapter(new ProductHorizontalAdapter(products));
+        rvPopularProducts.setAdapter(new ProductHorizontalAdapter(products, this));
     }
 
     // ======================== ĐANG GIẢM GIÁ ========================
@@ -364,7 +370,7 @@ public class HomeFragment extends Fragment {
     private void setupDiscountProducts() {
         rvDiscountProducts.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(new ArrayList<>()));
+        rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(new ArrayList<>(), this));
     }
 
     // ======================== TOP 100 BÁN CHẠY ========================
@@ -377,7 +383,42 @@ public class HomeFragment extends Fragment {
         rvTop100Products.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         // Hiện tại ProductHorizontalAdapter đã đồng bộ giao diện Grid, bỏ qua showIcons logic cũ
-        rvTop100Products.setAdapter(new ProductHorizontalAdapter(products));
+        rvTop100Products.setAdapter(new ProductHorizontalAdapter(products, this));
+    }
+
+    // ======================== THÊM VÀO GIỎ HÀNG ========================
+
+    /**
+     * Xử lý sự kiện thêm sản phẩm vào giỏ hàng từ adapter.
+     * Nếu là Guest, hiện popup yêu cầu đăng nhập.
+     */
+    @Override
+    public void onAddCartClick(Product product) {
+        if (sessionManager.isGuestMode()) {
+            showGuestLoginPopup();
+        } else {
+            cartViewModel.addToCart(product.getId(), 1);
+            Toast.makeText(requireContext(), "Đang thêm vào giỏ...", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Hiển thị popup yêu cầu đăng nhập cho Guest.
+     */
+    private void showGuestLoginPopup() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Bạn chưa đăng nhập")
+                .setMessage("Vui lòng đăng nhập để mua hàng")
+                .setPositiveButton("Đăng nhập", (dialog, which) -> {
+                    // Chuyển về màn Login
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_loginFragment);
+                })
+                .setNegativeButton("Ở lại", (dialog, which) -> {
+                    // Đóng dialog
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
     }
 
     // ======================== TẤT CẢ SẢN PHẨM (GRID) ========================
@@ -388,7 +429,7 @@ public class HomeFragment extends Fragment {
      */
     private void setupAllProducts() {
         rvAllProducts.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        rvAllProducts.setAdapter(new ProductGridAdapter(new ArrayList<>()));
+        rvAllProducts.setAdapter(new ProductGridAdapter(new ArrayList<>(), this));
     }
 
     // ======================== TIỆN ÍCH ========================

@@ -30,9 +30,16 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final int TYPE_VIEW_MORE = 1;
 
     private final List<Product> products;
+    private final OnProductAddCartListener listener;
 
-    public ProductHorizontalAdapter(List<Product> products) {
+    // Interface cho sự kiện thêm vào giỏ hàng
+    public interface OnProductAddCartListener {
+        void onAddCartClick(Product product);
+    }
+
+    public ProductHorizontalAdapter(List<Product> products, OnProductAddCartListener listener) {
         this.products = products;
+        this.listener = listener;
     }
 
     @Override
@@ -166,6 +173,13 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
                 Bundle bundle = new Bundle();
                 bundle.putInt("productId", product.getId());
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_productDetailFragment, bundle);
+            });
+
+            // Sự kiện click nút thêm vào giỏ (riêng biệt, không bị đè bởi itemView)
+            productHolder.btnAddCart.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onAddCartClick(product);
+                }
             });
         }
     }
