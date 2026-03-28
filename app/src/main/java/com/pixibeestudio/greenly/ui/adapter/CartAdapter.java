@@ -74,8 +74,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             // Load ảnh
             String imageUrl = product.getImage();
             if (imageUrl != null && !imageUrl.isEmpty()) {
+                String finalUrl = imageUrl;
+                if (!imageUrl.startsWith("http")) {
+                    finalUrl = "http://192.168.2.200:8000" + imageUrl;
+                }
                 Glide.with(holder.itemView.getContext())
-                        .load("http://192.168.2.200:8000" + imageUrl)
+                        .load(finalUrl)
                         .placeholder(R.drawable.ic_launcher_background)
                         .into(holder.ivImage);
             } else {
