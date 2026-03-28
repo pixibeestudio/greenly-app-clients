@@ -150,7 +150,7 @@ public class CartFragment extends Fragment {
         });
 
         btnCheckoutCart.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Chức năng Thanh toán đang phát triển", Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(v).navigate(R.id.action_cartFragment_to_checkoutFragment);
         });
     }
 
