@@ -171,7 +171,7 @@ public class CartFragment extends Fragment {
     }
 
     private void observeViewModel() {
-        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("vi-VN"));
         
         cartViewModel.getSubtotalLiveData().observe(getViewLifecycleOwner(), subtotal -> {
             tvSubtotalCart.setText(format.format(subtotal));

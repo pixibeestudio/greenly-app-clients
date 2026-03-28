@@ -59,7 +59,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             holder.tvUnit.setText(product.getUnit());
 
             // Định dạng tiền tệ VNĐ
-            NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            NumberFormat format = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("vi-VN"));
 
             if (product.getDiscountPrice() > 0) {
                 holder.tvPrice.setText(format.format(product.getDiscountPrice()));
@@ -72,7 +72,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             }
 
             // Load ảnh
-            String imageUrl = product.getImageUrl();
+            String imageUrl = product.getImage();
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 Glide.with(holder.itemView.getContext())
                         .load("http://192.168.2.200:8000" + imageUrl)
