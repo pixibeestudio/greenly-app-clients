@@ -16,12 +16,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.button.MaterialButton;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.model.Product;
 import com.pixibeestudio.greenly.ui.adapter.ProductImageSliderAdapter;
+import com.pixibeestudio.greenly.data.local.SessionManager;
+import com.pixibeestudio.greenly.ui.viewmodel.CartViewModel;
 import com.pixibeestudio.greenly.ui.viewmodel.ProductDetailViewModel;
 
 import java.text.NumberFormat;
@@ -60,6 +63,9 @@ public class ProductDetailFragment extends Fragment {
     private int productId = -1;
     private int currentQuantity = 1;
     private ProductDetailViewModel viewModel;
+    private CartViewModel cartViewModel;
+    private SessionManager sessionManager;
+    private Product currentProduct;
 
     @Nullable
     @Override
@@ -81,6 +87,8 @@ public class ProductDetailFragment extends Fragment {
         setupListeners();
         
         viewModel = new ViewModelProvider(this).get(ProductDetailViewModel.class);
+        cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
+        sessionManager = new SessionManager(requireContext());
         loadProductDetail();
     }
 
@@ -135,17 +143,29 @@ public class ProductDetailFragment extends Fragment {
         });
         
         btnAddToCart.setOnClickListener(v -> {
-            if (getContext() != null) {
-                Toast.makeText(getContext(), "Đã thêm " + currentQuantity + " sản phẩm vào giỏ", Toast.LENGTH_SHORT).show();
+            if (sessionManager.isGuestMode()) {
+                showGuestLoginPopup();
+            } else {
+                if (currentProduct != null) {
+                    cartViewModel.addToCart(currentProduct.getId(), currentQuantity);
+                    Toast.makeText(getContext(), "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                }
             }
+        });
+
+        btnCart.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isFromDetail", true);
+            Navigation.findNavController(v).navigate(R.id.action_productDetailFragment_to_cartFragment, bundle);
         });
     }
     
     private void loadProductDetail() {
         if (productId == -1) return;
-        
+
         viewModel.getProductDetail(productId).observe(getViewLifecycleOwner(), product -> {
             if (product != null) {
+                currentProduct = product;
                 bindProductData(product);
             } else {
                 if (getContext() != null) {
@@ -255,5 +275,22 @@ public class ProductDetailFragment extends Fragment {
             }
             isExpanded[0] = !isExpanded[0];
         });
+    }
+
+    /**
+     * Hiển thị popup yêu cầu đăng nhập cho Guest.
+     */
+    private void showGuestLoginPopup() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Bạn chưa đăng nhập")
+                .setMessage("Vui lòng đăng nhập để mua hàng")
+                .setPositiveButton("Đăng nhập", (dialog, which) -> {
+                    Navigation.findNavController(requireView()).navigate(R.id.action_productDetailFragment_to_loginFragment);
+                })
+                .setNegativeButton("Ở lại", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
     }
 }
