@@ -54,8 +54,10 @@ public class AddAddressFragment extends Fragment {
         // Tự động điền địa chỉ cũ (nếu có)
         String savedAddress = sessionManager.getShippingAddress();
         if (savedAddress != null && !savedAddress.isEmpty() && savedAddress.contains(",")) {
+            // Chuỗi đang lưu có dạng: "Số nhà, Tên đường, Phường/Xã, Quận/Huyện, Tỉnh/Thành phố"
             String[] parts = savedAddress.split(",");
-            // Cấu trúc lưu: "Số nhà, Tên đường, Phường/Xã, Quận/Huyện, Tỉnh/Thành phố"
+            
+            // Đảm bảo mảng có đủ 5 phần tử trước khi gán để tránh lỗi ArrayIndexOutOfBoundsException
             if (parts.length >= 5) {
                 edtHouseNumberAddress.setText(parts[0].trim());
                 edtStreetAddress.setText(parts[1].trim());
