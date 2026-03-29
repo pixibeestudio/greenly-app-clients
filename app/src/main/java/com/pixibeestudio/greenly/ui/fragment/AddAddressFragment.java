@@ -99,8 +99,20 @@ public class AddAddressFragment extends Fragment {
         String street = edtStreetAddress.getText().toString().trim();
         String houseNumber = edtHouseNumberAddress.getText().toString().trim();
 
-        // Basic validation
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(province) || 
+        // Kiểm tra định dạng số điện thoại Việt Nam
+        // Regex: Bắt đầu bằng 0, theo sau là 3/5/7/8/9, và 8 số còn lại (tổng 10 số)
+        String phoneRegex = "^0[35789][0-9]{8}$";
+        
+        if (phone.isEmpty()) {
+            Toast.makeText(getContext(), "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!phone.matches(phoneRegex)) {
+            Toast.makeText(getContext(), "Số điện thoại không hợp lệ (VD: 0912345678)", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Basic validation các trường khác
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(province) || 
             TextUtils.isEmpty(district) || TextUtils.isEmpty(ward) || TextUtils.isEmpty(street) || 
             TextUtils.isEmpty(houseNumber)) {
             Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
