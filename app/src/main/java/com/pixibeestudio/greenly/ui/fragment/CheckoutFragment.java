@@ -16,8 +16,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;
+import android.app.ProgressDialog;
+import androidx.lifecycle.ViewModelProvider;
+import com.pixibeestudio.greenly.data.model.CheckoutRequest;
+import com.pixibeestudio.greenly.ui.viewmodel.CheckoutViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.pixibeestudio.greenly.R;
+
 import com.pixibeestudio.greenly.data.local.SessionManager;
 
 import java.text.NumberFormat;
@@ -39,6 +44,8 @@ public class CheckoutFragment extends Fragment {
     private MaterialButton btnPlaceOrder;
     
     private SessionManager sessionManager;
+    private CheckoutViewModel checkoutViewModel;
+    private ProgressDialog progressDialog;
 
     private double subtotal = 0;
     private double shippingFee = 20000;
@@ -54,6 +61,11 @@ public class CheckoutFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         
         sessionManager = new SessionManager(requireContext());
+        checkoutViewModel = new ViewModelProvider(this).get(CheckoutViewModel.class);
+        
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Đang xử lý...");
+        progressDialog.setCancelable(false);
         
         // Lấy subtotal từ arguments
         if (getArguments() != null) {
@@ -120,7 +132,54 @@ public class CheckoutFragment extends Fragment {
         });
 
         btnPlaceOrder.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Chức năng đặt hàng đang được phát triển", Toast.LENGTH_SHORT).show();
+            placeOrder();
+        });
+    }
+
+    private void placeOrder() {
+        String phone = sessionManager.getShippingPhone();
+        String address = sessionManager.getShippingAddress();
+        String userName = sessionManager.getUserName();
+        String name = (userName != null && !userName.isEmpty()) ? userName : "Khách hàng";
+        
+        if (address == null || address.isEmpty() || phone == null || phone.isEmpty()) {
+            Toast.makeText(getContext(), "Vui lòng thêm địa chỉ nhận hàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String notes = etCheckoutNote.getText() != null ? etCheckoutNote.getText().toString().trim() : "";
+        
+        String shippingMethod = rgShippingMethod.getCheckedRadioButtonId() == R.id.rbShippingExpress ? "Hoa_toc" : "Nhanh";
+        String paymentMethod = rgPaymentMethod.getCheckedRadioButtonId() == R.id.rbPaymentVietQR ? "VietQR" : "COD";
+
+        CheckoutRequest request = new CheckoutRequest(
+            name,
+            phone,
+            address,
+            shippingMethod,
+            paymentMethod,
+            (int) shippingFee,
+            notes
+        );
+
+        checkoutViewModel.placeOrder(request).observe(getViewLifecycleOwner(), resource -> {
+            switch (resource.status) {
+                case LOADING:
+                    progressDialog.show();
+                    break;
+                case SUCCESS:
+                    progressDialog.dismiss();
+                    sessionManager.clearShippingInfo();
+                    Toast.makeText(getContext(), "Đặt hàng thành công!", Toast.LENGTH_SHORT).show();
+                    
+                    // Xóa backstack và về thẳng trang chủ
+                    Navigation.findNavController(requireView()).popBackStack(R.id.homeFragment, false);
+                    break;
+                case ERROR:
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                    break;
+            }
         });
     }
 

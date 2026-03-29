@@ -79,6 +79,12 @@ public class SessionManager {
         return pref.getString(KEY_SHIPPING_ADDRESS, null);
     }
 
+    public void clearShippingInfo() {
+        editor.remove(KEY_SHIPPING_PHONE);
+        editor.remove(KEY_SHIPPING_ADDRESS);
+        editor.apply();
+    }
+
     public void clearSession() {
         editor.clear();
         editor.apply();

@@ -50,5 +50,9 @@ public interface ApiService {
 
     @DELETE("api/carts/clear")
     Call<JsonObject> clearCart();
+
+    // --- CHECKOUT API ---
+    @POST("api/checkout")
+    Call<JsonObject> placeOrder(@Body com.pixibeestudio.greenly.data.model.CheckoutRequest request);
 }
 
