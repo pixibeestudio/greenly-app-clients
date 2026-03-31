@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_view"
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,7 +21,7 @@
 
     <!-- Thanh điều hướng dưới đáy (Sử dụng Material 2 Style để thiết kế phẳng, tắt indicator viên nang của Material 3) -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_view"
+        android:id="@+id/nav_view"
         style="@style/Widget.MaterialComponents.BottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         app:menu="@menu/bottom_nav_menu" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/shipper_bottom_navigation_view"
+        android:id="@+id/nav_view_shipper"
         style="@style/Widget.MaterialComponents.BottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

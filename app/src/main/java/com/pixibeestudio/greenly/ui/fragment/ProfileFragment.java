@@ -121,12 +121,10 @@ public class ProfileFragment extends Fragment {
             sessionManager.clearSession();
             Toast.makeText(requireContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
 
-            // Điều hướng về WelcomeFragment và xóa backstack
-            NavController navController = Navigation.findNavController(view);
-            NavOptions navOptions = new NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_main, true)
-                    .build();
-            navController.navigate(R.id.action_profileFragment_to_welcomeFragment, null, navOptions);
+            // Khởi động lại MainActivity để tự động vào WelcomeFragment
+            android.content.Intent intent = new android.content.Intent(requireActivity(), com.pixibeestudio.greenly.ui.activity.MainActivity.class);
+            startActivity(intent);
+            requireActivity().finish();
         });
 
         // Nút Đăng nhập/Đăng ký cho Guest

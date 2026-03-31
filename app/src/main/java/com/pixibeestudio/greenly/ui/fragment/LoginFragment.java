@@ -1,5 +1,6 @@
 package com.pixibeestudio.greenly.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -23,6 +24,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pixibeestudio.greenly.R;
+import com.pixibeestudio.greenly.ui.activity.MainActivity;
 import com.pixibeestudio.greenly.data.local.SessionManager;
 import com.pixibeestudio.greenly.data.model.ErrorResponse;
 import com.pixibeestudio.greenly.data.model.LoginResponse;
@@ -124,7 +126,8 @@ public class LoginFragment extends Fragment {
                                     if (data.getUser() != null) {
                                         sessionManager.saveUser(
                                             data.getUser().getFullname(), 
-                                            data.getUser().getAvatar()
+                                            data.getUser().getAvatar(),
+                                            data.getUser().getRole()
                                         );
                                     }
                                     
@@ -132,9 +135,10 @@ public class LoginFragment extends Fragment {
 
                                     Toast.makeText(requireContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                                     
-                                    // Điều hướng về Home
-                                    NavController navController = Navigation.findNavController(view);
-                                    navController.navigate(R.id.action_login_to_home);
+                                    // Khởi động lại MainActivity để nạp đúng luồng (Customer hoặc Shipper)
+                                    Intent intent = new Intent(requireActivity(), MainActivity.class);
+                                    startActivity(intent);
+                                    requireActivity().finish();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

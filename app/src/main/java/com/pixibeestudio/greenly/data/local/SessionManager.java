@@ -12,6 +12,7 @@ public class SessionManager {
     private static final String KEY_AUTH_TOKEN = "authToken";
     private static final String KEY_USER_NAME = "userName";
     private static final String KEY_USER_AVATAR = "userAvatar";
+    private static final String KEY_USER_ROLE = "userRole";
     
     private static final String KEY_SHIPPING_PHONE = "shippingPhone";
     private static final String KEY_SHIPPING_ADDRESS = "shippingAddress";
@@ -51,9 +52,10 @@ public class SessionManager {
         return pref.getString(KEY_AUTH_TOKEN, null);
     }
 
-    public void saveUser(String name, String avatarUrl) {
+    public void saveUser(String name, String avatarUrl, String role) {
         editor.putString(KEY_USER_NAME, name);
         editor.putString(KEY_USER_AVATAR, avatarUrl);
+        editor.putString(KEY_USER_ROLE, role);
         editor.apply();
     }
 
@@ -63,6 +65,14 @@ public class SessionManager {
 
     public String getUserAvatar() {
         return pref.getString(KEY_USER_AVATAR, null);
+    }
+
+    public String getUserRole() {
+        return pref.getString(KEY_USER_ROLE, "customer"); // Mặc định là customer
+    }
+
+    public boolean isShipper() {
+        return "shipper".equals(getUserRole());
     }
 
     public void saveShippingInfo(String phone, String address) {

@@ -15,6 +15,9 @@ public class User {
     @SerializedName("avatar")
     private String avatar;
 
+    @SerializedName("role")
+    private String role;
+
     public int getId() {
         return id;
     }
@@ -45,5 +48,13 @@ public class User {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
