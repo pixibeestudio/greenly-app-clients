@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/shipperDashboardFragment"
+        android:icon="@drawable/ic_dashboard"
+        android:title="Trang chủ" />
+
+    <item
+        android:id="@+id/shipperOrdersFragment"
+        android:icon="@drawable/ic_orders"
+        android:title="Đơn hàng" />
+
+    <item
+        android:id="@+id/shipperIncomeFragment"
+        android:icon="@drawable/ic_wallet"
+        android:title="Ví / Thu nhập" />
+
+    <item
+        android:id="@+id/shipperProfileFragment"
+        android:icon="@drawable/ic_profile"
+        android:title="Cá nhân" />
+</menu>

@@ -13,4 +13,12 @@
     <color name="nav_item_active">#FFFFFF</color>
     <color name="nav_item_inactive">#BDBDBD</color>
     <color name="nav_ripple_transparent">#00000000</color>
+
+    <!-- Màu cho Shipper Dashboard -->
+    <color name="shipper_header_bg">#0D6846</color>
+    <color name="shipper_green_text">#06884D</color>
+    <color name="shipper_orange">#F17614</color>
+    <color name="shipper_gray_text">#8B8B8B</color>
+    <color name="shipper_light_gray_bg">#F1F2F4</color>
+    <color name="shipper_divider">#E0E0E0</color>
 </resources>

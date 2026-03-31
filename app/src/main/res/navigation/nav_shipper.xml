@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_shipper"
+    app:startDestination="@id/shipperDashboardFragment">
+
+    <fragment
+        android:id="@+id/shipperDashboardFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.shipper.ShipperDashboardFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_shipper_dashboard" />
+
+    <fragment
+        android:id="@+id/shipperOrdersFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.shipper.ShipperOrdersFragment"
+        android:label="Orders"
+        tools:layout="@layout/fragment_shipper_orders" />
+
+    <fragment
+        android:id="@+id/shipperIncomeFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.shipper.ShipperIncomeFragment"
+        android:label="Income"
+        tools:layout="@layout/fragment_shipper_income" />
+
+    <fragment
+        android:id="@+id/shipperProfileFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.shipper.ShipperProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_shipper_profile" />
+</navigation>

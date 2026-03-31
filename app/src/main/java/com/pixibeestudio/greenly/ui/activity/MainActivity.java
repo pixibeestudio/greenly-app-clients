@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         // Xử lý hiển thị tràn viền (Edge-to-Edge)
         View mainView = findViewById(R.id.main);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        BottomNavigationView shipperBottomNavigationView = findViewById(R.id.shipper_bottom_navigation_view);
 
         ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
             // Lấy insets của cả system bars (status bar, nav bar) và ime (bàn phím)
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             
             // Reset padding của bottomNavigationView vì mainView đã xử lý rồi
             bottomNavigationView.setPadding(0, 0, 0, 0);
+            shipperBottomNavigationView.setPadding(0, 0, 0, 0);
             
             return WindowInsetsCompat.CONSUMED;
         });
@@ -49,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Liên kết BottomNavigationView với NavController
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        
+        // TODO: Chuyển đổi hiển thị bottom nav dựa vào quyền user
+        // Tạm thời ẩn navigation shipper
+        shipperBottomNavigationView.setVisibility(View.GONE);
 
         // Logic ẩn/hiện BottomNavigationView theo màn hình hiện tại
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
@@ -63,10 +69,30 @@ public class MainActivity extends AppCompatActivity {
                     id == R.id.registerFragment || id == R.id.checkoutFragment || 
                     id == R.id.addAddressFragment) {
                     bottomNavigationView.setVisibility(View.GONE);
+                    shipperBottomNavigationView.setVisibility(View.GONE);
                 } else {
+                    // TODO: Hiển thị dựa theo quyền. 
+                    // Tạm thời hiển thị bottom nav của customer
                     bottomNavigationView.setVisibility(View.VISIBLE);
+                    shipperBottomNavigationView.setVisibility(View.GONE);
                 }
             }
         });
+        
+        // Gọi hàm setupShipperNavigation() để kiểm tra giao diện (bỏ comment để test)
+        // setupShipperNavigation(navHostFragment, shipperBottomNavigationView, bottomNavigationView);
+    }
+
+    private void setupShipperNavigation(NavHostFragment navHostFragment, BottomNavigationView shipperNav, BottomNavigationView customerNav) {
+        // Ẩn nav customer, hiện nav shipper
+        customerNav.setVisibility(View.GONE);
+        shipperNav.setVisibility(View.VISIBLE);
+
+        // Đổi NavGraph sang nav_shipper
+        NavController navController = navHostFragment.getNavController();
+        navController.setGraph(R.navigation.nav_shipper);
+
+        // Liên kết Shipper BottomNav với NavController
+        NavigationUI.setupWithNavController(shipperNav, navController);
     }
 }

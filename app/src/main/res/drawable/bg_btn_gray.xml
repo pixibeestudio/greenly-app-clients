@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Nút có nền bo góc màu xám -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/shipper_light_gray_bg" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+</layer-list>
