@@ -24,6 +24,15 @@ public class Order {
     @SerializedName("total_price")
     private double totalPrice;
 
+    @SerializedName("shipping_fee")
+    private double shippingFee;
+
+    @SerializedName("shipping_name")
+    private String shippingName;
+
+    @SerializedName("shipping_phone")
+    private String shippingPhone;
+
     @SerializedName("status")
     private String status;
 
@@ -81,6 +90,30 @@ public class Order {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public double getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(double shippingFee) {
+        this.shippingFee = shippingFee;
+    }
+
+    public String getShippingName() {
+        return shippingName;
+    }
+
+    public void setShippingName(String shippingName) {
+        this.shippingName = shippingName;
+    }
+
+    public String getShippingPhone() {
+        return shippingPhone;
+    }
+
+    public void setShippingPhone(String shippingPhone) {
+        this.shippingPhone = shippingPhone;
     }
 
     public String getStatus() {

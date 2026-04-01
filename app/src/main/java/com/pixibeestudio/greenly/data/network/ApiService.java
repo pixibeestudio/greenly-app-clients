@@ -59,11 +59,26 @@ public interface ApiService {
     @GET("api/shipper/orders/new")
     Call<com.pixibeestudio.greenly.data.model.OrderResponse> getShipperNewOrders();
 
+    @GET("api/shipper/orders/pickup")
+    Call<com.pixibeestudio.greenly.data.model.OrderResponse> getShipperPickupOrders();
+
+    @GET("api/shipper/orders/shipping")
+    Call<com.pixibeestudio.greenly.data.model.OrderResponse> getShipperShippingOrders();
+
     @POST("api/shipper/orders/{id}/accept")
     Call<JsonObject> acceptOrder(@Path("id") int orderId);
 
     @POST("api/shipper/orders/{id}/reject")
     Call<JsonObject> rejectOrder(@Path("id") int orderId);
+
+    @POST("api/shipper/orders/{id}/pickup")
+    Call<JsonObject> pickupOrder(@Path("id") int orderId);
+
+    @POST("api/shipper/orders/{id}/complete")
+    Call<JsonObject> completeOrder(@Path("id") int orderId);
+
+    @POST("api/shipper/orders/{id}/fail")
+    Call<JsonObject> failOrder(@Path("id") int orderId);
 
     @GET("api/shipper/stats")
     Call<com.pixibeestudio.greenly.data.model.ShipperStatsResponse> getShipperStats();
