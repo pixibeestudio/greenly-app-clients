@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Dòng 1: Mã đơn hàng và Phí ship -->
+        <TextView
+            android:id="@+id/tvOrderCode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#212121"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/tvShippingFee"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="ORD-8755" />
+
+        <TextView
+            android:id="@+id/tvShippingFee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_tag_light_green"
+            android:fontFamily="sans-serif-medium"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:textColor="@color/green_primary"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvOrderCode"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvOrderCode"
+            tools:text="35.000đ" />
+
+        <!-- Dòng kẻ ngang mờ -->
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="#E0E0E0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvOrderCode" />
+
+        <!-- Khối Khách hàng -->
+        <TextView
+            android:id="@+id/tvCustomerTitleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="GIAO CHO KHÁCH"
+            android:textAllCaps="true"
+            android:textColor="#E65100"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider1" />
+
+        <TextView
+            android:id="@+id/tvCustomerName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#212121"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCustomerTitleLabel"
+            tools:text="Anh Hoàng" />
+
+        <TextView
+            android:id="@+id/tvCustomerAddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#757575"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCustomerName"
+            tools:text="Landmark 81, 720A Điện Biên Phủ, Bình Thạnh" />
+
+        <!-- Hàng Nút 1: Gọi Khách & Chỉ Đường -->
+        <LinearLayout
+            android:id="@+id/layoutActionButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCustomerAddress">
+
+            <!-- Gọi Khách -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCallCustomer"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="Gọi Khách"
+                android:textColor="@color/green_primary"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_baseline_local_phone_24"
+                app:iconGravity="textStart"
+                app:iconTint="@color/green_primary"
+                app:strokeColor="@color/green_primary"
+                app:strokeWidth="1dp"
+                app:backgroundTint="#F1FDF5"/> <!-- Xanh siêu nhạt -->
+
+            <!-- Chỉ Đường -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNavigateMap"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Chỉ Đường"
+                android:textColor="#1565C0"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_baseline_location_on_24"
+                app:iconGravity="textStart"
+                app:iconTint="#1565C0"
+                app:strokeColor="#1565C0"
+                app:strokeWidth="1dp"
+                app:backgroundTint="#F0F4F8"/>
+        </LinearLayout>
+
+        <!-- Khối Thu Hộ (COD) -->
+        <LinearLayout
+            android:id="@+id/layoutCOD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_cod_orange"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutActionButtons">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Thu hộ (COD):"
+                android:textColor="#E65100"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvCodAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#E65100"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="850.000đ" />
+
+        </LinearLayout>
+
+        <!-- Hàng Nút 2: Thất Bại & Giao Thành Công -->
+        <LinearLayout
+            android:id="@+id/layoutFinalActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutCOD">
+
+            <!-- Thất bại -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeliveryFailed"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="Thất bại"
+                android:textColor="#424242"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:backgroundTint="#F5F5F5"
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_baseline_cancel_24"
+                app:iconGravity="textStart"
+                app:iconTint="#757575"
+                app:elevation="0dp"
+                app:strokeWidth="0dp"/>
+
+            <!-- Giao Thành Công -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeliverySuccess"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1.6"
+                android:text="GIAO THÀNH CÔNG"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/green_primary"
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_baseline_check_circle_outline_24"
+                app:iconGravity="textStart"
+                app:iconTint="#FFFFFF" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

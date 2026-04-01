@@ -21,4 +21,7 @@
     <color name="shipper_gray_text">#8B8B8B</color>
     <color name="shipper_light_gray_bg">#F1F2F4</color>
     <color name="shipper_divider">#E0E0E0</color>
+    <!-- Màu chính Greenly -->
+    <color name="green_primary">#06884D</color>
+
 </resources>
