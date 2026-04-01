@@ -64,5 +64,11 @@ public interface ApiService {
 
     @POST("api/shipper/orders/{id}/reject")
     Call<JsonObject> rejectOrder(@Path("id") int orderId);
+
+    @GET("api/shipper/stats")
+    Call<com.pixibeestudio.greenly.data.model.ShipperStatsResponse> getShipperStats();
+
+    @POST("api/shipper/work-status")
+    Call<JsonObject> updateWorkStatus(@Body JsonObject body);
 }
 

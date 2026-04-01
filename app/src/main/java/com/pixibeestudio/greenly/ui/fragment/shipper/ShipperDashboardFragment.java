@@ -49,17 +49,6 @@ public class ShipperDashboardFragment extends Fragment implements ShipperOrderAd
         switchStatus = view.findViewById(R.id.switch_status);
         tvStatusText = view.findViewById(R.id.tv_status_text);
 
-        // Xử lý toggle trạng thái online/offline
-        switchStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                tvStatusText.setText("Đang rảnh");
-                tvStatusText.setTextColor(0xFFA5D6A7); // Xanh nhạt
-            } else {
-                tvStatusText.setText("Đang bận");
-                tvStatusText.setTextColor(0xFFEF9A9A); // Đỏ nhạt
-            }
-        });
-
         // Thiết lập RecyclerView
         rvNewOrdersShipper.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ShipperOrderAdapter(getContext(), this);
@@ -68,11 +57,77 @@ public class ShipperDashboardFragment extends Fragment implements ShipperOrderAd
         // Observe dữ liệu
         observeViewModel();
 
-        // Gọi API lấy đơn hàng mới
-        viewModel.fetchNewOrders();
+        // Bắt đầu polling dữ liệu real-time
+        viewModel.startPolling();
+
+        // Xử lý toggle trạng thái online/offline gọi API
+        switchStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (buttonView.isPressed()) { // Chỉ gọi API nếu user thực sự ấn vào switch
+                String status = isChecked ? "available" : "offline";
+                viewModel.updateWorkStatus(status);
+            }
+        });
     }
 
     private void observeViewModel() {
+        // Observe thống kê và trạng thái
+        viewModel.getStatsLiveData().observe(getViewLifecycleOwner(), resource -> {
+            switch (resource.status) {
+                case SUCCESS:
+                    if (resource.data != null && resource.data.getData() != null) {
+                        com.pixibeestudio.greenly.data.model.ShipperStats stats = resource.data.getData();
+                        
+                        // Cập nhật UI Header (tên)
+                        TextView tvName = getView().findViewById(R.id.tvShipperName);
+                        if (tvName != null) {
+                            tvName.setText(stats.getFullname());
+                        }
+
+                        // Cập nhật thống kê
+                        TextView tvTodayOrders = getView().findViewById(R.id.tvTodayOrders);
+                        TextView tvTodayIncome = getView().findViewById(R.id.tvTodayIncome);
+                        
+                        if (tvTodayOrders != null) {
+                            tvTodayOrders.setText(String.valueOf(stats.getTodayOrders()));
+                        }
+                        if (tvTodayIncome != null) {
+                            java.text.NumberFormat format = java.text.NumberFormat.getInstance(new java.util.Locale("vi", "VN"));
+                            tvTodayIncome.setText(format.format(stats.getTodayIncome()));
+                        }
+
+                        // Cập nhật trạng thái Switch
+                        boolean isAvailable = "available".equals(stats.getWorkStatus()) || "on_delivery".equals(stats.getWorkStatus());
+                        switchStatus.setChecked(isAvailable);
+                        
+                        if (isAvailable) {
+                            tvStatusText.setText("Đang rảnh");
+                            tvStatusText.setTextColor(0xFFA5D6A7); // Xanh nhạt
+                        } else {
+                            tvStatusText.setText("Đang bận");
+                            tvStatusText.setTextColor(0xFFEF9A9A); // Đỏ nhạt
+                        }
+                    }
+                    break;
+                case ERROR:
+                    // Có thể bỏ qua error log để tránh spam Toast khi polling
+                    break;
+            }
+        });
+
+        // Observe kết quả cập nhật work status
+        viewModel.getUpdateStatusLiveData().observe(getViewLifecycleOwner(), resource -> {
+            switch (resource.status) {
+                case SUCCESS:
+                    Toast.makeText(getContext(), resource.data, Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR:
+                    Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                    // Revert switch nếu lỗi
+                    switchStatus.setChecked(!switchStatus.isChecked());
+                    break;
+            }
+        });
+
         // Observe danh sách đơn hàng mới
         viewModel.getNewOrdersLiveData().observe(getViewLifecycleOwner(), resource -> {
             switch (resource.status) {
