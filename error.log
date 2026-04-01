@@ -13,69 +13,44 @@ Executing tasks: [:app:assembleDebug] in project D:\finalyear-project\greenly-ap
 
 > Task :app:compileDebugJavaWithJavac
 Note: [1] Wrote GeneratedAppGlideModule with: []
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:28: error: cannot find symbol
-        apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-                                   ^
-  symbol:   method getRetrofitInstance()
-  location: class RetrofitClient
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:44: error: method loading in class Resource<T#1> cannot be applied to given types;
-        newOrdersLiveData.setValue(Resource.loading(null));
-                                           ^
-  required: no arguments
-  found:    <null>
-  reason: cannot infer type-variable(s) T#2
-    (actual and formal argument lists differ in length)
-  where T#1,T#2 are type-variables:
-    T#1 extends Object declared in class Resource
-    T#2 extends Object declared in method <T#2>loading()
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:67: error: method loading in class Resource<T#1> cannot be applied to given types;
-        acceptOrderLiveData.setValue(Resource.loading(null));
-                                             ^
-  required: no arguments
-  found:    <null>
-  reason: cannot infer type-variable(s) T#2
-    (actual and formal argument lists differ in length)
-  where T#1,T#2 are type-variables:
-    T#1 extends Object declared in class Resource
-    T#2 extends Object declared in method <T#2>loading()
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:92: error: method loading in class Resource<T#1> cannot be applied to given types;
-        rejectOrderLiveData.setValue(Resource.loading(null));
-                                             ^
-  required: no arguments
-  found:    <null>
-  reason: cannot infer type-variable(s) T#2
-    (actual and formal argument lists differ in length)
-  where T#1,T#2 are type-variables:
-    T#1 extends Object declared in class Resource
-    T#2 extends Object declared in method <T#2>loading()
-Note: D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\adapter\ShipperOrderAdapter.java uses or overrides a deprecated API.
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:184: error: cannot find symbol
+        updateStatusLiveData.addSource(source, responseResource -> {
+                            ^
+  symbol:   method addSource(LiveData<Resource<String>>,(responseR[...]; } })
+  location: variable updateStatusLiveData of type SingleLiveEvent<Resource<String>>
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:187: error: cannot find symbol
+                updateStatusLiveData.removeSource(source);
+                                    ^
+  symbol:   method removeSource(LiveData<Resource<String>>)
+  location: variable updateStatusLiveData of type SingleLiveEvent<Resource<String>>
+Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
-4 errors
+2 errors
 
 > Task :app:compileDebugJavaWithJavac FAILED
 > Task :app:generateDebugAssets UP-TO-DATE
 > Task :app:mergeDebugAssets UP-TO-DATE
 > Task :app:compressDebugAssets UP-TO-DATE
-> Task :app:checkDebugDuplicateClasses UP-TO-DATE
 > Task :app:desugarDebugFileDependencies UP-TO-DATE
-> Task :app:mergeExtDexDebug UP-TO-DATE
-> Task :app:mergeLibDexDebug UP-TO-DATE
 > Task :app:checkDebugAarMetadata UP-TO-DATE
 > Task :app:mapDebugSourceSetPaths UP-TO-DATE
 > Task :app:compileDebugNavigationResources UP-TO-DATE
-> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses
+> Task :app:mergeLibDexDebug UP-TO-DATE
 > Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
 > Task :app:extractDeepLinksDebug UP-TO-DATE
-> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:mergeDebugResources
+> Task :app:processDebugMainManifest
 > Task :app:processDebugManifest UP-TO-DATE
 > Task :app:processDebugManifestForPackage UP-TO-DATE
-> Task :app:processDebugResources UP-TO-DATE
 > Task :app:mergeDebugJniLibFolders UP-TO-DATE
 > Task :app:mergeDebugNativeLibs NO-SOURCE
 > Task :app:stripDebugDebugSymbols NO-SOURCE
 > Task :app:validateSigningDebug UP-TO-DATE
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:mergeExtDexDebug
+> Task :app:processDebugResources
 
 [Incubating] Problems report is available at: file:///D:/finalyear-project/greenly-app/build/reports/problems/problems-report.html
 
@@ -84,45 +59,20 @@ FAILURE: Build failed with an exception.
 * What went wrong:
 Execution failed for task ':app:compileDebugJavaWithJavac'.
 > Compilation failed; see the compiler output below.
-  Note: D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\adapter\ShipperOrderAdapter.java uses or overrides a deprecated API.
-  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:44: error: method loading in class Resource<T#1> cannot be applied to given types;
-          newOrdersLiveData.setValue(Resource.loading(null));
-                                             ^
-    required: no arguments
-    found:    <null>
-    reason: cannot infer type-variable(s) T#2
-      (actual and formal argument lists differ in length)
-    where T#1,T#2 are type-variables:
-      T#1 extends Object declared in class Resource
-      T#2 extends Object declared in method <T#2>loading()
-  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:67: error: method loading in class Resource<T#1> cannot be applied to given types;
-          acceptOrderLiveData.setValue(Resource.loading(null));
-                                               ^
-    required: no arguments
-    found:    <null>
-    reason: cannot infer type-variable(s) T#2
-      (actual and formal argument lists differ in length)
-    where T#1,T#2 are type-variables:
-      T#1 extends Object declared in class Resource
-      T#2 extends Object declared in method <T#2>loading()
-  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:92: error: method loading in class Resource<T#1> cannot be applied to given types;
-          rejectOrderLiveData.setValue(Resource.loading(null));
-                                               ^
-    required: no arguments
-    found:    <null>
-    reason: cannot infer type-variable(s) T#2
-      (actual and formal argument lists differ in length)
-    where T#1,T#2 are type-variables:
-      T#1 extends Object declared in class Resource
-      T#2 extends Object declared in method <T#2>loading()
   Note: Recompile with -Xlint:deprecation for details.
+  Note: Some input files use or override a deprecated API.
   Note: [1] Wrote GeneratedAppGlideModule with: []
-  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:28: error: cannot find symbol
-          apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-                                     ^
-    symbol:   method getRetrofitInstance()
-    location: class RetrofitClient
-  4 errors
+  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:184: error: cannot find symbol
+          updateStatusLiveData.addSource(source, responseResource -> {
+                              ^
+    symbol:   method addSource(LiveData<Resource<String>>,(responseR[...]; } })
+    location: variable updateStatusLiveData of type SingleLiveEvent<Resource<String>>
+  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:187: error: cannot find symbol
+                  updateStatusLiveData.removeSource(source);
+                                      ^
+    symbol:   method removeSource(LiveData<Resource<String>>)
+    location: variable updateStatusLiveData of type SingleLiveEvent<Resource<String>>
+  2 errors
 
 * Try:
 > Check your code and dependencies to fix the compilation error(s)
@@ -165,44 +115,19 @@ org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:com
 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
 Caused by: org.gradle.api.internal.tasks.compile.CompilationFailedException: Compilation failed; see the compiler output below.
 Note: [1] Wrote GeneratedAppGlideModule with: []
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:28: error: cannot find symbol
-        apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-                                   ^
-  symbol:   method getRetrofitInstance()
-  location: class RetrofitClient
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:44: error: method loading in class Resource<T#1> cannot be applied to given types;
-        newOrdersLiveData.setValue(Resource.loading(null));
-                                           ^
-  required: no arguments
-  found:    <null>
-  reason: cannot infer type-variable(s) T#2
-    (actual and formal argument lists differ in length)
-  where T#1,T#2 are type-variables:
-    T#1 extends Object declared in class Resource
-    T#2 extends Object declared in method <T#2>loading()
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:67: error: method loading in class Resource<T#1> cannot be applied to given types;
-        acceptOrderLiveData.setValue(Resource.loading(null));
-                                             ^
-  required: no arguments
-  found:    <null>
-  reason: cannot infer type-variable(s) T#2
-    (actual and formal argument lists differ in length)
-  where T#1,T#2 are type-variables:
-    T#1 extends Object declared in class Resource
-    T#2 extends Object declared in method <T#2>loading()
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:92: error: method loading in class Resource<T#1> cannot be applied to given types;
-        rejectOrderLiveData.setValue(Resource.loading(null));
-                                             ^
-  required: no arguments
-  found:    <null>
-  reason: cannot infer type-variable(s) T#2
-    (actual and formal argument lists differ in length)
-  where T#1,T#2 are type-variables:
-    T#1 extends Object declared in class Resource
-    T#2 extends Object declared in method <T#2>loading()
-Note: D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\adapter\ShipperOrderAdapter.java uses or overrides a deprecated API.
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:184: error: cannot find symbol
+        updateStatusLiveData.addSource(source, responseResource -> {
+                            ^
+  symbol:   method addSource(LiveData<Resource<String>>,(responseR[...]; } })
+  location: variable updateStatusLiveData of type SingleLiveEvent<Resource<String>>
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:187: error: cannot find symbol
+                updateStatusLiveData.removeSource(source);
+                                    ^
+  symbol:   method removeSource(LiveData<Resource<String>>)
+  location: variable updateStatusLiveData of type SingleLiveEvent<Resource<String>>
+Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
-4 errors
+2 errors
 	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:89)
 	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:50)
 	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.delegateAndHandleErrors(NormalizingJavaCompiler.java:98)
@@ -214,9 +139,9 @@ Note: Recompile with -Xlint:deprecation for details.
 	at org.gradle.api.internal.tasks.compile.ModuleApplicationNameWritingCompiler.execute(ModuleApplicationNameWritingCompiler.java:36)
 	at org.gradle.jvm.toolchain.internal.DefaultToolchainJavaCompiler.execute(DefaultToolchainJavaCompiler.java:57)
 	at org.gradle.api.tasks.compile.JavaCompile.lambda$createToolchainCompiler$3(JavaCompile.java:206)
-	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.lambda$execute$0(SelectiveCompiler.java:101)
-	at org.gradle.api.internal.tasks.compile.incremental.transaction.CompileTransaction.execute(CompileTransaction.java:108)
-	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:95)
+	at org.gradle.api.internal.tasks.compile.CleaningJavaCompiler.execute(CleaningJavaCompiler.java:53)
+	at org.gradle.api.internal.tasks.compile.incremental.IncrementalCompilerFactory.lambda$createRebuildAllCompiler$0(IncrementalCompilerFactory.java:55)
+	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:91)
 	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:44)
 	at org.gradle.api.internal.tasks.compile.incremental.IncrementalResultStoringCompiler.execute(IncrementalResultStoringCompiler.java:66)
 	at org.gradle.api.internal.tasks.compile.incremental.IncrementalResultStoringCompiler.execute(IncrementalResultStoringCompiler.java:52)
@@ -337,5 +262,5 @@ Note: Recompile with -Xlint:deprecation for details.
 	... 30 more
 
 
-BUILD FAILED in 13s
-27 actionable tasks: 1 executed, 26 up-to-date
+BUILD FAILED in 15s
+27 actionable tasks: 6 executed, 21 up-to-date

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,10 +15,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.pixibeestudio.greenly.R;
+import com.pixibeestudio.greenly.data.local.SessionManager;
 import com.pixibeestudio.greenly.data.model.Order;
 import com.pixibeestudio.greenly.ui.adapter.ShipperOrderAdapter;
 import com.pixibeestudio.greenly.ui.viewmodel.ShipperDashboardViewModel;
@@ -27,9 +32,11 @@ public class ShipperDashboardFragment extends Fragment implements ShipperOrderAd
     private ShipperDashboardViewModel viewModel;
     private RecyclerView rvNewOrdersShipper;
     private ShipperOrderAdapter adapter;
-    private TextView tvOrderCount;
     private MaterialSwitch switchStatus;
     private TextView tvStatusText;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private SessionManager sessionManager;
+    private boolean isManualRefresh = false;
 
     @Nullable
     @Override
@@ -44,10 +51,43 @@ public class ShipperDashboardFragment extends Fragment implements ShipperOrderAd
         // Khởi tạo ViewModel
         viewModel = new ViewModelProvider(this).get(ShipperDashboardViewModel.class);
 
+        // Khởi tạo SessionManager
+        sessionManager = new SessionManager(requireContext());
+
         // Ánh xạ View
         rvNewOrdersShipper = view.findViewById(R.id.rvNewOrdersShipper);
         switchStatus = view.findViewById(R.id.switch_status);
         tvStatusText = view.findViewById(R.id.tv_status_text);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+
+        // Cập nhật Header với dữ liệu từ SessionManager
+        TextView tvShipperName = view.findViewById(R.id.tvShipperName);
+        ShapeableImageView imgAvatar = view.findViewById(R.id.imgAvatar);
+
+        if (tvShipperName != null) {
+            String userName = sessionManager.getUserName();
+            tvShipperName.setText(userName != null && !userName.isEmpty() ? userName : "Shipper");
+        }
+
+        if (imgAvatar != null) {
+            String avatarUrl = sessionManager.getUserAvatar();
+            if (avatarUrl != null && !avatarUrl.isEmpty()) {
+                Glide.with(this)
+                        .load(avatarUrl)
+                        .placeholder(R.drawable.ic_default_avatar_placeholder)
+                        .error(R.drawable.ic_default_avatar_placeholder)
+                        .into(imgAvatar);
+            }
+        }
+
+        // Thiết lập SwipeRefreshLayout
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                isManualRefresh = true;
+                viewModel.fetchNewOrders();
+                viewModel.fetchStats();
+            });
+        }
 
         // Thiết lập RecyclerView
         rvNewOrdersShipper.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -65,6 +105,15 @@ public class ShipperDashboardFragment extends Fragment implements ShipperOrderAd
             if (buttonView.isPressed()) { // Chỉ gọi API nếu user thực sự ấn vào switch
                 String status = isChecked ? "available" : "offline";
                 viewModel.updateWorkStatus(status);
+                
+                // Cập nhật text tạm thời trước khi API phản hồi để mượt mà hơn
+                if (isChecked) {
+                    tvStatusText.setText("Đang rảnh");
+                    tvStatusText.setTextColor(0xFFA5D6A7); // Xanh nhạt
+                } else {
+                    tvStatusText.setText("Đang bận");
+                    tvStatusText.setTextColor(0xFFEF9A9A); // Đỏ nhạt
+                }
             }
         });
     }
@@ -74,6 +123,9 @@ public class ShipperDashboardFragment extends Fragment implements ShipperOrderAd
         viewModel.getStatsLiveData().observe(getViewLifecycleOwner(), resource -> {
             switch (resource.status) {
                 case SUCCESS:
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                     if (resource.data != null && resource.data.getData() != null) {
                         com.pixibeestudio.greenly.data.model.ShipperStats stats = resource.data.getData();
                         
@@ -109,6 +161,9 @@ public class ShipperDashboardFragment extends Fragment implements ShipperOrderAd
                     }
                     break;
                 case ERROR:
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                     // Có thể bỏ qua error log để tránh spam Toast khi polling
                     break;
             }
@@ -131,17 +186,29 @@ public class ShipperDashboardFragment extends Fragment implements ShipperOrderAd
         // Observe danh sách đơn hàng mới
         viewModel.getNewOrdersLiveData().observe(getViewLifecycleOwner(), resource -> {
             switch (resource.status) {
-                case LOADING:
-                    // Hiển thị loading (tùy chọn)
-                    break;
                 case SUCCESS:
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                     if (resource.data != null) {
                         adapter.setOrders(resource.data);
-                        // Cập nhật số lượng đơn hàng lên UI nếu cần
+                        
+                        // Cập nhật số lượng đơn hàng lên tiêu đề
+                        TextView tvOrderCountTitle = getView().findViewById(R.id.tvOrderCountTitle);
+                        if (tvOrderCountTitle != null) {
+                            tvOrderCountTitle.setText("Đơn Hàng Mới (" + resource.data.size() + ")");
+                        }
                     }
                     break;
                 case ERROR:
-                    Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                    // Chỉ hiện Toast lỗi khi user chủ động refresh, tránh spam khi polling
+                    if (isManualRefresh) {
+                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                    }
+                    isManualRefresh = false;
                     break;
             }
         });
@@ -149,19 +216,16 @@ public class ShipperDashboardFragment extends Fragment implements ShipperOrderAd
         // Observe kết quả nhận đơn
         viewModel.getAcceptOrderLiveData().observe(getViewLifecycleOwner(), resource -> {
             switch (resource.status) {
-                case LOADING:
-                    // Hiển thị loading (tùy chọn)
-                    break;
                 case SUCCESS:
                     Toast.makeText(getContext(), "Đã nhận đơn! Vui lòng tới cửa hàng lấy hàng", Toast.LENGTH_LONG).show();
                     // Load lại danh sách đơn hàng
                     viewModel.fetchNewOrders();
                     
-                    // Chuyển hướng sang Tab "Đơn hàng" (id_tab_orders)
+                    // Chuyển hướng sang Tab "Đơn hàng" (shipperOrdersFragment)
                     if (getActivity() != null) {
                         BottomNavigationView bottomNav = getActivity().findViewById(R.id.nav_view_shipper);
                         if (bottomNav != null) {
-                            bottomNav.setSelectedItemId(R.id.shipperOrdersFragment); // Thay thế bằng ID thực tế của menu item
+                            bottomNav.setSelectedItemId(R.id.shipperOrdersFragment);
                         }
                     }
                     break;
@@ -174,9 +238,6 @@ public class ShipperDashboardFragment extends Fragment implements ShipperOrderAd
         // Observe kết quả từ chối đơn
         viewModel.getRejectOrderLiveData().observe(getViewLifecycleOwner(), resource -> {
             switch (resource.status) {
-                case LOADING:
-                    // Hiển thị loading (tùy chọn)
-                    break;
                 case SUCCESS:
                     Toast.makeText(getContext(), resource.data, Toast.LENGTH_SHORT).show();
                     // Đã gọi fetchNewOrders() trong ViewModel khi success

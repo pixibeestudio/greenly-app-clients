@@ -49,9 +49,10 @@
             app:layout_constraintTop_toTopOf="@+id/imgAvatar">
 
             <TextView
+                android:id="@+id/tvShipperName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nguyễn Văn A"
+                android:text="Tên Shipper"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -155,9 +156,10 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tvTodayOrders"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="5"
+                        android:text="0"
                         android:textColor="@color/header_bg_green"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -200,9 +202,10 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tvTodayIncome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="140.000"
+                        android:text="0"
                         android:textColor="@color/shipper_orange"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -221,57 +224,64 @@
     </androidx.cardview.widget.CardView>
 
     <!-- Phần cuộn danh sách đơn hàng -->
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:clipToPadding="false"
-        android:fillViewport="true"
-        android:paddingBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardStats">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp">
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:paddingBottom="24dp">
 
-            <!-- Tiêu đề có chấm tròn cam -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp">
 
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_indicator_active"
-                    android:backgroundTint="@color/shipper_orange" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- Tiêu đề có chấm tròn cam -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Đơn Hàng Mới (2)"
-                    android:textColor="@color/text_black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_indicator_active"
+                        android:backgroundTint="@color/shipper_orange" />
+
+                    <TextView
+                        android:id="@+id/tvOrderCountTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đơn Hàng Mới (0)"
+                        android:textColor="@color/text_black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvNewOrdersShipper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_order_dashboard_shipper" />
+
             </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvNewOrdersShipper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                tools:itemCount="2"
-                tools:listitem="@layout/item_order_dashboard_shipper" />
-
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

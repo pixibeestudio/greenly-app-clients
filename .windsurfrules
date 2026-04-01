@@ -28,6 +28,7 @@ You are acting as the AI coder, but the user will run and compile the app inside
 
 # 5. Git and Github
 - Don't commit and push code directly, wait for my permission.
+- Don't run git commands directly, wait for my permission.
 - Always commit and push in Vietnamese.
 
 # 6. Fix and Debugging

@@ -180,12 +180,29 @@ public class ShipperDashboardViewModel extends AndroidViewModel {
     }
 
     public void updateWorkStatus(String status) {
-        LiveData<Resource<String>> source = repository.updateWorkStatus(status);
-        updateStatusLiveData.addSource(source, responseResource -> {
-            updateStatusLiveData.setValue(responseResource);
-            if (responseResource.status != Resource.Status.LOADING) {
-                updateStatusLiveData.removeSource(source);
+        updateStatusLiveData.setValue(Resource.loading());
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("work_status", status);
+        RetrofitClient.getApiService(getApplication()).updateWorkStatus(body).enqueue(new retrofit2.Callback<com.google.gson.JsonObject>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.google.gson.JsonObject> call, retrofit2.Response<com.google.gson.JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    com.google.gson.JsonObject res = response.body();
+                    if (res.has("success") && res.get("success").getAsBoolean()) {
+                        updateStatusLiveData.setValue(Resource.success(res.has("message") ? res.get("message").getAsString() : "Thành công"));
+                    } else {
+                        String msg = res.has("message") ? res.get("message").getAsString() : "Lỗi không xác định";
+                        updateStatusLiveData.setValue(Resource.error(msg, null));
+                    }
+                } else {
+                    updateStatusLiveData.setValue(Resource.error("Lỗi cập nhật trạng thái", null));
+                }
                 fetchStats(); // Cập nhật lại stats sau khi đổi trạng thái
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<com.google.gson.JsonObject> call, Throwable t) {
+                updateStatusLiveData.setValue(Resource.error("Lỗi kết nối: " + t.getMessage(), null));
             }
         });
     }
