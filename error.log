@@ -3,108 +3,126 @@ Executing tasks: [:app:assembleDebug] in project D:\finalyear-project\greenly-ap
 > Task :app:preBuild UP-TO-DATE
 > Task :app:preDebugBuild UP-TO-DATE
 > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
-> Task :app:generateDebugResources
-> Task :app:packageDebugResources
-> Task :app:processDebugNavigationResources
-> Task :app:generateDebugAssets UP-TO-DATE
-> Task :app:javaPreCompileDebug
-> Task :app:mergeDebugAssets
-> Task :app:compressDebugAssets
-> Task :app:parseDebugLocalResources
-> Task :app:desugarDebugFileDependencies
-> Task :app:generateDebugRFile
-> Task :app:checkDebugDuplicateClasses
-> Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
 > Task :app:compileDebugKotlin NO-SOURCE
+> Task :app:javaPreCompileDebug UP-TO-DATE
 
 > Task :app:compileDebugJavaWithJavac
 Note: [1] Wrote GeneratedAppGlideModule with: []
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\activity\MainActivity.java:35: error: cannot find symbol
-        BottomNavigationView navViewCustomer = findViewById(R.id.bottom_navigation_view);
-                                                                ^
-  symbol:   variable bottom_navigation_view
-  location: class id
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\activity\MainActivity.java:36: error: cannot find symbol
-        BottomNavigationView navViewShipper = findViewById(R.id.shipper_bottom_navigation_view);
-                                                               ^
-  symbol:   variable shipper_bottom_navigation_view
-  location: class id
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\LoginFragment.java:137: error: cannot find symbol
-                                    Intent intent = new Intent(requireActivity(), MainActivity.class);
-                                    ^
-  symbol:   class Intent
-  location: class LoginFragment
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\LoginFragment.java:137: error: cannot find symbol
-                                    Intent intent = new Intent(requireActivity(), MainActivity.class);
-                                                        ^
-  symbol:   class Intent
-  location: class LoginFragment
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\LoginFragment.java:137: error: cannot find symbol
-                                    Intent intent = new Intent(requireActivity(), MainActivity.class);
-                                                                                  ^
-  symbol:   class MainActivity
-  location: class LoginFragment
-Note: D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\CheckoutFragment.java uses or overrides a deprecated API.
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:28: error: cannot find symbol
+        apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+                                   ^
+  symbol:   method getRetrofitInstance()
+  location: class RetrofitClient
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:44: error: method loading in class Resource<T#1> cannot be applied to given types;
+        newOrdersLiveData.setValue(Resource.loading(null));
+                                           ^
+  required: no arguments
+  found:    <null>
+  reason: cannot infer type-variable(s) T#2
+    (actual and formal argument lists differ in length)
+  where T#1,T#2 are type-variables:
+    T#1 extends Object declared in class Resource
+    T#2 extends Object declared in method <T#2>loading()
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:67: error: method loading in class Resource<T#1> cannot be applied to given types;
+        acceptOrderLiveData.setValue(Resource.loading(null));
+                                             ^
+  required: no arguments
+  found:    <null>
+  reason: cannot infer type-variable(s) T#2
+    (actual and formal argument lists differ in length)
+  where T#1,T#2 are type-variables:
+    T#1 extends Object declared in class Resource
+    T#2 extends Object declared in method <T#2>loading()
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:92: error: method loading in class Resource<T#1> cannot be applied to given types;
+        rejectOrderLiveData.setValue(Resource.loading(null));
+                                             ^
+  required: no arguments
+  found:    <null>
+  reason: cannot infer type-variable(s) T#2
+    (actual and formal argument lists differ in length)
+  where T#1,T#2 are type-variables:
+    T#1 extends Object declared in class Resource
+    T#2 extends Object declared in method <T#2>loading()
+Note: D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\adapter\ShipperOrderAdapter.java uses or overrides a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
-5 errors
+4 errors
 
 > Task :app:compileDebugJavaWithJavac FAILED
-> Task :app:mapDebugSourceSetPaths
-> Task :app:compileDebugNavigationResources
-> Task :app:mergeLibDexDebug
-> Task :app:mergeExtDexDebug
-> Task :app:createDebugCompatibleScreenManifests
-> Task :app:extractDeepLinksDebug
-> Task :app:processDebugMainManifest
-> Task :app:processDebugManifest
-> Task :app:mergeDebugJniLibFolders
-> Task :app:processDebugManifestForPackage
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
 > Task :app:mergeDebugNativeLibs NO-SOURCE
 > Task :app:stripDebugDebugSymbols NO-SOURCE
-> Task :app:validateSigningDebug
-> Task :app:writeDebugAppMetadata
-> Task :app:writeDebugSigningConfigVersions
-> Task :app:mergeDebugResources
-> Task :app:processDebugResources FAILED
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
 
 [Incubating] Problems report is available at: file:///D:/finalyear-project/greenly-app/build/reports/problems/problems-report.html
 
-FAILURE: Build completed with 2 failures.
+FAILURE: Build failed with an exception.
 
-1: Task failed with an exception.
------------
 * What went wrong:
 Execution failed for task ':app:compileDebugJavaWithJavac'.
 > Compilation failed; see the compiler output below.
-  Note: D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\CheckoutFragment.java uses or overrides a deprecated API.
+  Note: D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\adapter\ShipperOrderAdapter.java uses or overrides a deprecated API.
+  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:44: error: method loading in class Resource<T#1> cannot be applied to given types;
+          newOrdersLiveData.setValue(Resource.loading(null));
+                                             ^
+    required: no arguments
+    found:    <null>
+    reason: cannot infer type-variable(s) T#2
+      (actual and formal argument lists differ in length)
+    where T#1,T#2 are type-variables:
+      T#1 extends Object declared in class Resource
+      T#2 extends Object declared in method <T#2>loading()
+  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:67: error: method loading in class Resource<T#1> cannot be applied to given types;
+          acceptOrderLiveData.setValue(Resource.loading(null));
+                                               ^
+    required: no arguments
+    found:    <null>
+    reason: cannot infer type-variable(s) T#2
+      (actual and formal argument lists differ in length)
+    where T#1,T#2 are type-variables:
+      T#1 extends Object declared in class Resource
+      T#2 extends Object declared in method <T#2>loading()
+  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:92: error: method loading in class Resource<T#1> cannot be applied to given types;
+          rejectOrderLiveData.setValue(Resource.loading(null));
+                                               ^
+    required: no arguments
+    found:    <null>
+    reason: cannot infer type-variable(s) T#2
+      (actual and formal argument lists differ in length)
+    where T#1,T#2 are type-variables:
+      T#1 extends Object declared in class Resource
+      T#2 extends Object declared in method <T#2>loading()
   Note: Recompile with -Xlint:deprecation for details.
-  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\activity\MainActivity.java:35: error: cannot find symbol
-          BottomNavigationView navViewCustomer = findViewById(R.id.bottom_navigation_view);
-                                                                  ^
-    symbol:   variable bottom_navigation_view
-    location: class id
-  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\activity\MainActivity.java:36: error: cannot find symbol
-          BottomNavigationView navViewShipper = findViewById(R.id.shipper_bottom_navigation_view);
-                                                                 ^
-    symbol:   variable shipper_bottom_navigation_view
-    location: class id
-  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\LoginFragment.java:137: error: cannot find symbol
-                                      Intent intent = new Intent(requireActivity(), MainActivity.class);
-                                      ^
-    symbol:   class Intent
-    location: class LoginFragment
-  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\LoginFragment.java:137: error: cannot find symbol
-                                      Intent intent = new Intent(requireActivity(), MainActivity.class);
-                                                          ^
-    symbol:   class Intent
-    location: class LoginFragment
-  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\LoginFragment.java:137: error: cannot find symbol
-                                      Intent intent = new Intent(requireActivity(), MainActivity.class);
-                                                                                    ^
-    symbol:   class MainActivity
-    location: class LoginFragment
   Note: [1] Wrote GeneratedAppGlideModule with: []
-  5 errors
+  D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:28: error: cannot find symbol
+          apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+                                     ^
+    symbol:   method getRetrofitInstance()
+    location: class RetrofitClient
+  4 errors
 
 * Try:
 > Check your code and dependencies to fix the compilation error(s)
@@ -147,34 +165,44 @@ org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:com
 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
 Caused by: org.gradle.api.internal.tasks.compile.CompilationFailedException: Compilation failed; see the compiler output below.
 Note: [1] Wrote GeneratedAppGlideModule with: []
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\activity\MainActivity.java:35: error: cannot find symbol
-        BottomNavigationView navViewCustomer = findViewById(R.id.bottom_navigation_view);
-                                                                ^
-  symbol:   variable bottom_navigation_view
-  location: class id
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\activity\MainActivity.java:36: error: cannot find symbol
-        BottomNavigationView navViewShipper = findViewById(R.id.shipper_bottom_navigation_view);
-                                                               ^
-  symbol:   variable shipper_bottom_navigation_view
-  location: class id
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\LoginFragment.java:137: error: cannot find symbol
-                                    Intent intent = new Intent(requireActivity(), MainActivity.class);
-                                    ^
-  symbol:   class Intent
-  location: class LoginFragment
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\LoginFragment.java:137: error: cannot find symbol
-                                    Intent intent = new Intent(requireActivity(), MainActivity.class);
-                                                        ^
-  symbol:   class Intent
-  location: class LoginFragment
-D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\LoginFragment.java:137: error: cannot find symbol
-                                    Intent intent = new Intent(requireActivity(), MainActivity.class);
-                                                                                  ^
-  symbol:   class MainActivity
-  location: class LoginFragment
-Note: D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\fragment\CheckoutFragment.java uses or overrides a deprecated API.
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:28: error: cannot find symbol
+        apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+                                   ^
+  symbol:   method getRetrofitInstance()
+  location: class RetrofitClient
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:44: error: method loading in class Resource<T#1> cannot be applied to given types;
+        newOrdersLiveData.setValue(Resource.loading(null));
+                                           ^
+  required: no arguments
+  found:    <null>
+  reason: cannot infer type-variable(s) T#2
+    (actual and formal argument lists differ in length)
+  where T#1,T#2 are type-variables:
+    T#1 extends Object declared in class Resource
+    T#2 extends Object declared in method <T#2>loading()
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:67: error: method loading in class Resource<T#1> cannot be applied to given types;
+        acceptOrderLiveData.setValue(Resource.loading(null));
+                                             ^
+  required: no arguments
+  found:    <null>
+  reason: cannot infer type-variable(s) T#2
+    (actual and formal argument lists differ in length)
+  where T#1,T#2 are type-variables:
+    T#1 extends Object declared in class Resource
+    T#2 extends Object declared in method <T#2>loading()
+D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\viewmodel\ShipperDashboardViewModel.java:92: error: method loading in class Resource<T#1> cannot be applied to given types;
+        rejectOrderLiveData.setValue(Resource.loading(null));
+                                             ^
+  required: no arguments
+  found:    <null>
+  reason: cannot infer type-variable(s) T#2
+    (actual and formal argument lists differ in length)
+  where T#1,T#2 are type-variables:
+    T#1 extends Object declared in class Resource
+    T#2 extends Object declared in method <T#2>loading()
+Note: D:\finalyear-project\greenly-app\app\src\main\java\com\pixibeestudio\greenly\ui\adapter\ShipperOrderAdapter.java uses or overrides a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
-5 errors
+4 errors
 	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:89)
 	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:50)
 	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.delegateAndHandleErrors(NormalizingJavaCompiler.java:98)
@@ -186,9 +214,9 @@ Note: Recompile with -Xlint:deprecation for details.
 	at org.gradle.api.internal.tasks.compile.ModuleApplicationNameWritingCompiler.execute(ModuleApplicationNameWritingCompiler.java:36)
 	at org.gradle.jvm.toolchain.internal.DefaultToolchainJavaCompiler.execute(DefaultToolchainJavaCompiler.java:57)
 	at org.gradle.api.tasks.compile.JavaCompile.lambda$createToolchainCompiler$3(JavaCompile.java:206)
-	at org.gradle.api.internal.tasks.compile.CleaningJavaCompiler.execute(CleaningJavaCompiler.java:53)
-	at org.gradle.api.internal.tasks.compile.incremental.IncrementalCompilerFactory.lambda$createRebuildAllCompiler$0(IncrementalCompilerFactory.java:55)
-	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:70)
+	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.lambda$execute$0(SelectiveCompiler.java:101)
+	at org.gradle.api.internal.tasks.compile.incremental.transaction.CompileTransaction.execute(CompileTransaction.java:108)
+	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:95)
 	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:44)
 	at org.gradle.api.internal.tasks.compile.incremental.IncrementalResultStoringCompiler.execute(IncrementalResultStoringCompiler.java:66)
 	at org.gradle.api.internal.tasks.compile.incremental.IncrementalResultStoringCompiler.execute(IncrementalResultStoringCompiler.java:52)
@@ -308,239 +336,6 @@ Note: Recompile with -Xlint:deprecation for details.
 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:132)
 	... 30 more
 
-==============================================================================
 
-2: Task failed with an exception.
------------
-* What went wrong:
-Execution failed for task ':app:processDebugResources'.
-> A failure occurred while executing com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask$TaskAction
-   > Android resource linking failed
-     com.pixibeestudio.greenly.app-main-49:/layout/fragment_shipper_dashboard.xml:154: error: 'baseline' is incompatible with attribute gravity (attr) flags [bottom=80, center=17, center_horizontal=1, center_vertical=16, clip_horizontal=8, clip_vertical=128, end=8388613, fill=119, fill_horizontal=7, fill_vertical=112, left=3, right=5, start=8388611, top=48].
-     com.pixibeestudio.greenly.app-main-49:/layout/fragment_shipper_dashboard.xml:199: error: 'baseline' is incompatible with attribute gravity (attr) flags [bottom=80, center=17, center_horizontal=1, center_vertical=16, clip_horizontal=8, clip_vertical=128, end=8388613, fill=119, fill_horizontal=7, fill_vertical=112, left=3, right=5, start=8388611, top=48].
-     error: failed linking file resources.
-
-
-* Try:
-> Run with --info or --debug option to get more log output.
-> Run with --scan to get full insights from a Build Scan (powered by Develocity).
-> Get more help at https://help.gradle.org.
-
-* Exception is:
-org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:processDebugResources'.
-	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.lambda$executeIfValid$1(ExecuteActionsTaskExecuter.java:135)
-	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:288)
-	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:133)
-	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:121)
-	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:41)
-	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
-	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
-	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
-	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
-	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
-	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
-	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
-	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
-	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
-	at org.gradle.execution.plan.DefaultNodeExecutor.executeLocalTaskNode(DefaultNodeExecutor.java:55)
-	at org.gradle.execution.plan.DefaultNodeExecutor.execute(DefaultNodeExecutor.java:34)
-	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:355)
-	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:343)
-	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:339)
-	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:84)
-	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:339)
-	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:328)
-	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
-	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
-	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
-	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
-	at java.base/java.lang.Thread.run(Unknown Source)
-Caused by: org.gradle.workers.internal.DefaultWorkerExecutor$WorkExecutionException: A failure occurred while executing com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask$TaskAction
-	at org.gradle.workers.internal.DefaultWorkerExecutor$WorkItemExecution.waitForCompletion(DefaultWorkerExecutor.java:289)
-	at org.gradle.internal.work.DefaultAsyncWorkTracker.lambda$waitForItemsAndGatherFailures$2(DefaultAsyncWorkTracker.java:130)
-	at org.gradle.internal.Factories$1.create(Factories.java:30)
-	at org.gradle.internal.work.DefaultWorkerLeaseService.lambda$withoutLocks$2(DefaultWorkerLeaseService.java:350)
-	at org.gradle.internal.work.ResourceLockStatistics$1.measure(ResourceLockStatistics.java:43)
-	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocks(DefaultWorkerLeaseService.java:348)
-	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocks(DefaultWorkerLeaseService.java:332)
-	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLock(DefaultWorkerLeaseService.java:337)
-	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:126)
-	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:92)
-	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForAll(DefaultAsyncWorkTracker.java:78)
-	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForCompletion(DefaultAsyncWorkTracker.java:66)
-	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:267)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:30)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:27)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:48)
-	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:244)
-	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:227)
-	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:210)
-	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:176)
-	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:167)
-	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:47)
-	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:137)
-	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:134)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
-	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:134)
-	at org.gradle.internal.execution.steps.ExecuteStep$Mutable.execute(ExecuteStep.java:80)
-	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:42)
-	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:75)
-	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
-	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:51)
-	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:29)
-	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.executeMutable(RemovePreviousOutputsStep.java:67)
-	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.executeMutable(RemovePreviousOutputsStep.java:39)
-	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
-	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:42)
-	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:24)
-	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:69)
-	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:46)
-	at org.gradle.internal.execution.steps.ResolveInputChangesStep.executeMutable(ResolveInputChangesStep.java:39)
-	at org.gradle.internal.execution.steps.ResolveInputChangesStep.executeMutable(ResolveInputChangesStep.java:28)
-	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
-	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
-	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$1(BuildCacheStep.java:76)
-	at org.gradle.internal.Either$Right.fold(Either.java:176)
-	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
-	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:74)
-	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:49)
-	at org.gradle.internal.execution.steps.StoreExecutionStateStep.executeMutable(StoreExecutionStateStep.java:46)
-	at org.gradle.internal.execution.steps.StoreExecutionStateStep.executeMutable(StoreExecutionStateStep.java:35)
-	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
-	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:75)
-	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:53)
-	at java.base/java.util.Optional.orElseGet(Unknown Source)
-	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:53)
-	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:35)
-	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
-	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
-	at org.gradle.internal.execution.steps.ResolveMutableCachingStateStep.executeDelegate(ResolveMutableCachingStateStep.java:70)
-	at org.gradle.internal.execution.steps.ResolveMutableCachingStateStep.executeDelegate(ResolveMutableCachingStateStep.java:32)
-	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:69)
-	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:37)
-	at org.gradle.internal.execution.steps.ResolveChangesStep.executeMutable(ResolveChangesStep.java:63)
-	at org.gradle.internal.execution.steps.ResolveChangesStep.executeMutable(ResolveChangesStep.java:34)
-	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
-	at org.gradle.internal.execution.steps.ValidateStep$Mutable.executeDelegate(ValidateStep.java:79)
-	at org.gradle.internal.execution.steps.ValidateStep$Mutable.executeDelegate(ValidateStep.java:65)
-	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:99)
-	at org.gradle.internal.execution.steps.ValidateStep$Mutable.execute(ValidateStep.java:65)
-	at org.gradle.internal.execution.steps.CaptureMutableStateBeforeExecutionStep.executeMutable(CaptureMutableStateBeforeExecutionStep.java:86)
-	at org.gradle.internal.execution.steps.CaptureMutableStateBeforeExecutionStep.execute(CaptureMutableStateBeforeExecutionStep.java:65)
-	at org.gradle.internal.execution.steps.CaptureMutableStateBeforeExecutionStep.execute(CaptureMutableStateBeforeExecutionStep.java:45)
-	at org.gradle.internal.execution.steps.SkipEmptyMutableWorkStep.executeWithNonEmptySources(SkipEmptyMutableWorkStep.java:210)
-	at org.gradle.internal.execution.steps.SkipEmptyMutableWorkStep.executeMutable(SkipEmptyMutableWorkStep.java:85)
-	at org.gradle.internal.execution.steps.SkipEmptyMutableWorkStep.executeMutable(SkipEmptyMutableWorkStep.java:53)
-	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
-	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
-	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.executeMutable(LoadPreviousExecutionStateStep.java:36)
-	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.executeMutable(LoadPreviousExecutionStateStep.java:23)
-	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
-	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.executeMutable(HandleStaleOutputsStep.java:77)
-	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.executeMutable(HandleStaleOutputsStep.java:43)
-	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
-	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$executeMutable$0(AssignMutableWorkspaceStep.java:34)
-	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:305)
-	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.executeMutable(AssignMutableWorkspaceStep.java:30)
-	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.executeMutable(AssignMutableWorkspaceStep.java:21)
-	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
-	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
-	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
-	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
-	at java.base/java.util.Optional.orElseGet(Unknown Source)
-	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
-	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
-	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
-	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
-	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:56)
-	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:38)
-	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:68)
-	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:132)
-	... 33 more
-Caused by: com.android.builder.internal.aapt.v2.Aapt2Exception: Android resource linking failed
-com.pixibeestudio.greenly.app-main-49:/layout/fragment_shipper_dashboard.xml:154: error: 'baseline' is incompatible with attribute gravity (attr) flags [bottom=80, center=17, center_horizontal=1, center_vertical=16, clip_horizontal=8, clip_vertical=128, end=8388613, fill=119, fill_horizontal=7, fill_vertical=112, left=3, right=5, start=8388611, top=48].
-com.pixibeestudio.greenly.app-main-49:/layout/fragment_shipper_dashboard.xml:199: error: 'baseline' is incompatible with attribute gravity (attr) flags [bottom=80, center=17, center_horizontal=1, center_vertical=16, clip_horizontal=8, clip_vertical=128, end=8388613, fill=119, fill_horizontal=7, fill_vertical=112, left=3, right=5, start=8388611, top=48].
-error: failed linking file resources.
-
-	at com.android.builder.internal.aapt.v2.Aapt2Exception$Companion.create(Aapt2Exception.kt:44)
-	at com.android.builder.internal.aapt.v2.Aapt2Exception$Companion.create$default(Aapt2Exception.kt:33)
-	at com.android.builder.internal.aapt.v2.Aapt2DaemonImpl.doLink(Aapt2DaemonImpl.kt:187)
-	at com.android.builder.internal.aapt.v2.Aapt2Daemon.link(Aapt2Daemon.kt:122)
-	at com.android.builder.internal.aapt.v2.Aapt2DaemonManager$LeasedAaptDaemon.link(Aapt2DaemonManager.kt:164)
-	at com.android.builder.internal.aapt.v2.Aapt2DaemonManager$leasingAapt2Daemon$1.link(Aapt2DaemonManager.kt:188)
-	at com.android.build.gradle.internal.services.PartialInProcessResourceProcessor.link(PartialInProcessResourceProcessor.kt:51)
-	at com.android.build.gradle.internal.res.Aapt2ProcessResourcesRunnableKt.processResources(Aapt2ProcessResourcesRunnable.kt:73)
-	at com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask$Companion.invokeAaptForSplit(LinkApplicationAndroidResourcesTask.kt:857)
-	at com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask$Companion.access$invokeAaptForSplit(LinkApplicationAndroidResourcesTask.kt:695)
-	at com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask$TaskAction.run(LinkApplicationAndroidResourcesTask.kt:396)
-	at com.android.build.gradle.internal.profile.ProfileAwareWorkAction.execute(ProfileAwareWorkAction.kt:66)
-	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:68)
-	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:64)
-	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:61)
-	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:102)
-	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:61)
-	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
-	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
-	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
-	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
-	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:58)
-	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:176)
-	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
-	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:194)
-	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:127)
-	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:169)
-	at org.gradle.internal.Factories$1.create(Factories.java:30)
-	at org.gradle.internal.work.DefaultWorkerLeaseService.lambda$withLocksAcquired$0(DefaultWorkerLeaseService.java:275)
-	at org.gradle.internal.work.ResourceLockStatistics$1.measure(ResourceLockStatistics.java:43)
-	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocksAcquired(DefaultWorkerLeaseService.java:273)
-	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:265)
-	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:128)
-	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:133)
-	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:164)
-	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:133)
-	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
-	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
-	... 5 more
-	Suppressed: java.util.NoSuchElementException: Unable to get absolute path from com.pixibeestudio.greenly.app-main-49:/layout/fragment_shipper_dashboard.xml
-                       because com.pixibeestudio.greenly.app-main-49 is not key in sourceSetPathMap.
-		at com.android.ide.common.resources.RelativeResourceUtils$relativeResourcePathToAbsolutePath$1.invoke(RelativeResourceUtils.kt:93)
-		at com.android.ide.common.resources.RelativeResourceUtils$relativeResourcePathToAbsolutePath$1.invoke(RelativeResourceUtils.kt:69)
-		at com.android.ide.common.resources.RelativeResourceUtils.relativeResourcePathToAbsolutePath(RelativeResourceUtils.kt:62)
-		at com.android.ide.common.blame.parser.aapt.Aapt2ErrorParser$MessageParser.parse(Aapt2ErrorParser.kt:113)
-		at com.android.ide.common.blame.parser.aapt.Aapt2ErrorParser.parse(Aapt2ErrorParser.kt:89)
-		at com.android.ide.common.blame.parser.aapt.Aapt2OutputParser.parse(Aapt2OutputParser.java:56)
-		at com.android.ide.common.blame.parser.ToolOutputParser.parseToolOutput(ToolOutputParser.java:84)
-		at com.android.build.gradle.internal.res.Aapt2ErrorUtils.rewriteException(Aapt2ErrorUtils.kt:189)
-		at com.android.build.gradle.internal.res.Aapt2ErrorUtils.rewriteLinkException(Aapt2ErrorUtils.kt:120)
-		at com.android.build.gradle.internal.res.Aapt2ProcessResourcesRunnableKt.processResources(Aapt2ProcessResourcesRunnable.kt:75)
-		... 41 more
-
-==============================================================================
-
-BUILD FAILED in 32s
-27 actionable tasks: 27 executed
+BUILD FAILED in 13s
+27 actionable tasks: 1 executed, 26 up-to-date

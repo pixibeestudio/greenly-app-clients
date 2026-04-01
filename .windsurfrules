@@ -23,6 +23,15 @@ You are acting as the AI coder, but the user will run and compile the app inside
 ## 4. Language and Communication
 - Always comment code and write error messages and user interface (UI) in Vietnamese.
 - Explain code concisely, focusing on the result.
-- Always run code or commands using PowerShell.
+- Always run code or commands using PowerShell in the terminal.
 - Always speak to me in Vietnamese.
-- Don't commit and push code directly, let me do it.
+
+# 5. Git and Github
+- Don't commit and push code directly, wait for my permission.
+- Always commit and push in Vietnamese.
+
+# 6. Fix and Debugging
+- When fixing bugs, always explain the root cause and the solution.
+- When debugging, always use logging to trace the issue and document the solution in memory.log for future reference.
+- When debugging, always use the debugger to step through the code.
+- When fixing bugs or debugging, you can access to D:\finalyear-project\greenly-website-admin to check the Backend Laravel, API endpoints and database schema.

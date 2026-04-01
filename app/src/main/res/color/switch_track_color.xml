@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Màu xanh lá đậm khi BẬT -->
+    <item android:color="#2E7D32" android:state_checked="true" />
+    <!-- Màu đỏ khi TẮT -->
+    <item android:color="#E53935" android:state_checked="false" />
+</selector>

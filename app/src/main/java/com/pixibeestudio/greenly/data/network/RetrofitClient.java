@@ -16,8 +16,15 @@ import java.io.IOException;
 public class RetrofitClient {
     private static final String BASE_URL = "http://192.168.2.200:8000/";
     private static Retrofit retrofit = null;
+    // Lưu context riêng để interceptor luôn dùng được context mới nhất
+    private static Context appContext = null;
 
     public static Retrofit getClient(Context context) {
+        // Cập nhật context nếu có truyền vào (dùng ApplicationContext để tránh memory leak)
+        if (context != null) {
+            appContext = context.getApplicationContext();
+        }
+
         if (retrofit == null) {
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
@@ -28,8 +35,9 @@ public class RetrofitClient {
                     Request original = chain.request();
                     Request.Builder requestBuilder = original.newBuilder();
 
-                    if (context != null) {
-                        SessionManager sessionManager = new SessionManager(context);
+                    // Dùng appContext (static) thay vì closure context
+                    if (appContext != null) {
+                        SessionManager sessionManager = new SessionManager(appContext);
                         String token = sessionManager.getAuthToken();
                         if (token != null && !token.isEmpty()) {
                             requestBuilder.header("Authorization", "Bearer " + token);
