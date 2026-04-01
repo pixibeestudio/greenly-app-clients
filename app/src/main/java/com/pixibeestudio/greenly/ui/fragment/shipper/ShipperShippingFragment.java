@@ -97,6 +97,18 @@ public class ShipperShippingFragment extends Fragment implements ShipperShipping
             }
         });
 
+        // Observe trạng thái Action (Hoàn thành, Thất bại...)
+        viewModel.getActionStatusLiveData().observe(getViewLifecycleOwner(), resource -> {
+            switch (resource.status) {
+                case SUCCESS:
+                    Toast.makeText(getContext(), resource.data, Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR:
+                    Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        });
+
         // Fetch lần đầu
         viewModel.fetchShippingOrders();
     }
@@ -137,7 +149,6 @@ public class ShipperShippingFragment extends Fragment implements ShipperShipping
                 .setMessage("Bạn chắc chắn muốn báo cáo giao hàng thất bại (hủy đơn) cho đơn hàng này?")
                 .setPositiveButton("Đồng ý", (dialog, which) -> {
                     viewModel.failOrder(order.getId());
-                    Toast.makeText(getContext(), "Đã hủy đơn!", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Đóng", null)
                 .show();
@@ -150,7 +161,6 @@ public class ShipperShippingFragment extends Fragment implements ShipperShipping
                 .setMessage("Bạn đã thu đủ số tiền COD từ khách hàng và giao hàng thành công?")
                 .setPositiveButton("Xác nhận", (dialog, which) -> {
                     viewModel.completeOrder(order.getId());
-                    Toast.makeText(getContext(), "Giao thành công!", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Chưa", null)
                 .show();

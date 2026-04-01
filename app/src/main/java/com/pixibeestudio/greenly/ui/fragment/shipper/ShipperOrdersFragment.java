@@ -47,4 +47,13 @@ public class ShipperOrdersFragment extends Fragment {
             }
         }).attach();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Luôn ép về tab 0 (Chờ lấy hàng) khi mở lại fragment
+        if (viewPager != null) {
+            viewPager.setCurrentItem(0, false);
+        }
+    }
 }

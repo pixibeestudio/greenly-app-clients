@@ -114,6 +114,5 @@ public class ShipperPickupFragment extends Fragment implements ShipperPickupAdap
     @Override
     public void onPickupClick(Order order) {
         viewModel.pickupOrder(order.getId());
-        Toast.makeText(getContext(), "Đã lấy hàng, bắt đầu giao!", Toast.LENGTH_SHORT).show();
     }
 }
