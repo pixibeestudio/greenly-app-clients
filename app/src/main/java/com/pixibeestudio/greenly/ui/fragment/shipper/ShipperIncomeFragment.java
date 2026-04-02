@@ -98,6 +98,8 @@ public class ShipperIncomeFragment extends Fragment {
     }
 
     private void updateUI(WalletProfileResponse data) {
+        if (data == null) return;
+
         tvTotalIncome.setText(currencyFormatter.format(data.getTotalIncome()) + "đ");
         tvCodBalance.setText(currencyFormatter.format(data.getCodBalance()) + "đ");
 
@@ -107,7 +109,11 @@ public class ShipperIncomeFragment extends Fragment {
         }
 
         // Cập nhật biểu đồ
-        updateChartData(data.getChartData());
+        if (data.getChartData() != null && !data.getChartData().isEmpty()) {
+            updateChartData(data.getChartData());
+        } else {
+            barChartIncome.clear();
+        }
     }
 
     private void setupBarChart() {

@@ -127,7 +127,8 @@ public class LoginFragment extends Fragment {
                                         sessionManager.saveUser(
                                             data.getUser().getFullname(), 
                                             data.getUser().getAvatar(),
-                                            data.getUser().getRole()
+                                            data.getUser().getRole(),
+                                            data.getUser().getPhone()
                                         );
                                     }
                                     

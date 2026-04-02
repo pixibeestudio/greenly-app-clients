@@ -14,8 +14,9 @@ public class SessionManager {
     private static final String KEY_USER_AVATAR = "userAvatar";
     private static final String KEY_USER_ROLE = "userRole";
     
-    private static final String KEY_SHIPPING_PHONE = "shippingPhone";
+    private static final String KEY_USER_PHONE = "userPhone";
     private static final String KEY_SHIPPING_ADDRESS = "shippingAddress";
+    private static final String KEY_SHIPPING_PHONE = "shippingPhone";
 
     private final SharedPreferences pref;
     private final SharedPreferences.Editor editor;
@@ -52,15 +53,20 @@ public class SessionManager {
         return pref.getString(KEY_AUTH_TOKEN, null);
     }
 
-    public void saveUser(String name, String avatarUrl, String role) {
+    public void saveUser(String name, String avatarUrl, String role, String phone) {
         editor.putString(KEY_USER_NAME, name);
         editor.putString(KEY_USER_AVATAR, avatarUrl);
         editor.putString(KEY_USER_ROLE, role);
+        editor.putString(KEY_USER_PHONE, phone);
         editor.apply();
     }
 
     public String getUserName() {
         return pref.getString(KEY_USER_NAME, null);
+    }
+
+    public String getUserPhone() {
+        return pref.getString(KEY_USER_PHONE, null);
     }
 
     public String getUserAvatar() {

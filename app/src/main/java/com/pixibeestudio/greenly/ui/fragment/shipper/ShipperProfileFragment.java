@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.local.SessionManager;
@@ -87,11 +88,20 @@ public class ShipperProfileFragment extends Fragment {
 
     private void loadUserInfo() {
         String name = sessionManager.getUserName();
-        String phone = sessionManager.getShippingPhone();
+        String phone = sessionManager.getUserPhone();
+        
         if (name != null) {
             tvShipperName.setText(name);
         }
         tvShipperPhone.setText(phone != null ? phone : "Chưa cập nhật số điện thoại");
+
+        // Load Avatar bằng Glide và cắt tròn tuyệt đối
+        Glide.with(this)
+            .load(sessionManager.getUserAvatar())
+            .circleCrop()
+            .placeholder(R.drawable.ic_person) // Dùng ic_person làm mặc định vì R.drawable.ic_profile chưa chắc có
+            .error(R.drawable.ic_person)
+            .into(ivShipperAvatar);
     }
 
     private void updateStatsUI(WalletProfileResponse data) {
