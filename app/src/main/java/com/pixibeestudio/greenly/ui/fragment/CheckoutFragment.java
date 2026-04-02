@@ -172,8 +172,8 @@ public class CheckoutFragment extends Fragment {
                     sessionManager.clearShippingInfo();
                     Toast.makeText(getContext(), "Đặt hàng thành công!", Toast.LENGTH_SHORT).show();
                     
-                    // Xóa backstack và về thẳng trang chủ
-                    Navigation.findNavController(requireView()).popBackStack(R.id.homeFragment, false);
+                    // Chuyển sang màn hình Thanh toán thành công
+                    Navigation.findNavController(requireView()).navigate(R.id.action_checkoutFragment_to_orderSuccessFragment);
                     break;
                 case ERROR:
                     progressDialog.dismiss();
