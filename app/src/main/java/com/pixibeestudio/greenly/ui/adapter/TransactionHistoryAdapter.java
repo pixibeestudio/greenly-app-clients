@@ -39,25 +39,22 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TransactionHistory item = historyList.get(position);
-        holder.tvTransactionTitle.setText(item.getTitle());
+        
+        // Gán tiêu đề đơn hàng
+        holder.tvTransactionTitle.setText("Hoàn thành đơn #" + item.getOrderId());
+        
+        // Gán thời gian đã được Laravel format sẵn
         holder.tvTransactionTime.setText(item.getTime());
 
+        // Gán số tiền
         DecimalFormat df = new DecimalFormat("#,###");
-        String formattedAmount = df.format(item.getAmount()) + "đ";
-
-        if ("INCOME".equalsIgnoreCase(item.getType())) {
-            holder.ivTransactionType.setImageResource(R.drawable.ic_arrow_up_green);
-            holder.tvTransactionAmount.setText("+ " + formattedAmount);
-            holder.tvTransactionAmount.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.holo_green_dark));
-        } else if ("WITHDRAWAL".equalsIgnoreCase(item.getType())) {
-            holder.ivTransactionType.setImageResource(R.drawable.ic_arrow_down_red);
-            holder.tvTransactionAmount.setText("- " + formattedAmount);
-            holder.tvTransactionAmount.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.holo_red_dark));
-        } else {
-            holder.ivTransactionType.setImageResource(R.drawable.ic_cash); // Default icon
-            holder.tvTransactionAmount.setText(formattedAmount);
-            holder.tvTransactionAmount.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.black));
-        }
+        String formattedAmount = df.format(item.getIncome()) + "đ";
+        
+        holder.tvTransactionAmount.setText("+ " + formattedAmount);
+        
+        // Cố định icon thu nhập và màu xanh
+        holder.ivTransactionType.setImageResource(R.drawable.ic_arrow_up_green);
+        holder.tvTransactionAmount.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.holo_green_dark));
     }
 
     @Override

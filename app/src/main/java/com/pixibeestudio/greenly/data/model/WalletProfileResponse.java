@@ -96,35 +96,29 @@ public class WalletProfileResponse {
     }
 
     public static class TransactionHistory {
-        @SerializedName("id")
-        private int id;
+        @SerializedName("orderId")
+        private int orderId;
 
-        @SerializedName("title")
-        private String title;
+        @SerializedName("income")
+        private double income;
 
         @SerializedName("time")
         private String time;
 
-        @SerializedName("amount")
-        private double amount;
-
-        @SerializedName("type")
-        private String type; // e.g., "INCOME", "WITHDRAWAL", "COD_SUBMIT"
-
-        public int getId() {
-            return id;
+        public int getOrderId() {
+            return orderId;
         }
 
-        public void setId(int id) {
-            this.id = id;
+        public void setOrderId(int orderId) {
+            this.orderId = orderId;
         }
 
-        public String getTitle() {
-            return title;
+        public double getIncome() {
+            return income;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public void setIncome(double income) {
+            this.income = income;
         }
 
         public String getTime() {
@@ -133,22 +127,6 @@ public class WalletProfileResponse {
 
         public void setTime(String time) {
             this.time = time;
-        }
-
-        public double getAmount() {
-            return amount;
-        }
-
-        public void setAmount(double amount) {
-            this.amount = amount;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
         }
     }
 }
