@@ -33,6 +33,6 @@ You are acting as the AI coder, but the user will run and compile the app inside
 
 # 6. Fix and Debugging
 - When fixing bugs, always explain the root cause and the solution.
-- When debugging, always use logging to trace the issue and document the solution in memory.log for future reference.
+- When debugging, always use logging to trace the issue and document the solution in D:\finalyear-project\greenly-app\memory.log for future reference.
 - When debugging, always use the debugger to step through the code.
 - When fixing bugs or debugging, you can access to D:\finalyear-project\greenly-website-admin to check the Backend Laravel, API endpoints and database schema.

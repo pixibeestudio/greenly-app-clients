@@ -31,6 +31,7 @@ public class ShipperDashboardViewModel extends AndroidViewModel {
     // Dữ liệu cho UI
     private final MediatorLiveData<Resource<List<Order>>> newOrdersLiveData = new MediatorLiveData<>();
     private final MediatorLiveData<Resource<ShipperStatsResponse>> statsLiveData = new MediatorLiveData<>();
+    private final MutableLiveData<Resource<com.pixibeestudio.greenly.data.model.WalletProfileResponse>> walletProfileLiveData = new MutableLiveData<>();
     
     // Các event dùng SingleLiveEvent để tránh Double Toast
     private final SingleLiveEvent<Resource<String>> acceptOrderLiveData = new SingleLiveEvent<>();
@@ -65,6 +66,9 @@ public class ShipperDashboardViewModel extends AndroidViewModel {
 
     public LiveData<Resource<ShipperStatsResponse>> getStatsLiveData() {
         return statsLiveData;
+    }
+    public LiveData<Resource<com.pixibeestudio.greenly.data.model.WalletProfileResponse>> getWalletProfileLiveData() {
+        return walletProfileLiveData;
     }
 
     public SingleLiveEvent<Resource<String>> getAcceptOrderLiveData() {
@@ -121,6 +125,25 @@ public class ShipperDashboardViewModel extends AndroidViewModel {
             statsLiveData.setValue(responseResource);
             if (responseResource.status != Resource.Status.LOADING) {
                 statsLiveData.removeSource(source);
+            }
+        });
+    }
+
+    public void fetchWalletProfile() {
+        walletProfileLiveData.setValue(Resource.loading());
+        RetrofitClient.getApiService(getApplication()).getWalletProfile().enqueue(new retrofit2.Callback<com.pixibeestudio.greenly.data.model.WalletProfileResponse>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.pixibeestudio.greenly.data.model.WalletProfileResponse> call, retrofit2.Response<com.pixibeestudio.greenly.data.model.WalletProfileResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    walletProfileLiveData.setValue(Resource.success(response.body()));
+                } else {
+                    walletProfileLiveData.setValue(Resource.error("Lỗi lấy thông tin ví & hồ sơ", null));
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<com.pixibeestudio.greenly.data.model.WalletProfileResponse> call, Throwable t) {
+                walletProfileLiveData.setValue(Resource.error("Lỗi kết nối: " + t.getMessage(), null));
             }
         });
     }

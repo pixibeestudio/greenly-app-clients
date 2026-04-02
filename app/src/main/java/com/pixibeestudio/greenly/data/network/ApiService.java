@@ -85,5 +85,8 @@ public interface ApiService {
 
     @POST("api/shipper/work-status")
     Call<JsonObject> updateWorkStatus(@Body JsonObject body);
+
+    @GET("api/shipper/wallet-profile")
+    Call<com.pixibeestudio.greenly.data.model.WalletProfileResponse> getWalletProfile();
 }
 
