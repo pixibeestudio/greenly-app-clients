@@ -1,5 +1,6 @@
 package com.pixibeestudio.greenly.ui.fragment;
 
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
@@ -22,6 +24,7 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.pixibeestudio.greenly.R;
+import com.pixibeestudio.greenly.ui.viewmodel.CheckoutViewModel;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -38,6 +41,7 @@ public class PaymentQrFragment extends Fragment {
 
     private int totalAmount;
     private int orderId;
+    private CheckoutViewModel viewModel;
 
     /**
      * Tạo instance của PaymentQrFragment với arguments
@@ -72,6 +76,9 @@ public class PaymentQrFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Khoi tao ViewModel
+        viewModel = new ViewModelProvider(this).get(CheckoutViewModel.class);
+
         // Anh xa views
         btnBack = view.findViewById(R.id.btnBack);
         imgQrCode = view.findViewById(R.id.imgQrCode);
@@ -96,13 +103,34 @@ public class PaymentQrFragment extends Fragment {
         btnBack.setOnClickListener(v -> showExitDialog());
 
         btnPaymentDone.setOnClickListener(v -> {
-            // Dieu huong sang OrderSuccessFragment va xoa backstack ve Home
-            Bundle args = new Bundle();
-            args.putInt("orderId", orderId);
-            args.putString("paymentMethod", "bank_transfer");
+            // Goi API xac nhan thanh toan truoc khi dieu huong
+            ProgressDialog progressDialog = new ProgressDialog(requireContext());
+            progressDialog.setMessage("Đang xác nhận thanh toán...");
+            progressDialog.setCancelable(false);
 
-            NavController navController = Navigation.findNavController(view);
-            navController.navigate(R.id.action_paymentQrFragment_to_orderSuccessFragment, args);
+            viewModel.confirmPayment(orderId).observe(getViewLifecycleOwner(), resource -> {
+                switch (resource.status) {
+                    case LOADING:
+                        progressDialog.show();
+                        break;
+                    case SUCCESS:
+                        progressDialog.dismiss();
+                        Toast.makeText(getContext(), "Xác nhận thanh toán thành công!", Toast.LENGTH_SHORT).show();
+
+                        // Dieu huong sang OrderSuccessFragment
+                        Bundle args = new Bundle();
+                        args.putInt("orderId", orderId);
+                        args.putString("paymentMethod", "bank_transfer");
+
+                        NavController navController = Navigation.findNavController(view);
+                        navController.navigate(R.id.action_paymentQrFragment_to_orderSuccessFragment, args);
+                        break;
+                    case ERROR:
+                        progressDialog.dismiss();
+                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_LONG).show();
+                        break;
+                }
+            });
         });
     }
 

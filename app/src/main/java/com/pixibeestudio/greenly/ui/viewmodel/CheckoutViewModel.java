@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.gson.JsonObject;
 import com.pixibeestudio.greenly.data.model.CheckoutRequest;
 import com.pixibeestudio.greenly.data.model.CheckoutResult;
 import com.pixibeestudio.greenly.data.network.Resource;
@@ -21,5 +22,10 @@ public class CheckoutViewModel extends AndroidViewModel {
 
     public MutableLiveData<Resource<CheckoutResult>> placeOrder(CheckoutRequest request) {
         return repository.placeOrder(request);
+    }
+
+    // Xac nhan thanh toan chuyen khoan
+    public MutableLiveData<Resource<JsonObject>> confirmPayment(int orderId) {
+        return repository.confirmPayment(orderId);
     }
 }

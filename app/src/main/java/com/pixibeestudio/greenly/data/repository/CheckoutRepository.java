@@ -65,4 +65,37 @@ public class CheckoutRepository {
 
         return result;
     }
+
+    // Xac nhan thanh toan chuyen khoan cho don hang
+    public MutableLiveData<Resource<JsonObject>> confirmPayment(int orderId) {
+        MutableLiveData<Resource<JsonObject>> result = new MutableLiveData<>();
+        result.setValue(Resource.loading());
+
+        apiService.confirmPayment(orderId).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    android.util.Log.d("CheckoutRepository", "Xác nhận thanh toán OK - orderId=" + orderId);
+                    result.setValue(Resource.success(response.body()));
+                } else {
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
+                        android.util.Log.e("CheckoutRepository", "Lỗi xác nhận thanh toán (HTTP " + response.code() + "): " + errorBody);
+                        result.setValue(Resource.error("Lỗi xác nhận thanh toán: " + response.message(), null));
+                    } catch (Exception e) {
+                        android.util.Log.e("CheckoutRepository", "Lỗi phân tích errorBody", e);
+                        result.setValue(Resource.error("Lỗi xác nhận thanh toán", null));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                android.util.Log.e("CheckoutRepository", "Lỗi mạng xác nhận thanh toán: " + t.getMessage());
+                result.setValue(Resource.error("Không thể kết nối máy chủ", null));
+            }
+        });
+
+        return result;
+    }
 }

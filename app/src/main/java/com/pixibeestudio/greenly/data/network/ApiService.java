@@ -55,6 +55,10 @@ public interface ApiService {
     @POST("api/checkout")
     Call<JsonObject> placeOrder(@Body com.pixibeestudio.greenly.data.model.CheckoutRequest request);
 
+    // --- XAC NHAN THANH TOAN ---
+    @POST("api/orders/{id}/confirm-payment")
+    Call<JsonObject> confirmPayment(@Path("id") int orderId);
+
     // --- CUSTOMER ORDERS API ---
     @GET("api/my-orders")
     Call<com.pixibeestudio.greenly.data.model.OrderResponse> getMyOrders();
