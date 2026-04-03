@@ -115,6 +115,11 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setupClickListeners(View view) {
+        // Nút Đơn hàng của tôi (nằm trong groupShoppingProfile)
+        groupShoppingProfile.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_profileFragment_to_myOrdersFragment);
+        });
+
         // Nút Đăng xuất
         btnLogoutProfile.setOnClickListener(v -> {
             // Local Logout

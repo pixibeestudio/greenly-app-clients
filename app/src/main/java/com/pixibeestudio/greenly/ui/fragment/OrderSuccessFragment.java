@@ -50,15 +50,13 @@ public class OrderSuccessFragment extends Fragment {
 
         // Xử lý sự kiện click
         btnViewOrders.setOnClickListener(v -> {
-            // Chuyển hướng sang MyOrdersFragment (Nếu đã có)
-            // Nếu chưa có MyOrdersFragment, tạm thời quay về Home hoặc báo Toast
+            // Chuyển hướng sang MyOrdersFragment
             try {
                 NavOptions navOptions = new NavOptions.Builder()
                         .setPopUpTo(R.id.homeFragment, false)
                         .build();
-                Navigation.findNavController(view).navigate(R.id.action_orderSuccessFragment_to_homeFragment, null, navOptions);
+                Navigation.findNavController(view).navigate(R.id.action_orderSuccessFragment_to_myOrdersFragment, null, navOptions);
             } catch (Exception e) {
-                // Tạm thời nếu MyOrders chưa có trong NavGraph
                 Toast.makeText(requireContext(), "Màn hình Đơn hàng đang phát triển. Quay về Trang chủ.", Toast.LENGTH_SHORT).show();
                 navigateToHome(view);
             }
