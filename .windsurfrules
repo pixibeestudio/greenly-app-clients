@@ -30,6 +30,7 @@ You are acting as the AI coder, but the user will run and compile the app inside
 - Don't commit and push code directly, wait for my permission.
 - Don't run git commands directly, wait for my permission.
 - Always commit and push in Vietnamese.
+- LƯU Ý QUẢN TRỌNG: Không chạy lệnh git(Commit & push) khi làm đã xong yêu cầu hoặc nhiệm vụ mà tôi giao bạn làm. Khi tôi test xong và yêu cầu bạn commit và push code thì mới chạy lệnh git(Commit & push).
 
 # 6. Fix and Debugging
 - When fixing bugs, always explain the root cause and the solution.

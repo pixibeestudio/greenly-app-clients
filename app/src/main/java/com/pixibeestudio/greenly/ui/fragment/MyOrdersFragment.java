@@ -12,16 +12,20 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.ui.adapter.MyOrdersPagerAdapter;
+import com.pixibeestudio.greenly.ui.viewmodel.MyOrdersViewModel;
 
 public class MyOrdersFragment extends Fragment {
 
     private ImageButton btnBack;
     private TabLayout tlMyOrders;
     private ViewPager2 vpMyOrders;
+    private MyOrdersViewModel viewModel;
 
     private final String[] tabTitles = new String[]{
             "Tất cả", "Chờ xác nhận", "Đang xử lý", "Chờ lấy hàng", "Đang giao", "Đã giao", "Đã hủy"
@@ -37,6 +41,9 @@ public class MyOrdersFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Khởi tạo ViewModel (SharedViewModel cho các Fragment con)
+        viewModel = new ViewModelProvider(this).get(MyOrdersViewModel.class);
+
         // Ánh xạ View
         btnBack = view.findViewById(R.id.btnBack);
         tlMyOrders = view.findViewById(R.id.tlMyOrders);
@@ -46,6 +53,9 @@ public class MyOrdersFragment extends Fragment {
         btnBack.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
 
         // Cài đặt ViewPager2 và TabLayout
+
+        // Gọi API tải danh sách đơn hàng
+        viewModel.fetchMyOrders();
         MyOrdersPagerAdapter adapter = new MyOrdersPagerAdapter(this);
         vpMyOrders.setAdapter(adapter);
 

@@ -55,6 +55,10 @@ public interface ApiService {
     @POST("api/checkout")
     Call<JsonObject> placeOrder(@Body com.pixibeestudio.greenly.data.model.CheckoutRequest request);
 
+    // --- CUSTOMER ORDERS API ---
+    @GET("api/my-orders")
+    Call<com.pixibeestudio.greenly.data.model.OrderResponse> getMyOrders();
+
     // --- SHIPPER API ---
     @GET("api/shipper/orders/new")
     Call<com.pixibeestudio.greenly.data.model.OrderResponse> getShipperNewOrders();
