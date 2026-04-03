@@ -33,6 +33,9 @@ public class ProfileFragment extends Fragment {
     private TextView tvUserContactProfile;
     
     private LinearLayout groupShoppingProfile;
+    private LinearLayout layoutMyOrders;
+    private LinearLayout layoutAddress;
+    private LinearLayout layoutReviews;
     private LinearLayout groupAccountProfile;
     private LinearLayout groupSupportProfile;
     
@@ -66,6 +69,9 @@ public class ProfileFragment extends Fragment {
         tvUserContactProfile = view.findViewById(R.id.tvUserContactProfile);
 
         groupShoppingProfile = view.findViewById(R.id.groupShoppingProfile);
+        layoutMyOrders = view.findViewById(R.id.layoutMyOrders);
+        layoutAddress = view.findViewById(R.id.layoutAddress);
+        layoutReviews = view.findViewById(R.id.layoutReviews);
         groupAccountProfile = view.findViewById(R.id.groupAccountProfile);
         groupSupportProfile = view.findViewById(R.id.groupSupportProfile);
 
@@ -115,9 +121,19 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setupClickListeners(View view) {
-        // Nút Đơn hàng của tôi (nằm trong groupShoppingProfile)
-        groupShoppingProfile.setOnClickListener(v -> {
+        // Nút Đơn hàng của tôi
+        layoutMyOrders.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.action_profileFragment_to_myOrdersFragment);
+        });
+
+        // Nút Sổ địa chỉ
+        layoutAddress.setOnClickListener(v -> {
+            Toast.makeText(requireContext(), "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
+        });
+
+        // Nút Đánh giá sản phẩm
+        layoutReviews.setOnClickListener(v -> {
+            Toast.makeText(requireContext(), "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
         });
 
         // Nút Đăng xuất

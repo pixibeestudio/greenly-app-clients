@@ -135,11 +135,14 @@
 
                         <!-- Item Đơn hàng -->
                         <LinearLayout
+                            android:id="@+id/layoutMyOrders"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             android:paddingHorizontal="16dp">
                             
                             <ImageView
@@ -168,11 +171,14 @@
 
                         <!-- Item Sổ địa chỉ -->
                         <LinearLayout
+                            android:id="@+id/layoutAddress"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             android:paddingHorizontal="16dp">
                             
                             <ImageView
@@ -201,11 +207,14 @@
 
                         <!-- Item Đánh giá -->
                         <LinearLayout
+                            android:id="@+id/layoutReviews"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             android:paddingHorizontal="16dp">
                             
                             <ImageView

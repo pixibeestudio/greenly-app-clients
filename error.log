@@ -16,14 +16,14 @@ Executing tasks: [:app:assembleDebug] in project D:\finalyear-project\greenly-ap
 > Task :app:mergeLibDexDebug UP-TO-DATE
 > Task :app:checkDebugAarMetadata UP-TO-DATE
 > Task :app:mapDebugSourceSetPaths
+> Task :app:compileDebugNavigationResources UP-TO-DATE
 > Task :app:parseDebugLocalResources
-> Task :app:compileDebugNavigationResources
 > Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
-> Task :app:extractDeepLinksDebug
+> Task :app:extractDeepLinksDebug UP-TO-DATE
 > Task :app:generateDebugRFile
+> Task :app:mergeDebugResources
 > Task :app:processDebugMainManifest UP-TO-DATE
 > Task :app:compileDebugKotlin NO-SOURCE
-> Task :app:mergeDebugResources
 
 > Task :app:compileDebugJavaWithJavac
 Note: [1] Wrote GeneratedAppGlideModule with: []
@@ -50,9 +50,8 @@ FAILURE: Build failed with an exception.
 Execution failed for task ':app:processDebugResources'.
 > A failure occurred while executing com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask$TaskAction
    > Android resource linking failed
-     com.pixibeestudio.greenly.app-main-50:/layout/fragment_my_orders.xml:26: error: resource drawable/ic_back (aka com.pixibeestudio.greenly:drawable/ic_back) not found.
-     com.pixibeestudio.greenly.app-main-50:/layout/fragment_my_orders.xml:84: error: resource drawable/ic_filter (aka com.pixibeestudio.greenly:drawable/ic_filter) not found.
-     com.pixibeestudio.greenly.app-main-50:/layout/fragment_my_orders_page.xml:34: error: resource drawable/ic_order_empty (aka com.pixibeestudio.greenly:drawable/ic_order_empty) not found.
+     com.pixibeestudio.greenly.app-main-50:/layout/item_customer_order.xml:69: error: resource drawable/ic_default_product (aka com.pixibeestudio.greenly:drawable/ic_default_product) not found.
+     com.pixibeestudio.greenly.app-main-50:/layout/item_customer_order.xml:69: error: resource style/ShapeAppearanceOverlay.App.CornerSize10Percent (aka com.pixibeestudio.greenly:style/ShapeAppearanceOverlay.App.CornerSize10Percent) not found.
      error: failed linking file resources.
 
 
@@ -207,9 +206,8 @@ Caused by: org.gradle.workers.internal.DefaultWorkerExecutor$WorkExecutionExcept
 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:132)
 	... 30 more
 Caused by: com.android.builder.internal.aapt.v2.Aapt2Exception: Android resource linking failed
-com.pixibeestudio.greenly.app-main-50:/layout/fragment_my_orders.xml:26: error: resource drawable/ic_back (aka com.pixibeestudio.greenly:drawable/ic_back) not found.
-com.pixibeestudio.greenly.app-main-50:/layout/fragment_my_orders.xml:84: error: resource drawable/ic_filter (aka com.pixibeestudio.greenly:drawable/ic_filter) not found.
-com.pixibeestudio.greenly.app-main-50:/layout/fragment_my_orders_page.xml:34: error: resource drawable/ic_order_empty (aka com.pixibeestudio.greenly:drawable/ic_order_empty) not found.
+com.pixibeestudio.greenly.app-main-50:/layout/item_customer_order.xml:69: error: resource drawable/ic_default_product (aka com.pixibeestudio.greenly:drawable/ic_default_product) not found.
+com.pixibeestudio.greenly.app-main-50:/layout/item_customer_order.xml:69: error: resource style/ShapeAppearanceOverlay.App.CornerSize10Percent (aka com.pixibeestudio.greenly:style/ShapeAppearanceOverlay.App.CornerSize10Percent) not found.
 error: failed linking file resources.
 
 	at com.android.builder.internal.aapt.v2.Aapt2Exception$Companion.create(Aapt2Exception.kt:44)
@@ -254,7 +252,7 @@ error: failed linking file resources.
 	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:164)
 	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:133)
 	... 2 more
-	Suppressed: java.util.NoSuchElementException: Unable to get absolute path from com.pixibeestudio.greenly.app-main-50:/layout/fragment_my_orders.xml
+	Suppressed: java.util.NoSuchElementException: Unable to get absolute path from com.pixibeestudio.greenly.app-main-50:/layout/item_customer_order.xml
                        because com.pixibeestudio.greenly.app-main-50 is not key in sourceSetPathMap.
 		at com.android.ide.common.resources.RelativeResourceUtils$relativeResourcePathToAbsolutePath$1.invoke(RelativeResourceUtils.kt:93)
 		at com.android.ide.common.resources.RelativeResourceUtils$relativeResourcePathToAbsolutePath$1.invoke(RelativeResourceUtils.kt:69)
@@ -309,5 +307,5 @@ error: failed linking file resources.
 		at java.base/java.lang.Thread.run(Unknown Source)
 
 
-BUILD FAILED in 24s
-29 actionable tasks: 11 executed, 18 up-to-date
+BUILD FAILED in 8s
+29 actionable tasks: 9 executed, 20 up-to-date
