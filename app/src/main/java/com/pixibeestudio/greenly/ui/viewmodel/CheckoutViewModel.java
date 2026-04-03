@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.pixibeestudio.greenly.data.model.CheckoutRequest;
+import com.pixibeestudio.greenly.data.model.CheckoutResult;
 import com.pixibeestudio.greenly.data.network.Resource;
 import com.pixibeestudio.greenly.data.repository.CheckoutRepository;
 
@@ -18,7 +19,7 @@ public class CheckoutViewModel extends AndroidViewModel {
         repository = new CheckoutRepository(application.getApplicationContext());
     }
 
-    public MutableLiveData<Resource<Boolean>> placeOrder(CheckoutRequest request) {
+    public MutableLiveData<Resource<CheckoutResult>> placeOrder(CheckoutRequest request) {
         return repository.placeOrder(request);
     }
 }

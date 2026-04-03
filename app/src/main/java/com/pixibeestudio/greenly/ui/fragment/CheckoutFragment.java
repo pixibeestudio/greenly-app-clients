@@ -19,6 +19,7 @@ import com.google.android.material.button.MaterialButton;
 import android.app.ProgressDialog;
 import androidx.lifecycle.ViewModelProvider;
 import com.pixibeestudio.greenly.data.model.CheckoutRequest;
+import com.pixibeestudio.greenly.data.model.CheckoutResult;
 import com.pixibeestudio.greenly.ui.viewmodel.CheckoutViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.pixibeestudio.greenly.R;
@@ -185,17 +186,16 @@ public class CheckoutFragment extends Fragment {
                     sessionManager.clearShippingInfo();
                     Toast.makeText(getContext(), "Đặt hàng thành công!", Toast.LENGTH_SHORT).show();
                     
-                    // Tinh tong tien
-                    int totalAmount = (int) (subtotal + shippingFee);
-                    // orderId tam thoi dung 0 (API placeOrder chi tra ve Boolean)
-                    int orderId = 0;
+                    // Lay orderId va grandTotal tu backend response
+                    CheckoutResult checkoutResult = resource.data;
+                    int orderId = (checkoutResult != null) ? checkoutResult.getOrderId() : 0;
+                    int grandTotal = (checkoutResult != null) ? checkoutResult.getGrandTotal() : (int)(subtotal + shippingFee);
                     
                     // Chia luong dieu huong theo phuong thuc thanh toan
-                    // Dung selectedPaymentId vi paymentMethod da doi thanh "banking"
                     if (selectedPaymentId == R.id.rbPaymentVietQR) {
-                        // Chuyen sang man hinh QR
+                        // Chuyen sang man hinh QR voi grandTotal va orderId tu backend
                         Bundle args = new Bundle();
-                        args.putInt("totalAmount", totalAmount);
+                        args.putInt("totalAmount", grandTotal);
                         args.putInt("orderId", orderId);
                         Navigation.findNavController(requireView())
                                 .navigate(R.id.action_checkoutFragment_to_paymentQrFragment, args);

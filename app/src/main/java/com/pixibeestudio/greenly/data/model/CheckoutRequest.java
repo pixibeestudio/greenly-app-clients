@@ -21,7 +21,7 @@ public class CheckoutRequest {
     @SerializedName("shipping_fee")
     private int shippingFee;
 
-    @SerializedName("notes")
+    @SerializedName("note")
     private String notes;
 
     public CheckoutRequest() {

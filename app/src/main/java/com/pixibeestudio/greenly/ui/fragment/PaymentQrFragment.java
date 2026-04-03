@@ -10,10 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
@@ -81,11 +84,16 @@ public class PaymentQrFragment extends Fragment {
         // Tai QR code VietQR
         loadQrCode();
 
-        // Xu ly su kien click
-        btnBack.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController(view);
-            navController.popBackStack();
+        // Chan nut Back he thong (System Back) - hien dialog thay vi quay lai Checkout
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showExitDialog();
+            }
         });
+
+        // Xu ly su kien click nut Back tren Header - hien dialog thay vi popBackStack
+        btnBack.setOnClickListener(v -> showExitDialog());
 
         btnPaymentDone.setOnClickListener(v -> {
             // Dieu huong sang OrderSuccessFragment va xoa backstack ve Home
@@ -118,6 +126,26 @@ public class PaymentQrFragment extends Fragment {
                 .placeholder(R.drawable.ic_default_product)
                 .error(R.drawable.ic_default_product)
                 .into(imgQrCode);
+    }
+
+    /**
+     * Hien thi Dialog xac nhan khi nguoi dung muon roi khoi man hinh thanh toan QR
+     * Vi gio hang da bi xoa sau khi dat hang, khong the quay lai Checkout
+     */
+    private void showExitDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Hủy thanh toán?")
+                .setMessage("Bạn chưa hoàn thành giao dịch. Đơn hàng sẽ được lưu vào danh sách chờ thanh toán. Bạn có chắc chắn muốn rời đi và quay về Trang chủ không?")
+                .setPositiveButton("Về Trang chủ", (dialog, which) -> {
+                    NavController navController = Navigation.findNavController(requireView());
+                    NavOptions navOptions = new NavOptions.Builder()
+                            .setPopUpTo(R.id.homeFragment, true)
+                            .build();
+                    navController.navigate(R.id.homeFragment, null, navOptions);
+                })
+                .setNegativeButton("Tiếp tục thanh toán", (dialog, which) -> dialog.dismiss())
+                .setCancelable(false)
+                .show();
     }
 
     /**
