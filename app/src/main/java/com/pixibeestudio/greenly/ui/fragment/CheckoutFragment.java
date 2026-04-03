@@ -81,6 +81,11 @@ public class CheckoutFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadShippingInfo();
+        // Kiem tra lai gio hang, neu trong thi chuyen ve gio hang
+        if (subtotal <= 0) {
+            Toast.makeText(getContext(), "Giỏ hàng trống, vui lòng thêm sản phẩm", Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(requireView()).popBackStack(R.id.cartFragment, false);
+        }
     }
 
     private void initViews(View view) {
@@ -137,6 +142,12 @@ public class CheckoutFragment extends Fragment {
     }
 
     private void placeOrder() {
+        // Kiem tra gio hang co san pham khong
+        if (subtotal <= 0) {
+            Toast.makeText(getContext(), "Giỏ hàng trống, không thể đặt hàng", Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(requireView()).popBackStack(R.id.cartFragment, false);
+            return;
+        }
         String phone = sessionManager.getShippingPhone();
         String address = sessionManager.getShippingAddress();
         String userName = sessionManager.getUserName();
@@ -150,7 +161,9 @@ public class CheckoutFragment extends Fragment {
         String notes = etCheckoutNote.getText() != null ? etCheckoutNote.getText().toString().trim() : "";
         
         String shippingMethod = rgShippingMethod.getCheckedRadioButtonId() == R.id.rbShippingExpress ? "Hoa_toc" : "Nhanh";
-        String paymentMethod = rgPaymentMethod.getCheckedRadioButtonId() == R.id.rbPaymentVietQR ? "VietQR" : "COD";
+        // Lay ID cua RadioButton duoc chon de xac dinh phuong thuc thanh toan
+        int selectedPaymentId = rgPaymentMethod.getCheckedRadioButtonId();
+        String paymentMethod = (selectedPaymentId == R.id.rbPaymentVietQR) ? "banking" : "COD";
 
         CheckoutRequest request = new CheckoutRequest(
             name,
@@ -172,8 +185,25 @@ public class CheckoutFragment extends Fragment {
                     sessionManager.clearShippingInfo();
                     Toast.makeText(getContext(), "Đặt hàng thành công!", Toast.LENGTH_SHORT).show();
                     
-                    // Chuyển sang màn hình Thanh toán thành công
-                    Navigation.findNavController(requireView()).navigate(R.id.action_checkoutFragment_to_orderSuccessFragment);
+                    // Tinh tong tien
+                    int totalAmount = (int) (subtotal + shippingFee);
+                    // orderId tam thoi dung 0 (API placeOrder chi tra ve Boolean)
+                    int orderId = 0;
+                    
+                    // Chia luong dieu huong theo phuong thuc thanh toan
+                    // Dung selectedPaymentId vi paymentMethod da doi thanh "banking"
+                    if (selectedPaymentId == R.id.rbPaymentVietQR) {
+                        // Chuyen sang man hinh QR
+                        Bundle args = new Bundle();
+                        args.putInt("totalAmount", totalAmount);
+                        args.putInt("orderId", orderId);
+                        Navigation.findNavController(requireView())
+                                .navigate(R.id.action_checkoutFragment_to_paymentQrFragment, args);
+                    } else {
+                        // COD - Chuyen sang man hinh thanh toan thanh cong
+                        Navigation.findNavController(requireView())
+                                .navigate(R.id.action_checkoutFragment_to_orderSuccessFragment);
+                    }
                     break;
                 case ERROR:
                     progressDialog.dismiss();

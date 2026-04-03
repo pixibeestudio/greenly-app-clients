@@ -192,6 +192,14 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+            
+        <action
+            android:id="@+id/action_checkoutFragment_to_paymentQrFragment"
+            app:destination="@id/paymentQrFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
@@ -254,6 +262,29 @@
             app:destination="@id/loginFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/paymentQrFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.PaymentQrFragment"
+        android:label="Thanh toán chuyển khoản"
+        tools:layout="@layout/fragment_payment_qr">
+        <argument
+            android:name="totalAmount"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="orderId"
+            app:argType="integer"
+            android:defaultValue="0" />
+
+        <action
+            android:id="@+id/action_paymentQrFragment_to_orderSuccessFragment"
+            app:destination="@id/orderSuccessFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
 </navigation>
