@@ -72,6 +72,8 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     private AppBarLayout appBarLayout;
     private ConstraintLayout layoutHeaderExpanded;
     private ConstraintLayout layoutHeaderPinned;
+    private LinearLayout layoutSearch;
+    private LinearLayout searchBarSticky;
     private Button btnFilterBy, btnCategoryFilter, btnDiscountFilter, btnResetFilter;
 
     private HomeViewModel homeViewModel;
@@ -242,6 +244,16 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         appBarLayout = view.findViewById(R.id.app_bar_layout);
         layoutHeaderExpanded = view.findViewById(R.id.layoutHeaderExpanded);
         layoutHeaderPinned = view.findViewById(R.id.layoutHeaderPinned);
+
+        // Search Bar Views (Fake - click de navigate sang SearchFragment)
+        layoutSearch = view.findViewById(R.id.layoutSearch);
+        searchBarSticky = view.findViewById(R.id.searchBarSticky);
+
+        View.OnClickListener searchClickListener = v ->
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_searchFragment);
+
+        if (layoutSearch != null) layoutSearch.setOnClickListener(searchClickListener);
+        if (searchBarSticky != null) searchBarSticky.setOnClickListener(searchClickListener);
 
         // Filter Buttons
         btnFilterBy = view.findViewById(R.id.btnFilterBy);

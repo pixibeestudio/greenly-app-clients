@@ -109,6 +109,40 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.SearchFragment"
+        android:label="Tìm kiếm"
+        tools:layout="@layout/fragment_search">
+        
+        <action
+            android:id="@+id/action_searchFragment_to_searchResultFragment"
+            app:destination="@id/searchResultFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchResultFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.SearchResultFragment"
+        android:label="Kết quả tìm kiếm"
+        tools:layout="@layout/fragment_search_result">
+        <argument
+            android:name="searchQuery"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
 
     <fragment

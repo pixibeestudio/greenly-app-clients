@@ -129,6 +129,12 @@ public class ProductDetailFragment extends Fragment {
             NavController navController = Navigation.findNavController(v);
             navController.popBackStack();
         });
+
+        // Click vao o tim kiem gia -> navigate sang SearchFragment
+        if (searchBarDetail != null) {
+            searchBarDetail.setOnClickListener(v ->
+                    Navigation.findNavController(v).navigate(R.id.searchFragment));
+        }
         
         btnDecreaseQty.setOnClickListener(v -> {
             if (currentQuantity > 1) {
