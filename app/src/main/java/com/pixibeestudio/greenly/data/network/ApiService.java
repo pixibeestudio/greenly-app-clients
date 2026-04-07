@@ -15,6 +15,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
     @GET("api/categories")
@@ -25,6 +26,10 @@ public interface ApiService {
 
     @GET("api/products/discounted")
     Call<ProductResponse> getDiscountedProducts();
+
+    // --- TIM KIEM SAN PHAM ---
+    @GET("api/products/search")
+    Call<ProductResponse> searchProducts(@Query("keyword") String keyword);
 
     @GET("api/products/{id}")
     Call<ProductDetailResponse> getProductDetail(@Path("id") int id);

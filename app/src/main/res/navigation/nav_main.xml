@@ -5,6 +5,15 @@
     android:id="@+id/nav_main"
     app:startDestination="@id/splashFragment">
 
+    <!-- Global Action: navigate den Chi tiet san pham tu bat ky fragment nao -->
+    <action
+        android:id="@+id/action_global_to_productDetailFragment"
+        app:destination="@id/productDetailFragment"
+        app:enterAnim="@anim/fade_in"
+        app:exitAnim="@anim/fade_out"
+        app:popEnterAnim="@anim/fade_in"
+        app:popExitAnim="@anim/fade_out" />
+
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.pixibeestudio.greenly.ui.fragment.SplashFragment"
