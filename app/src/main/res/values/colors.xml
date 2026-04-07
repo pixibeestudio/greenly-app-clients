@@ -24,4 +24,7 @@
     <!-- Màu chính Greenly -->
     <color name="green_primary">#06884D</color>
 
+    <!-- Màu xám nhạt dùng cho Chip lịch sử tìm kiếm -->
+    <color name="gray_light">#F5F5F5</color>
+
 </resources>
