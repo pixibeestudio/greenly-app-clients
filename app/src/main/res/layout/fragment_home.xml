@@ -33,13 +33,14 @@
                 app:layout_collapseMode="parallax">
 
                 <!-- 1. Avatar (Top-Start) -->
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_avatar"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/bg_circle_green"
                     android:contentDescription="Ảnh đại diện"
-                    android:src="@drawable/ic_person"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_default_avatar_placeholder"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -354,13 +355,13 @@
                 android:gravity="center"
                 android:orientation="horizontal" />
 
-            <!-- 3. Sản phẩm nổi bật -->
+            <!-- 3. Sản phẩm mới nhất -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
-                android:text="Sản phẩm nổi bật"
+                android:text="Sản phẩm mới nhất"
                 android:textColor="#1B5E20"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -392,13 +393,13 @@
                 android:clipToPadding="false"
                 android:paddingHorizontal="12dp" />
 
-            <!-- 5. Top 100 bán chạy -->
+            <!-- 5. Top 10 bán chạy -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
-                android:text="🏆 Top 100 bán chạy"
+                android:text="🏆 Top 10 bán chạy"
                 android:textColor="#1B5E20"
                 android:textSize="18sp"
                 android:textStyle="bold" />

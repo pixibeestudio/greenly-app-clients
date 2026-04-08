@@ -138,10 +138,10 @@ public class PaymentQrFragment extends Fragment {
      * Tao URL VietQR va load vao ImageView
      */
     private void loadQrCode() {
-        String bankId = "MB";
-        String accountNo = "0343717527";
-        String accountName = "HO SI TUNG";
-        String addInfo = "ThanhToanDonHang" + orderId;
+        String bankId = "TPBank";
+        String accountNo = "00001983982";
+        String accountName = "Greenly Store";
+        String addInfo = "Greenly Store" + orderId;
 
         // Mẫu URL của VietQR.io (Dùng template compact2 cho đẹp)
         String qrUrl = "https://img.vietqr.io/image/" + bankId + "-" + accountNo

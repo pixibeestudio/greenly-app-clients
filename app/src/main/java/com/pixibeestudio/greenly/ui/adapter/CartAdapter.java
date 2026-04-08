@@ -77,6 +77,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 String finalUrl = imageUrl;
                 if (!imageUrl.startsWith("http")) {
                     finalUrl = "http://192.168.2.200:8000" + imageUrl;
+                    //finalUrl = "http://10.0.2.2:8000" + imageUrl;
                 }
                 Glide.with(holder.itemView.getContext())
                         .load(finalUrl)

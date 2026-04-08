@@ -56,7 +56,7 @@ public class ShipperPickupAdapter extends RecyclerView.Adapter<ShipperPickupAdap
         holder.tvShippingFee.setText(df.format(shippingFee));
 
         // Gán cứng địa chỉ cửa hàng
-        holder.tvStoreName.setText("Cửa hàng Rau sạch Greenly");
+        holder.tvStoreName.setText("Cửa hàng Greenly");
         holder.tvStoreAddress.setText("141 Chiến Thắng, Thanh Trì, Hà Nội");
         holder.tvPickupNote.setText("Hãy đọc mã đơn " + (order.getOrderCode() != null ? order.getOrderCode() : "#" + order.getId()) + " cho Admin để nhận hàng nhé.");
 

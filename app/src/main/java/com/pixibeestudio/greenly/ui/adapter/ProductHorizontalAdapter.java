@@ -172,7 +172,7 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
             productHolder.itemView.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
                 bundle.putInt("productId", product.getId());
-                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_productDetailFragment, bundle);
+                Navigation.findNavController(v).navigate(R.id.action_global_to_productDetailFragment, bundle);
             });
 
             // Sự kiện click nút thêm vào giỏ (riêng biệt, không bị đè bởi itemView)

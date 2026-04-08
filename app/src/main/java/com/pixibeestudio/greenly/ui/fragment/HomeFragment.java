@@ -154,7 +154,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
                      .load(avatarUrl)
                      .placeholder(R.drawable.ic_default_avatar_placeholder)
                      .error(R.drawable.ic_default_avatar_placeholder)
-                     .centerCrop()
+                     .circleCrop()
                      .into(ivAvatar);
             }
         } else if (sessionManager.isGuestMode()) {
@@ -219,6 +219,25 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         homeViewModel.getDiscountedProductsLiveData().observe(getViewLifecycleOwner(), discountedProducts -> {
             if (discountedProducts != null && !discountedProducts.isEmpty()) {
                 rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(discountedProducts, this));
+            }
+        });
+
+        // Observe san pham moi nhat (lay 10 san pham dau, sap xep theo ID giam dan = moi nhat)
+        homeViewModel.getProductsLiveData().observe(getViewLifecycleOwner(), products -> {
+            if (products != null && !products.isEmpty()) {
+                // Sap xep theo ID giam dan (san pham moi nhat co ID lon nhat)
+                List<Product> sorted = new ArrayList<>(products);
+                sorted.sort((p1, p2) -> Integer.compare(p2.getId(), p1.getId()));
+                List<Product> newest = sorted.subList(0, Math.min(10, sorted.size()));
+                rvPopularProducts.setAdapter(new ProductHorizontalAdapter(newest, this));
+            }
+        });
+
+        // Observe Top 10 ban chay (tam thoi lay 10 san pham dau tu danh sach chung)
+        homeViewModel.getProductsLiveData().observe(getViewLifecycleOwner(), products -> {
+            if (products != null && !products.isEmpty()) {
+                List<Product> top10 = products.subList(0, Math.min(10, products.size()));
+                rvTop100Products.setAdapter(new ProductHorizontalAdapter(top10, this));
             }
         });
     }
@@ -364,13 +383,13 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     // ======================== SẢN PHẨM NỔI BẬT ========================
 
     /**
-     * Thiết lập RecyclerView sản phẩm nổi bật (cuộn ngang, không hiển thị icon).
+     * Thiết lập RecyclerView sản phẩm mới nhất (cuộn ngang).
+     * Dữ liệu thật sẽ được nạp qua observeData()
      */
     private void setupPopularProducts() {
-        List<Product> products = generateMockProducts("Rau sạch", 10);
         rvPopularProducts.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvPopularProducts.setAdapter(new ProductHorizontalAdapter(products, this));
+        rvPopularProducts.setAdapter(new ProductHorizontalAdapter(new ArrayList<>(), this));
     }
 
     // ======================== ĐANG GIẢM GIÁ ========================
@@ -388,14 +407,13 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     // ======================== TOP 100 BÁN CHẠY ========================
 
     /**
-     * Thiết lập RecyclerView Top 100 sản phẩm bán chạy (cuộn ngang, CÓ hiển thị icon).
+     * Thiết lập RecyclerView Top 10 sản phẩm bán chạy (cuộn ngang).
+     * Dữ liệu thật sẽ được nạp qua observeData()
      */
     private void setupTop100Products() {
-        List<Product> products = generateMockProducts("Thực phẩm", 10);
         rvTop100Products.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        // Hiện tại ProductHorizontalAdapter đã đồng bộ giao diện Grid, bỏ qua showIcons logic cũ
-        rvTop100Products.setAdapter(new ProductHorizontalAdapter(products, this));
+        rvTop100Products.setAdapter(new ProductHorizontalAdapter(new ArrayList<>(), this));
     }
 
     // ======================== THÊM VÀO GIỎ HÀNG ========================
@@ -446,26 +464,6 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
 
     // ======================== TIỆN ÍCH ========================
 
-    /**
-     * Tạo danh sách sản phẩm giả lập để test giao diện.
-     * @param prefix Tiền tố tên sản phẩm
-     * @param count Số lượng sản phẩm
-     * @return Danh sách Product mock
-     */
-    private List<Product> generateMockProducts(String prefix, int count) {
-        List<Product> products = new ArrayList<>();
-        for (int i = 1; i <= count; i++) {
-            String name = prefix + " " + i;
-            // Giá ngẫu nhiên từ 15.000đ đến 150.000đ
-            int price = (int) (Math.random() * 135 + 15) * 1000;
-            // Fake discount
-            int discountPrice = (Math.random() > 0.5) ? (int)(price * 0.8) : 0;
-            
-            // public Product(int id, String name, String image, double price, double discountPrice, String unit, String origin, int stockQuantity)
-            products.add(new Product(i, name, "https://via.placeholder.com/150", price, discountPrice, "Hộp 500g", "Mộc Châu", 10));
-        }
-        return products;
-    }
 
     /**
      * Chuyển đổi dp sang px.
