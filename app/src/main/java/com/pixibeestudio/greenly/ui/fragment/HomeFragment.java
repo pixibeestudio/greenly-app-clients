@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bumptech.glide.Glide;
@@ -72,6 +73,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     private AppBarLayout appBarLayout;
     private ConstraintLayout layoutHeaderExpanded;
     private ConstraintLayout layoutHeaderPinned;
+    private Toolbar toolbarSticky;
     private LinearLayout layoutSearch;
     private LinearLayout searchBarSticky;
     private Button btnFilterBy, btnCategoryFilter, btnDiscountFilter, btnResetFilter;
@@ -263,6 +265,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         appBarLayout = view.findViewById(R.id.app_bar_layout);
         layoutHeaderExpanded = view.findViewById(R.id.layoutHeaderExpanded);
         layoutHeaderPinned = view.findViewById(R.id.layoutHeaderPinned);
+        toolbarSticky = view.findViewById(R.id.toolbarSticky);
 
         // Search Bar Views (Fake - click de navigate sang SearchFragment)
         layoutSearch = view.findViewById(R.id.layoutSearch);
@@ -273,6 +276,16 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
 
         if (layoutSearch != null) layoutSearch.setOnClickListener(searchClickListener);
         if (searchBarSticky != null) searchBarSticky.setOnClickListener(searchClickListener);
+
+        // Nút Yêu thích trên cả 2 Header -> navigate sang FavoriteFragment
+        View.OnClickListener favoriteClickListener = v ->
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_favoriteFragment);
+
+        ImageButton btnFavorite = view.findViewById(R.id.ic_favorite);
+        if (btnFavorite != null) btnFavorite.setOnClickListener(favoriteClickListener);
+
+        ImageButton btnFavSticky = view.findViewById(R.id.ibFavSticky);
+        if (btnFavSticky != null) btnFavSticky.setOnClickListener(favoriteClickListener);
 
         // Filter Buttons
         btnFilterBy = view.findViewById(R.id.btnFilterBy);
@@ -296,9 +309,14 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
                 
                 // Tắt/bật touch event để tránh click nhầm khi mờ
                 if (percentage > 0.1f) {
+                    // Hiện Toolbar sticky để nhận touch và hiển thị nội dung
+                    if (toolbarSticky != null) toolbarSticky.setVisibility(View.VISIBLE);
                     layoutHeaderPinned.setVisibility(View.VISIBLE);
                 } else {
                     layoutHeaderPinned.setVisibility(View.GONE);
+                    // INVISIBLE: Toolbar vẫn chiếm không gian (giữ collapsing behavior)
+                    // nhưng KHÔNG nhận touch events → touch xuyên qua đến expanded header
+                    if (toolbarSticky != null) toolbarSticky.setVisibility(View.INVISIBLE);
                 }
             });
         }

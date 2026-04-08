@@ -1,0 +1,22 @@
+2025-04-08 - Fix HomeFragment mock data issue
+========================================
+Problem: HomeFragment hiển thị mock data thay vì dữ liệu thật từ API cho "Sản phẩm mới nhất" và "Top 10 bán chạy"
+
+Root Cause:
+- setupPopularProducts() và setupTop100Products() gọi generateMockProducts() thay vì observe từ ViewModel
+- generateMockProducts() tạo product với ID 1-10 không tồn tại trên server → lỗi 404 khi click
+
+Solution:
+1. Xóa generateMockProducts() khỏi HomeFragment
+2. setupPopularProducts() và setupTop100Products() chỉ setup adapter rỗng
+3. Thêm observe trong observeData() để lấy dữ liệu thật từ homeViewModel.getProductsLiveData()
+4. Sản phẩm mới nhất: sort theo ID giảm dần, lấy 10 SP đầu
+5. Top 10 bán chạy: lấy 10 SP đầu từ danh sách
+6. Đổi ProductHorizontalAdapter dùng action_global_to_productDetailFragment thay vì action_homeFragment_to_productDetailFragment
+
+Files changed:
+- HomeFragment.java
+- ProductHorizontalAdapter.java
+- fragment_home.xml (ShapeableImageView cho avatar)
+
+Commit: b855a94

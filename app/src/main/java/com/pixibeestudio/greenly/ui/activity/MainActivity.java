@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         id == R.id.welcomeFragment || id == R.id.loginFragment ||
                         id == R.id.registerFragment || id == R.id.checkoutFragment ||
                         id == R.id.addAddressFragment || id == R.id.searchFragment ||
-                        id == R.id.searchResultFragment) {
+                        id == R.id.searchResultFragment || id == R.id.favoriteFragment) {
                     navViewCustomer.setVisibility(View.GONE);
                     navViewShipper.setVisibility(View.GONE);
                 } else {

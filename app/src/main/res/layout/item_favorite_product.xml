@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="6dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeColor="#EAEAEA"
+    app:strokeWidth="0.5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <!-- Ảnh sản phẩm (Bo góc, bên trái) -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivFavProductImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#F5F5F5"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/img_placeholder" />
+
+        <!-- Nút xóa khỏi yêu thích (Góc phải trên cùng) -->
+        <ImageButton
+            android:id="@+id/btnRemoveItem"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Xóa khỏi yêu thích"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#9E9E9E" />
+
+        <!-- Tên sản phẩm -->
+        <TextView
+            android:id="@+id/tvFavProductName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="#1A3B2A"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/btnRemoveItem"
+            app:layout_constraintStart_toEndOf="@id/ivFavProductImage"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Dâu Tây Mộc Châu Organic Loại 1" />
+
+        <!-- Đơn vị sản phẩm -->
+        <TextView
+            android:id="@+id/tvFavProductUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#9E9E9E"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/tvFavProductName"
+            app:layout_constraintTop_toBottomOf="@id/tvFavProductName"
+            tools:text="Hộp 500g" />
+
+        <!-- Nút thêm vào giỏ hàng (Góc phải dưới cùng) -->
+        <ImageView
+            android:id="@+id/btnAddCartItem"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_rounded_green_add"
+            android:clickable="true"
+            android:contentDescription="Thêm vào giỏ hàng"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="#FFFFFF" />
+
+        <!-- Giá bán (Giá KM hoặc giá hiện tại) -->
+        <TextView
+            android:id="@+id/tvFavProductPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#E53935"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/btnAddCartItem"
+            app:layout_constraintStart_toStartOf="@id/tvFavProductName"
+            app:layout_constraintTop_toTopOf="@id/btnAddCartItem"
+            tools:text="180.000đ" />
+
+        <!-- Giá gốc (Gạch ngang, cỡ nhỏ) -->
+        <TextView
+            android:id="@+id/tvFavProductOriginalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:textColor="#9E9E9E"
+            android:textSize="12sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvFavProductPrice"
+            app:layout_constraintStart_toEndOf="@id/tvFavProductPrice"
+            tools:text="200.000đ" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
