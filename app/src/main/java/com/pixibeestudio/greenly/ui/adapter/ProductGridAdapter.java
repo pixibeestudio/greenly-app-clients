@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+
 import com.bumptech.glide.Glide;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.model.Product;
@@ -181,7 +184,7 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
 
         // Hiển thị trạng thái yêu thích và bắt sự kiện toggle
         boolean isFav = favoriteIds.contains(product.getId());
-        holder.ivFavorite.setImageResource(isFav ? R.drawable.ic_favorite_red : R.drawable.ic_favorite_border);
+        updateFavoriteIcon(holder.ivFavorite, isFav);
 
         holder.ivFavorite.setOnClickListener(v -> {
             boolean currentlyFav = favoriteIds.contains(product.getId());
@@ -192,12 +195,26 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
             } else {
                 favoriteIds.remove(product.getId());
             }
-            holder.ivFavorite.setImageResource(isNowFav ? R.drawable.ic_favorite_red : R.drawable.ic_favorite_border);
+            updateFavoriteIcon(holder.ivFavorite, isNowFav);
             // Callback về Fragment để gọi API
             if (favoriteListener != null) {
                 favoriteListener.onFavoriteToggle(product, isNowFav);
             }
         });
+    }
+
+    /**
+     * Cập nhật icon + tint cho nút yêu thích.
+     * Phải set cả ImageResource và ImageTintList vì XML layout có app:tint mặc định.
+     */
+    private void updateFavoriteIcon(ImageView iv, boolean isFavorite) {
+        if (isFavorite) {
+            iv.setImageResource(R.drawable.ic_favorite_red);
+            iv.setImageTintList(ColorStateList.valueOf(Color.parseColor("#E53935")));
+        } else {
+            iv.setImageResource(R.drawable.ic_favorite_border);
+            iv.setImageTintList(ColorStateList.valueOf(Color.parseColor("#9E9E9E")));
+        }
     }
 
     @Override

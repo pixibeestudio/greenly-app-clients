@@ -1,5 +1,6 @@
 package com.pixibeestudio.greenly.ui.fragment;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +23,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.local.SearchHistoryManager;
+import com.pixibeestudio.greenly.data.local.SessionManager;
 import com.pixibeestudio.greenly.data.model.Product;
+import com.pixibeestudio.greenly.data.model.WishlistItem;
 import com.pixibeestudio.greenly.ui.adapter.ProductGridAdapter;
+import com.pixibeestudio.greenly.ui.viewmodel.CartViewModel;
+import com.pixibeestudio.greenly.ui.viewmodel.FavoriteViewModel;
 import com.pixibeestudio.greenly.ui.viewmodel.SearchViewModel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class SearchResultFragment extends Fragment implements ProductGridAdapter.OnProductAddCartListener {
+public class SearchResultFragment extends Fragment
+        implements ProductGridAdapter.OnProductAddCartListener,
+                   ProductGridAdapter.OnFavoriteToggleListener {
 
     private ImageButton btnBack;
     private EditText edtSearch;
@@ -37,8 +46,12 @@ public class SearchResultFragment extends Fragment implements ProductGridAdapter
     private String searchQuery = "";
 
     private SearchViewModel viewModel;
+    private FavoriteViewModel favoriteViewModel;
+    private CartViewModel cartViewModel;
     private ProductGridAdapter adapter;
     private SearchHistoryManager searchHistoryManager;
+    private SessionManager sessionManager;
+    private final Set<Integer> favoriteProductIds = new HashSet<>();
 
     @Nullable
     @Override
@@ -50,9 +63,12 @@ public class SearchResultFragment extends Fragment implements ProductGridAdapter
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Khoi tao ViewModel va SearchHistoryManager
+        // Khoi tao ViewModel va Manager
         viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+        favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+        cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
         searchHistoryManager = new SearchHistoryManager(requireContext());
+        sessionManager = new SessionManager(requireContext());
 
         // Anh xa views
         btnBack = view.findViewById(R.id.btnBack);
@@ -61,8 +77,6 @@ public class SearchResultFragment extends Fragment implements ProductGridAdapter
 
         // Cau hinh RecyclerView Grid 2 cot
         rvSearchResults.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        adapter = new ProductGridAdapter(new ArrayList<>(), this);
-        rvSearchResults.setAdapter(adapter);
 
         // Lay argument tu Bundle va hien len EditText
         if (getArguments() != null) {
@@ -96,10 +110,32 @@ public class SearchResultFragment extends Fragment implements ProductGridAdapter
             return false;
         });
 
+        // Load danh sach yeu thich de hien trang thai icon tim
+        loadFavorites();
+
         // Goi API tim kiem voi tu khoa ban dau
         if (!searchQuery.isEmpty()) {
             performSearch(searchQuery);
         }
+    }
+
+    /**
+     * Load danh sach yeu thich tu API de dong bo trang thai icon tim.
+     */
+    private void loadFavorites() {
+        if (sessionManager.isGuestMode()) return;
+        favoriteViewModel.getFavorites().observe(getViewLifecycleOwner(), wishlistItems -> {
+            favoriteProductIds.clear();
+            if (wishlistItems != null) {
+                for (WishlistItem item : wishlistItems) {
+                    favoriteProductIds.add(item.getProductId());
+                }
+            }
+            // Refresh adapter voi favoriteIds moi
+            if (adapter != null) {
+                adapter.setFavoriteIds(favoriteProductIds);
+            }
+        });
     }
 
     /**
@@ -111,19 +147,53 @@ public class SearchResultFragment extends Fragment implements ProductGridAdapter
             if (products != null && !products.isEmpty()) {
                 // Co ket qua -> cap nhat adapter
                 adapter = new ProductGridAdapter(products, this);
+                adapter.setFavoriteListener(this);
+                adapter.setFavoriteIds(favoriteProductIds);
                 rvSearchResults.setAdapter(adapter);
             } else {
                 // Khong co ket qua
                 adapter = new ProductGridAdapter(new ArrayList<>(), this);
                 rvSearchResults.setAdapter(adapter);
-                Toast.makeText(getContext(), "Kh\u00f4ng t\u00ecm th\u1ea5y s\u1ea3n ph\u1ea9m n\u00e0o", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Không tìm thấy sản phẩm nào", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
     public void onAddCartClick(Product product) {
-        // Xu ly them vao gio hang (se bo sung logic sau)
-        Toast.makeText(getContext(), "\u0110\u00e3 th\u00eam v\u00e0o gi\u1ecf h\u00e0ng", Toast.LENGTH_SHORT).show();
+        if (sessionManager.isGuestMode()) {
+            showGuestLoginPopup();
+            return;
+        }
+        cartViewModel.addToCart(product.getId(), 1);
+        Toast.makeText(getContext(), "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFavoriteToggle(Product product, boolean isNowFavorite) {
+        if (sessionManager.isGuestMode()) {
+            showGuestLoginPopup();
+            return;
+        }
+        if (isNowFavorite) {
+            favoriteProductIds.add(product.getId());
+        } else {
+            favoriteProductIds.remove(product.getId());
+        }
+        favoriteViewModel.toggleFavorite(product.getId());
+    }
+
+    /**
+     * Hien popup yeu cau dang nhap cho Guest.
+     */
+    private void showGuestLoginPopup() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Yêu cầu đăng nhập")
+                .setMessage("Bạn cần đăng nhập để sử dụng tính năng này.")
+                .setPositiveButton("Đăng nhập", (dialog, which) -> {
+                    Navigation.findNavController(requireView()).navigate(R.id.loginFragment);
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
     }
 }

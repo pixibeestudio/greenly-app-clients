@@ -335,7 +335,7 @@ public class ProductDetailFragment extends Fragment {
         if (btnDetailFavorite == null) return;
         if (isFavorite) {
             btnDetailFavorite.setImageResource(R.drawable.ic_favorite_red);
-            btnDetailFavorite.setImageTintList(null);
+            btnDetailFavorite.setImageTintList(ColorStateList.valueOf(Color.parseColor("#E53935")));
         } else {
             btnDetailFavorite.setImageResource(R.drawable.ic_favorite_border);
             btnDetailFavorite.setImageTintList(ColorStateList.valueOf(Color.parseColor("#9E9E9E")));
