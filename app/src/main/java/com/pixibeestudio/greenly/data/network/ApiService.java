@@ -101,5 +101,15 @@ public interface ApiService {
 
     @GET("api/shipper/wallet-profile")
     Call<com.pixibeestudio.greenly.data.model.WalletProfileResponse> getWalletProfile();
+
+    // --- WISHLIST (YÊU THÍCH) API ---
+    @GET("api/wishlist")
+    Call<com.pixibeestudio.greenly.data.model.WishlistResponse> getWishlists();
+
+    @POST("api/wishlist/toggle")
+    Call<JsonObject> toggleFavorite(@Body JsonObject body);
+
+    @DELETE("api/wishlist/clear")
+    Call<JsonObject> clearWishlists();
 }
 

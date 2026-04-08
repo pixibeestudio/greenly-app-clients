@@ -20,3 +20,63 @@ Files changed:
 - fragment_home.xml (ShapeableImageView cho avatar)
 
 Commit: b855a94
+
+2025-04-08 - Tạo MVVM layer cho tính năng Wishlist (Yêu thích)
+========================================
+Đồng bộ với backend Laravel:
+- GET /api/wishlist → getWishlists() → WishlistResponse { success, data: List<WishlistItem> }
+- POST /api/wishlist/toggle → toggleFavorite(@Body {product_id}) → JsonObject { success, message, is_favorite }
+- DELETE /api/wishlist/clear → clearWishlists() → JsonObject { success, message }
+
+LƯU Ý: Backend trả về WishlistItem (có nested Product), KHÔNG phải Product trực tiếp.
+WishlistItem: { id, user_id, product_id, created_at, updated_at, product: Product }
+
+Files tạo mới:
+- data/model/WishlistItem.java (model map từ backend)
+- data/model/WishlistResponse.java (response wrapper)
+- data/repository/FavoriteRepository.java (gọi API qua RetrofitClient)
+- ui/viewmodel/FavoriteViewModel.java (extends AndroidViewModel)
+
+Files sửa:
+- data/network/ApiService.java (thêm 3 endpoints wishlist)
+
+2025-04-08 - Xử lý logic Click Thả tim/Bỏ tim sản phẩm
+========================================
+Adapter (ProductGridAdapter, ProductHorizontalAdapter):
+- Thêm interface OnFavoriteToggleListener { onFavoriteToggle(Product, boolean) }
+- Thêm Set<Integer> favoriteIds + setter setFavoriteIds() 
+- onBindViewHolder: set icon (ic_favorite_red / ic_favorite_border) dựa trên favoriteIds
+- Click ivFavorite: Optimistic UI (đổi icon ngay) + callback về Fragment
+
+HomeFragment:
+- Init FavoriteViewModel, observe getFavorites() → build favoriteProductIds Set
+- Truyền favoriteIds + setFavoriteListener(this) vào tất cả adapter
+- Implement onFavoriteToggle(): cập nhật Set local + gọi API toggleFavorite()
+- Guest mode: hiện popup đăng nhập
+
+ProductDetailFragment:
+- Init FavoriteViewModel, gọi loadFavoriteStatus() kiểm tra SP có trong wishlist
+- updateFavoriteIcon(): swap drawable + xóa/set ImageTintList cho btnDetailFavorite
+- Click btnDetailFavorite: Optimistic UI + gọi API toggleFavorite()
+
+LƯU Ý: Backend Product API KHÔNG trả is_favorite. 
+→ Dùng cách load riêng danh sách wishlist rồi cross-reference bằng Set<Integer>.
+
+2025-04-09 - FavoriteFragment logic + CartFragment smart back
+========================================
+FavoriteAdapter.java (mới):
+- Layout: item_favorite_product.xml (ivFavProductImage, tvFavProductName, tvFavProductUnit, tvFavProductPrice, tvFavProductOriginalPrice, btnRemoveItem, btnAddCartItem)
+- Interface OnFavoriteItemListener: onRemoveItem(WishlistItem), onAddToCartItem(WishlistItem)
+- Click item → navigate action_global_to_productDetailFragment
+
+FavoriteFragment.java (viết lại):
+- Init FavoriteViewModel + CartViewModel
+- loadFavorites() → observe → setItems vào adapter / showEmptyState
+- onRemoveItem: Dialog xác nhận → toggleFavorite API → reload
+- showClearAllDialog: clearAllFavorites API → reload
+- showAddAllToCartDialog: vòng lặp addToCart cho tất cả items
+- onAddToCartItem: addToCart(productId, 1) cho 1 item
+
+CartFragment.java:
+- checkArgumentsAndSetupBack: kiểm tra isFromDetail HOẶC previousBackStackEntry == favoriteFragment
+- Nếu đúng → btnBackCart VISIBLE + popBackStack onClick

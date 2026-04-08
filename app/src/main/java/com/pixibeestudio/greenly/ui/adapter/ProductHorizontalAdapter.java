@@ -15,8 +15,10 @@ import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.model.Product;
 
 import java.text.NumberFormat;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import android.os.Bundle;
 
 /**
@@ -31,15 +33,34 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private final List<Product> products;
     private final OnProductAddCartListener listener;
+    private OnFavoriteToggleListener favoriteListener;
+    private Set<Integer> favoriteIds = new HashSet<>();
 
     // Interface cho sự kiện thêm vào giỏ hàng
     public interface OnProductAddCartListener {
         void onAddCartClick(Product product);
     }
 
+    // Interface cho sự kiện toggle yêu thích
+    public interface OnFavoriteToggleListener {
+        void onFavoriteToggle(Product product, boolean isNowFavorite);
+    }
+
     public ProductHorizontalAdapter(List<Product> products, OnProductAddCartListener listener) {
         this.products = products;
         this.listener = listener;
+    }
+
+    public void setFavoriteListener(OnFavoriteToggleListener listener) {
+        this.favoriteListener = listener;
+    }
+
+    /**
+     * Cập nhật danh sách ID sản phẩm yêu thích và refresh UI.
+     */
+    public void setFavoriteIds(Set<Integer> ids) {
+        this.favoriteIds = ids != null ? ids : new HashSet<>();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -179,6 +200,26 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
             productHolder.btnAddCart.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onAddCartClick(product);
+                }
+            });
+
+            // Hiển thị trạng thái yêu thích và bắt sự kiện toggle
+            boolean isFav = favoriteIds.contains(product.getId());
+            productHolder.ivFavorite.setImageResource(isFav ? R.drawable.ic_favorite_red : R.drawable.ic_favorite_border);
+
+            productHolder.ivFavorite.setOnClickListener(v -> {
+                boolean currentlyFav = favoriteIds.contains(product.getId());
+                boolean isNowFav = !currentlyFav;
+                // Optimistic UI: đổi icon ngay lập tức
+                if (isNowFav) {
+                    favoriteIds.add(product.getId());
+                } else {
+                    favoriteIds.remove(product.getId());
+                }
+                productHolder.ivFavorite.setImageResource(isNowFav ? R.drawable.ic_favorite_red : R.drawable.ic_favorite_border);
+                // Callback về Fragment để gọi API
+                if (favoriteListener != null) {
+                    favoriteListener.onFavoriteToggle(product, isNowFav);
                 }
             });
         }

@@ -39,18 +39,23 @@ import com.pixibeestudio.greenly.ui.adapter.CategoryAdapter;
 import com.pixibeestudio.greenly.ui.adapter.ProductGridAdapter;
 import com.pixibeestudio.greenly.ui.adapter.ProductHorizontalAdapter;
 import com.pixibeestudio.greenly.ui.viewmodel.CartViewModel;
+import com.pixibeestudio.greenly.ui.viewmodel.FavoriteViewModel;
 import com.pixibeestudio.greenly.ui.viewmodel.HomeViewModel;
+import com.pixibeestudio.greenly.data.model.WishlistItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Fragment Trang chủ - Hiển thị danh mục, banner, sản phẩm nổi bật,
  * sản phẩm giảm giá, Top 100 và tất cả sản phẩm dạng Grid.
  */
-public class HomeFragment extends Fragment implements ProductGridAdapter.OnProductAddCartListener, ProductHorizontalAdapter.OnProductAddCartListener {
+public class HomeFragment extends Fragment implements ProductGridAdapter.OnProductAddCartListener, ProductHorizontalAdapter.OnProductAddCartListener,
+        ProductGridAdapter.OnFavoriteToggleListener, ProductHorizontalAdapter.OnFavoriteToggleListener {
 
     // Thời gian tự động chuyển banner (3 giây)
     private static final int BANNER_AUTO_SLIDE_DELAY = 3000;
@@ -80,6 +85,16 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
 
     private HomeViewModel homeViewModel;
     private CartViewModel cartViewModel;
+    private FavoriteViewModel favoriteViewModel;
+
+    // Danh sách ID sản phẩm yêu thích (dùng chung cho tất cả adapter)
+    private final Set<Integer> favoriteProductIds = new HashSet<>();
+
+    // Giữ tham chiếu adapter để cập nhật favoriteIds khi load xong
+    private ProductGridAdapter allProductsAdapter;
+    private ProductHorizontalAdapter popularAdapter;
+    private ProductHorizontalAdapter discountAdapter;
+    private ProductHorizontalAdapter top100Adapter;
 
     // Handler và Runnable cho auto-slide banner
     private final Handler bannerHandler = new Handler(Looper.getMainLooper());
@@ -111,6 +126,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         // Khởi tạo ViewModel và SessionManager
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
+        favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
         sessionManager = new SessionManager(requireContext());
 
         // Ánh xạ các view
@@ -212,36 +228,66 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
             }
         });
 
+        // Tất cả sản phẩm (Grid)
         homeViewModel.getProductsLiveData().observe(getViewLifecycleOwner(), products -> {
             if (products != null && !products.isEmpty()) {
-                rvAllProducts.setAdapter(new ProductGridAdapter(products, this));
+                allProductsAdapter = new ProductGridAdapter(products, this);
+                allProductsAdapter.setFavoriteListener(this);
+                allProductsAdapter.setFavoriteIds(favoriteProductIds);
+                rvAllProducts.setAdapter(allProductsAdapter);
             }
         });
 
+        // Sản phẩm giảm giá (Horizontal)
         homeViewModel.getDiscountedProductsLiveData().observe(getViewLifecycleOwner(), discountedProducts -> {
             if (discountedProducts != null && !discountedProducts.isEmpty()) {
-                rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(discountedProducts, this));
+                discountAdapter = new ProductHorizontalAdapter(discountedProducts, this);
+                discountAdapter.setFavoriteListener(this);
+                discountAdapter.setFavoriteIds(favoriteProductIds);
+                rvDiscountProducts.setAdapter(discountAdapter);
             }
         });
 
-        // Observe san pham moi nhat (lay 10 san pham dau, sap xep theo ID giam dan = moi nhat)
+        // Sản phẩm mới nhất (sắp xếp theo ID giảm dần, lấy 10 SP đầu)
         homeViewModel.getProductsLiveData().observe(getViewLifecycleOwner(), products -> {
             if (products != null && !products.isEmpty()) {
-                // Sap xep theo ID giam dan (san pham moi nhat co ID lon nhat)
                 List<Product> sorted = new ArrayList<>(products);
                 sorted.sort((p1, p2) -> Integer.compare(p2.getId(), p1.getId()));
                 List<Product> newest = sorted.subList(0, Math.min(10, sorted.size()));
-                rvPopularProducts.setAdapter(new ProductHorizontalAdapter(newest, this));
+                popularAdapter = new ProductHorizontalAdapter(newest, this);
+                popularAdapter.setFavoriteListener(this);
+                popularAdapter.setFavoriteIds(favoriteProductIds);
+                rvPopularProducts.setAdapter(popularAdapter);
             }
         });
 
-        // Observe Top 10 ban chay (tam thoi lay 10 san pham dau tu danh sach chung)
+        // Top 10 bán chạy (tạm lấy 10 SP đầu từ danh sách chung)
         homeViewModel.getProductsLiveData().observe(getViewLifecycleOwner(), products -> {
             if (products != null && !products.isEmpty()) {
                 List<Product> top10 = products.subList(0, Math.min(10, products.size()));
-                rvTop100Products.setAdapter(new ProductHorizontalAdapter(top10, this));
+                top100Adapter = new ProductHorizontalAdapter(top10, this);
+                top100Adapter.setFavoriteListener(this);
+                top100Adapter.setFavoriteIds(favoriteProductIds);
+                rvTop100Products.setAdapter(top100Adapter);
             }
         });
+
+        // Observe danh sách yêu thích từ API → cập nhật favoriteProductIds cho tất cả adapter
+        if (!sessionManager.isGuestMode()) {
+            favoriteViewModel.getFavorites().observe(getViewLifecycleOwner(), wishlistItems -> {
+                favoriteProductIds.clear();
+                if (wishlistItems != null) {
+                    for (WishlistItem item : wishlistItems) {
+                        favoriteProductIds.add(item.getProductId());
+                    }
+                }
+                // Refresh tất cả adapter đang giữ tham chiếu
+                if (allProductsAdapter != null) allProductsAdapter.setFavoriteIds(favoriteProductIds);
+                if (popularAdapter != null) popularAdapter.setFavoriteIds(favoriteProductIds);
+                if (discountAdapter != null) discountAdapter.setFavoriteIds(favoriteProductIds);
+                if (top100Adapter != null) top100Adapter.setFavoriteIds(favoriteProductIds);
+            });
+        }
     }
 
     /**
@@ -448,6 +494,28 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
             cartViewModel.addToCart(product.getId(), 1);
             Toast.makeText(requireContext(), "Đang thêm vào giỏ...", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // ======================== YÊU THÍCH (TOGGLE) ========================
+
+    /**
+     * Xử lý sự kiện toggle yêu thích từ adapter.
+     * Optimistic UI đã được adapter xử lý, ở đây chỉ gọi API.
+     */
+    @Override
+    public void onFavoriteToggle(Product product, boolean isNowFavorite) {
+        if (sessionManager.isGuestMode()) {
+            showGuestLoginPopup();
+            return;
+        }
+        // Cập nhật Set local (đồng bộ giữa các adapter dùng chung Set)
+        if (isNowFavorite) {
+            favoriteProductIds.add(product.getId());
+        } else {
+            favoriteProductIds.remove(product.getId());
+        }
+        // Gọi API toggle (âm thầm, không cần observe kết quả)
+        favoriteViewModel.toggleFavorite(product.getId());
     }
 
     /**

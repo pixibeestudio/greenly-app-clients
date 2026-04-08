@@ -126,14 +126,25 @@ public class CartFragment extends Fragment {
     }
 
     private void checkArgumentsAndSetupBack() {
-        if (getArguments() != null) {
-            boolean isFromDetail = getArguments().getBoolean("isFromDetail", false);
-            if (isFromDetail) {
-                btnBackCart.setVisibility(View.VISIBLE);
-                btnBackCart.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
-            } else {
-                btnBackCart.setVisibility(View.GONE);
-            }
+        boolean shouldShowBack = false;
+
+        // Kiểm tra argument isFromDetail (từ ProductDetailFragment)
+        if (getArguments() != null && getArguments().getBoolean("isFromDetail", false)) {
+            shouldShowBack = true;
+        }
+
+        // Kiểm tra BackStack: nếu màn trước là FavoriteFragment thì cũng hiện nút Back
+        NavController navController = Navigation.findNavController(requireView());
+        if (navController.getPreviousBackStackEntry() != null &&
+                navController.getPreviousBackStackEntry().getDestination().getId() == R.id.favoriteFragment) {
+            shouldShowBack = true;
+        }
+
+        if (shouldShowBack) {
+            btnBackCart.setVisibility(View.VISIBLE);
+            btnBackCart.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
+        } else {
+            btnBackCart.setVisibility(View.GONE);
         }
     }
 

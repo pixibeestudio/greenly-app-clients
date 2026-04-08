@@ -24,8 +24,13 @@ import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.model.Product;
 import com.pixibeestudio.greenly.ui.adapter.ProductImageSliderAdapter;
 import com.pixibeestudio.greenly.data.local.SessionManager;
+import com.pixibeestudio.greenly.data.model.WishlistItem;
 import com.pixibeestudio.greenly.ui.viewmodel.CartViewModel;
+import com.pixibeestudio.greenly.ui.viewmodel.FavoriteViewModel;
 import com.pixibeestudio.greenly.ui.viewmodel.ProductDetailViewModel;
+
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -64,8 +69,10 @@ public class ProductDetailFragment extends Fragment {
     private int currentQuantity = 1;
     private ProductDetailViewModel viewModel;
     private CartViewModel cartViewModel;
+    private FavoriteViewModel favoriteViewModel;
     private SessionManager sessionManager;
     private Product currentProduct;
+    private boolean isFavorite = false;
 
     @Nullable
     @Override
@@ -88,8 +95,10 @@ public class ProductDetailFragment extends Fragment {
         
         viewModel = new ViewModelProvider(this).get(ProductDetailViewModel.class);
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
+        favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
         sessionManager = new SessionManager(requireContext());
         loadProductDetail();
+        loadFavoriteStatus();
     }
 
     private void initViews(View view) {
@@ -164,6 +173,22 @@ public class ProductDetailFragment extends Fragment {
             bundle.putBoolean("isFromDetail", true);
             Navigation.findNavController(v).navigate(R.id.action_productDetailFragment_to_cartFragment, bundle);
         });
+
+        // Nút yêu thích trên màn chi tiết
+        if (btnDetailFavorite != null) {
+            btnDetailFavorite.setOnClickListener(v -> {
+                if (sessionManager.isGuestMode()) {
+                    showGuestLoginPopup();
+                    return;
+                }
+                if (currentProduct == null) return;
+                // Optimistic UI: đổi icon ngay lập tức
+                isFavorite = !isFavorite;
+                updateFavoriteIcon();
+                // Gọi API toggle
+                favoriteViewModel.toggleFavorite(currentProduct.getId());
+            });
+        }
     }
     
     private void loadProductDetail() {
@@ -281,6 +306,40 @@ public class ProductDetailFragment extends Fragment {
             }
             isExpanded[0] = !isExpanded[0];
         });
+    }
+
+    /**
+     * Lấy trạng thái yêu thích của sản phẩm hiện tại từ API.
+     */
+    private void loadFavoriteStatus() {
+        if (sessionManager.isGuestMode() || productId == -1) return;
+
+        favoriteViewModel.getFavorites().observe(getViewLifecycleOwner(), wishlistItems -> {
+            isFavorite = false;
+            if (wishlistItems != null) {
+                for (WishlistItem item : wishlistItems) {
+                    if (item.getProductId() == productId) {
+                        isFavorite = true;
+                        break;
+                    }
+                }
+            }
+            updateFavoriteIcon();
+        });
+    }
+
+    /**
+     * Cập nhật icon trái tim dựa trên trạng thái isFavorite.
+     */
+    private void updateFavoriteIcon() {
+        if (btnDetailFavorite == null) return;
+        if (isFavorite) {
+            btnDetailFavorite.setImageResource(R.drawable.ic_favorite_red);
+            btnDetailFavorite.setImageTintList(null);
+        } else {
+            btnDetailFavorite.setImageResource(R.drawable.ic_favorite_border);
+            btnDetailFavorite.setImageTintList(ColorStateList.valueOf(Color.parseColor("#9E9E9E")));
+        }
     }
 
     /**
