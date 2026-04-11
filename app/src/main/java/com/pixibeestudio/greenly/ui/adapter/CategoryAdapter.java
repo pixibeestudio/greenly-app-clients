@@ -23,9 +23,24 @@ import java.util.List;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
     private final List<Category> categories;
+    private OnCategoryClickListener listener;
+
+    // Interface cho sự kiện click vào danh mục
+    public interface OnCategoryClickListener {
+        void onCategoryClick(Category category);
+    }
 
     public CategoryAdapter(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public CategoryAdapter(List<Category> categories, OnCategoryClickListener listener) {
+        this.categories = categories;
+        this.listener = listener;
+    }
+
+    public void setOnCategoryClickListener(OnCategoryClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -48,6 +63,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
              .error(R.drawable.bg_circle_green)
              .apply(RequestOptions.bitmapTransform(new CircleCrop()))
              .into(holder.imgCategory);
+
+        // Sự kiện click vào danh mục
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onCategoryClick(category);
+            }
+        });
     }
 
     @Override

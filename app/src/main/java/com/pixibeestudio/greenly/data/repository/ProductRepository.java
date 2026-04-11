@@ -107,6 +107,35 @@ public class ProductRepository {
         return data;
     }
 
+    public MutableLiveData<List<Product>> getProductsByCategory(int categoryId) {
+        MutableLiveData<List<Product>> data = new MutableLiveData<>();
+
+        RetrofitClient.getApiService(context).getProductsByCategory(categoryId).enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().isSuccess()) {
+                        data.setValue(response.body().getData());
+                    } else {
+                        Log.e(TAG, "Lỗi API sản phẩm theo danh mục trả về success = false");
+                        data.setValue(null);
+                    }
+                } else {
+                    Log.e(TAG, "Lỗi kết nối hoặc dữ liệu sản phẩm theo danh mục rỗng: " + response.code());
+                    data.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                Log.e(TAG, "Lỗi mạng hoặc parse dữ liệu sản phẩm theo danh mục: " + t.getMessage());
+                data.setValue(null);
+            }
+        });
+
+        return data;
+    }
+
     public MutableLiveData<Product> getProductDetail(int id) {
         MutableLiveData<Product> data = new MutableLiveData<>();
 

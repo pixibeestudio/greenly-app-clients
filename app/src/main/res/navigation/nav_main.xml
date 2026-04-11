@@ -134,6 +134,14 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_categoryProductFragment"
+            app:destination="@id/categoryProductFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
@@ -331,6 +339,31 @@
 
         <action
             android:id="@+id/action_favoriteFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoryProductFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.CategoryProductFragment"
+        android:label="Sản phẩm theo danh mục"
+        tools:layout="@layout/fragment_category_product">
+
+        <argument
+            android:name="categoryId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+
+        <argument
+            android:name="categoryName"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <action
+            android:id="@+id/action_categoryProductFragment_to_searchFragment"
             app:destination="@id/searchFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"

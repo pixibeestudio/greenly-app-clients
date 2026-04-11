@@ -80,3 +80,27 @@ FavoriteFragment.java (viết lại):
 CartFragment.java:
 - checkArgumentsAndSetupBack: kiểm tra isFromDetail HOẶC previousBackStackEntry == favoriteFragment
 - Nếu đúng → btnBackCart VISIBLE + popBackStack onClick
+
+2025-04-11 - Màn hình Sản phẩm theo Danh mục (CategoryProductFragment)
+========================================
+Backend (Laravel):
+- Thêm API GET /api/products/category/{categoryId} trong ProductController
+- Thêm route trong api.php (public, không cần auth)
+
+Android:
+- fragment_category_product.xml: Header (Back + Title + Search), Filter Bar (Tất cả, Giá ⬆, Giá ⬇, Mới nhất, Bán chạy), RecyclerView Grid 2 cột
+- CategoryProductFragment.java: load SP theo category, filter/sort client-side, favorite + cart logic, guest popup
+- nav_main.xml: thêm categoryProductFragment (args: categoryId int, categoryName string) + action từ homeFragment
+- ApiService.java: thêm getProductsByCategory(@Path categoryId)
+- ProductRepository.java: thêm getProductsByCategory()
+- Product.java: thêm field sold_count + getter/setter
+- CategoryAdapter.java: thêm interface OnCategoryClickListener + click listener
+- HomeFragment.java: thêm onCategoryClick() → navigate với Bundle (categoryId, categoryName)
+- MainActivity.java: thêm categoryProductFragment vào danh sách ẩn BottomNav
+
+Filter logic (client-side sort):
+- Tất cả: thứ tự gốc API
+- Giá ⬆: sort price asc (ưu tiên discountPrice)
+- Giá ⬇: sort price desc
+- Mới nhất: sort ID desc
+- Bán chạy: sort sold_count desc

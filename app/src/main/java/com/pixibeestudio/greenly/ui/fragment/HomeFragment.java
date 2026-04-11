@@ -34,6 +34,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.local.SessionManager;
 import com.pixibeestudio.greenly.data.model.Product;
+import com.pixibeestudio.greenly.data.model.Category;
 import com.pixibeestudio.greenly.ui.adapter.BannerAdapter;
 import com.pixibeestudio.greenly.ui.adapter.CategoryAdapter;
 import com.pixibeestudio.greenly.ui.adapter.ProductGridAdapter;
@@ -209,7 +210,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
      */
     private void setupInitialLists() {
         rvCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvCategories.setAdapter(new CategoryAdapter(new ArrayList<>()));
+        rvCategories.setAdapter(new CategoryAdapter(new ArrayList<>(), this::onCategoryClick));
         
         rvDiscountProducts.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         rvDiscountProducts.setAdapter(new ProductHorizontalAdapter(new ArrayList<>(), this));
@@ -224,7 +225,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     private void observeData() {
         homeViewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(), categories -> {
             if (categories != null && !categories.isEmpty()) {
-                rvCategories.setAdapter(new CategoryAdapter(categories));
+                rvCategories.setAdapter(new CategoryAdapter(categories, this::onCategoryClick));
             }
         });
 
@@ -535,6 +536,19 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
                 })
                 .setCancelable(false)
                 .show();
+    }
+
+    // ======================== DANH MỤC SẢN PHẨM ========================
+
+    /**
+     * Xử lý sự kiện click vào danh mục → chuyển sang màn hình sản phẩm theo danh mục.
+     */
+    private void onCategoryClick(Category category) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("categoryId", category.getId());
+        bundle.putString("categoryName", category.getName());
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_homeFragment_to_categoryProductFragment, bundle);
     }
 
     // ======================== TẤT CẢ SẢN PHẨM (GRID) ========================

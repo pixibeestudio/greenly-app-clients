@@ -27,6 +27,10 @@ public interface ApiService {
     @GET("api/products/discounted")
     Call<ProductResponse> getDiscountedProducts();
 
+    // --- SAN PHAM THEO DANH MUC ---
+    @GET("api/products/category/{categoryId}")
+    Call<ProductResponse> getProductsByCategory(@Path("categoryId") int categoryId);
+
     // --- TIM KIEM SAN PHAM ---
     @GET("api/products/search")
     Call<ProductResponse> searchProducts(@Query("keyword") String keyword);

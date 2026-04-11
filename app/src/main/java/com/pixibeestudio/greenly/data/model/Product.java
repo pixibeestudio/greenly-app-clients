@@ -28,6 +28,9 @@ public class Product {
     @SerializedName("supplier")
     private Supplier supplier;
 
+    @SerializedName("sold_count")
+    private int soldCount;
+
     public Product(int id, String name, String image, double price, double discountPrice, String unit, String origin, int stockQuantity) {
         this.id = id;
         this.name = name;
@@ -125,5 +128,13 @@ public class Product {
 
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
+    }
+
+    public int getSoldCount() {
+        return soldCount;
+    }
+
+    public void setSoldCount(int soldCount) {
+        this.soldCount = soldCount;
     }
 }
