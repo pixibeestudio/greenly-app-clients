@@ -105,6 +105,8 @@
         android:paddingHorizontal="12dp"
         android:paddingVertical="8dp"
         android:scrollbars="none"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dividerHeader">
@@ -113,13 +115,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
             <!-- Nút Icon Filter (phễu lọc) -->
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp">
+                android:layout_marginEnd="8dp"
+                android:clipChildren="false"
+                android:clipToPadding="false">
 
                 <ImageButton
                     android:id="@+id/btnOpenFilter"
@@ -137,8 +143,8 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_gravity="top|end"
-                    android:layout_marginTop="-4dp"
-                    android:layout_marginEnd="-4dp"
+                    android:translationX="6dp"
+                    android:translationY="-6dp"
                     android:background="@drawable/bg_badge_red"
                     android:gravity="center"
                     android:textColor="@color/white"

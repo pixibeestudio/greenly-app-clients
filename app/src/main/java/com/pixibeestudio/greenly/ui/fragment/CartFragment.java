@@ -128,16 +128,21 @@ public class CartFragment extends Fragment {
     private void checkArgumentsAndSetupBack() {
         boolean shouldShowBack = false;
 
-        // Kiểm tra argument isFromDetail (từ ProductDetailFragment)
-        if (getArguments() != null && getArguments().getBoolean("isFromDetail", false)) {
-            shouldShowBack = true;
+        // Kiểm tra argument isFromDetail (từ ProductDetailFragment) hoặc isFromFilter (từ FilteredProductsFragment)
+        if (getArguments() != null) {
+            if (getArguments().getBoolean("isFromDetail", false)
+                    || getArguments().getBoolean("isFromFilter", false)) {
+                shouldShowBack = true;
+            }
         }
 
-        // Kiểm tra BackStack: nếu màn trước là FavoriteFragment thì cũng hiện nút Back
+        // Kiểm tra BackStack: nếu màn trước là FavoriteFragment hoặc FilteredProductsFragment thì hiện nút Back
         NavController navController = Navigation.findNavController(requireView());
-        if (navController.getPreviousBackStackEntry() != null &&
-                navController.getPreviousBackStackEntry().getDestination().getId() == R.id.favoriteFragment) {
-            shouldShowBack = true;
+        if (navController.getPreviousBackStackEntry() != null) {
+            int prevId = navController.getPreviousBackStackEntry().getDestination().getId();
+            if (prevId == R.id.favoriteFragment || prevId == R.id.filteredProductsFragment) {
+                shouldShowBack = true;
+            }
         }
 
         if (shouldShowBack) {

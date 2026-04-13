@@ -234,23 +234,50 @@ public class FilteredProductsFragment extends Fragment
         tvSearchBox.setOnClickListener(v ->
                 navController.navigate(R.id.action_filteredProductsFragment_to_searchFragment));
 
-        // Nút Giỏ hàng → chuyển sang CartFragment
-        btnCart.setOnClickListener(v ->
-                navController.navigate(R.id.action_filteredProductsFragment_to_cartFragment));
+        // Nút Giỏ hàng → chuyển sang CartFragment (truyền flag để hiện nút Back)
+        btnCart.setOnClickListener(v -> {
+            Bundle cartBundle = new Bundle();
+            cartBundle.putBoolean("isFromFilter", true);
+            navController.navigate(R.id.action_filteredProductsFragment_to_cartFragment, cartBundle);
+        });
 
-        // Nút mở bộ lọc BottomSheet (tạm Toast)
+        // Nút icon filter → mở BottomSheet đầy đủ (MODE_ALL)
         btnOpenFilter.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Mở lại bộ lọc", Toast.LENGTH_SHORT).show());
+                FilterBottomSheetFragment.newInstance(FilterBottomSheetFragment.MODE_ALL)
+                        .show(getChildFragmentManager(), "FilterBottomSheet"));
 
-        // Các nút filter tag (tạm Toast, sau sẽ mở BottomSheet tại tab tương ứng)
+        // Nút "Lọc theo" → mở BottomSheet chỉ khối Sort
         btnCurrentSort.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Mở lại bộ lọc", Toast.LENGTH_SHORT).show());
+                FilterBottomSheetFragment.newInstance(FilterBottomSheetFragment.MODE_SORT_ONLY)
+                        .show(getChildFragmentManager(), "FilterBottomSheet"));
 
+        // Nút "Loại hàng" → mở BottomSheet chỉ khối Category
         btnCurrentCategory.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Mở lại bộ lọc", Toast.LENGTH_SHORT).show());
+                FilterBottomSheetFragment.newInstance(FilterBottomSheetFragment.MODE_CATEGORY_ONLY)
+                        .show(getChildFragmentManager(), "FilterBottomSheet"));
 
+        // Nút "Ưu đãi" → mở BottomSheet chỉ khối Discount
         btnCurrentDiscount.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Mở lại bộ lọc", Toast.LENGTH_SHORT).show());
+                FilterBottomSheetFragment.newInstance(FilterBottomSheetFragment.MODE_DISCOUNT_ONLY)
+                        .show(getChildFragmentManager(), "FilterBottomSheet"));
+
+        // Observe giỏ hàng để cập nhật badge
+        observeCartBadge();
+    }
+
+    /**
+     * Observe số lượng giỏ hàng để cập nhật badge trên icon giỏ hàng.
+     */
+    private void observeCartBadge() {
+        if (sessionManager.isGuestMode()) return;
+        cartViewModel.getCarts().observe(getViewLifecycleOwner(), cartItems -> {
+            if (cartItems != null && !cartItems.isEmpty()) {
+                tvCartBadge.setText(String.valueOf(cartItems.size()));
+                tvCartBadge.setVisibility(View.VISIBLE);
+            } else {
+                tvCartBadge.setVisibility(View.GONE);
+            }
+        });
     }
 
     /**

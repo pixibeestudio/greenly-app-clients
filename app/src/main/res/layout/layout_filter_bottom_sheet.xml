@@ -126,6 +126,7 @@
                         android:textColor="@color/text_black"
                         android:paddingVertical="10dp"
                         android:paddingStart="8dp"
+                        android:background="?attr/selectableItemBackground"
                         android:layoutDirection="rtl"
                         android:button="@null"
                         android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
@@ -140,6 +141,7 @@
                         android:textColor="@color/text_black"
                         android:paddingVertical="10dp"
                         android:paddingStart="8dp"
+                        android:background="?attr/selectableItemBackground"
                         android:layoutDirection="rtl"
                         android:button="@null"
                         android:drawableEnd="?android:attr/listChoiceIndicatorSingle" />
@@ -153,6 +155,7 @@
                         android:textColor="@color/text_black"
                         android:paddingVertical="10dp"
                         android:paddingStart="8dp"
+                        android:background="?attr/selectableItemBackground"
                         android:layoutDirection="rtl"
                         android:button="@null"
                         android:drawableEnd="?android:attr/listChoiceIndicatorSingle" />
@@ -166,6 +169,7 @@
                         android:textColor="@color/text_black"
                         android:paddingVertical="10dp"
                         android:paddingStart="8dp"
+                        android:background="?attr/selectableItemBackground"
                         android:layoutDirection="rtl"
                         android:button="@null"
                         android:drawableEnd="?android:attr/listChoiceIndicatorSingle" />
@@ -179,6 +183,7 @@
                         android:textColor="@color/text_black"
                         android:paddingVertical="10dp"
                         android:paddingStart="8dp"
+                        android:background="?attr/selectableItemBackground"
                         android:layoutDirection="rtl"
                         android:button="@null"
                         android:drawableEnd="?android:attr/listChoiceIndicatorSingle" />
@@ -225,6 +230,7 @@
                         android:textColor="@color/text_black"
                         android:paddingVertical="10dp"
                         android:paddingStart="8dp"
+                        android:background="?attr/selectableItemBackground"
                         android:layoutDirection="rtl"
                         android:button="@null"
                         android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
@@ -266,6 +272,7 @@
                     android:textColor="@color/text_black"
                     android:paddingVertical="10dp"
                     android:paddingStart="8dp"
+                    android:background="?attr/selectableItemBackground"
                     android:layoutDirection="rtl"
                     android:button="@null"
                     android:drawableEnd="?android:attr/listChoiceIndicatorMultiple" />
@@ -279,6 +286,7 @@
                     android:textColor="@color/text_black"
                     android:paddingVertical="10dp"
                     android:paddingStart="8dp"
+                    android:background="?attr/selectableItemBackground"
                     android:layoutDirection="rtl"
                     android:button="@null"
                     android:drawableEnd="?android:attr/listChoiceIndicatorMultiple" />

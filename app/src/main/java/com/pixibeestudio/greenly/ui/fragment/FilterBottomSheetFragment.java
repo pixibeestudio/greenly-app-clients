@@ -286,6 +286,12 @@ public class FilterBottomSheetFragment extends BottomSheetDialogFragment {
                             rb.setCompoundDrawablesWithIntrinsicBounds(
                                     0, 0, android.R.drawable.btn_radio, 0);
 
+                            // Ripple full-width khi hover/touch (giống các mục tĩnh trong XML)
+                            int[] attrs = new int[]{android.R.attr.selectableItemBackground};
+                            android.content.res.TypedArray ta = requireContext().obtainStyledAttributes(attrs);
+                            rb.setBackground(ta.getDrawable(0));
+                            ta.recycle();
+
                             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
                                     RadioGroup.LayoutParams.MATCH_PARENT,
                                     RadioGroup.LayoutParams.WRAP_CONTENT
