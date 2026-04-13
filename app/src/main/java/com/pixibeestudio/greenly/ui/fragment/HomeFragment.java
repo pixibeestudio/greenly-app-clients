@@ -1,9 +1,9 @@
 package com.pixibeestudio.greenly.ui.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +30,20 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.local.SessionManager;
+import com.pixibeestudio.greenly.data.model.Banner;
+import com.pixibeestudio.greenly.data.model.BannerResponse;
 import com.pixibeestudio.greenly.data.model.Product;
 import com.pixibeestudio.greenly.data.model.Category;
+import com.pixibeestudio.greenly.data.network.RetrofitClient;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import com.pixibeestudio.greenly.ui.adapter.BannerAdapter;
 import com.pixibeestudio.greenly.ui.adapter.CategoryAdapter;
 import com.pixibeestudio.greenly.ui.adapter.ProductGridAdapter;
@@ -45,7 +54,6 @@ import com.pixibeestudio.greenly.ui.viewmodel.HomeViewModel;
 import com.pixibeestudio.greenly.data.model.WishlistItem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -62,7 +70,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     private static final int BANNER_AUTO_SLIDE_DELAY = 3000;
 
     private ViewPager2 vpBanner;
-    private LinearLayout llIndicator;
+    private TabLayout tabIndicator;
     private RecyclerView rvCategories;
     private RecyclerView rvPopularProducts;
     private RecyclerView rvDiscountProducts;
@@ -97,6 +105,9 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     private ProductHorizontalAdapter popularAdapter;
     private ProductHorizontalAdapter discountAdapter;
     private ProductHorizontalAdapter top100Adapter;
+    private BannerAdapter bannerAdapter;
+
+    private static final String TAG = "HomeFragment";
 
     // Handler và Runnable cho auto-slide banner
     private final Handler bannerHandler = new Handler(Looper.getMainLooper());
@@ -297,7 +308,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
      */
     private void initViews(View view) {
         vpBanner = view.findViewById(R.id.vp_banner);
-        llIndicator = view.findViewById(R.id.ll_indicator);
+        tabIndicator = view.findViewById(R.id.tabIndicator);
         rvCategories = view.findViewById(R.id.rv_categories);
         rvPopularProducts = view.findViewById(R.id.rv_popular_products);
         rvDiscountProducts = view.findViewById(R.id.rv_discount_products);
@@ -397,65 +408,78 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
      * Thiết lập ViewPager2 banner với auto-slide và indicator.
      */
     private void setupBanner() {
-        // Dữ liệu banner giả lập (3 màu nền khác nhau)
-        List<Integer> bannerColors = Arrays.asList(
-                Color.parseColor("#A5D6A7"),  // Xanh lá nhạt
-                Color.parseColor("#FFCC80"),  // Cam nhạt
-                Color.parseColor("#90CAF9")   // Xanh dương nhạt
-        );
-
-        BannerAdapter bannerAdapter = new BannerAdapter(bannerColors);
+        // Khởi tạo adapter rỗng, gắn vào ViewPager2
+        bannerAdapter = new BannerAdapter(new ArrayList<>());
         vpBanner.setAdapter(bannerAdapter);
 
-        // Tạo indicator cho banner
-        createBannerIndicator(bannerColors.size());
+        // Mặc định ẩn indicator cho đến khi có >= 2 banner
+        tabIndicator.setVisibility(View.GONE);
 
-        // Lắng nghe sự kiện chuyển trang để cập nhật indicator
+        // Lắng nghe sự kiện chuyển trang: reset timer khi user vuốt tay
         vpBanner.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                updateBannerIndicator(position);
+                bannerHandler.removeCallbacks(bannerRunnable);
+                bannerHandler.postDelayed(bannerRunnable, BANNER_AUTO_SLIDE_DELAY);
             }
         });
 
-        // Bắt đầu auto-slide
-        bannerHandler.postDelayed(bannerRunnable, BANNER_AUTO_SLIDE_DELAY);
+        // Gọi API lấy danh sách banner từ server
+        loadBannersFromApi();
     }
 
     /**
-     * Tạo các chấm indicator cho banner.
+     * Gọi API GET /api/banners để lấy danh sách banner đang active.
+     * Nếu có >= 2 banner: hiện indicator + bật auto-slide.
+     * Nếu có 1 banner: hiện ảnh, ẩn indicator, không auto-slide.
+     * Nếu 0 banner: ẩn toàn bộ.
      */
-    private void createBannerIndicator(int count) {
-        llIndicator.removeAllViews();
-        for (int i = 0; i < count; i++) {
-            ImageView dot = new ImageView(requireContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    dpToPx(8), dpToPx(8));
-            params.setMargins(dpToPx(4), 0, dpToPx(4), 0);
-            dot.setLayoutParams(params);
+    private void loadBannersFromApi() {
+        RetrofitClient.getApiService(requireContext()).getBanners().enqueue(new Callback<BannerResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<BannerResponse> call, @NonNull Response<BannerResponse> response) {
+                if (!isAdded()) return;
 
-            // Chấm đầu tiên active, còn lại inactive
-            if (i == 0) {
-                dot.setImageResource(R.drawable.bg_indicator_active);
-            } else {
-                dot.setImageResource(R.drawable.bg_indicator_inactive);
-            }
-            llIndicator.addView(dot);
-        }
-    }
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    List<Banner> banners = response.body().getData();
+                    Log.d(TAG, "Đã load " + (banners != null ? banners.size() : 0) + " banner từ API");
 
-    /**
-     * Cập nhật trạng thái indicator khi chuyển banner.
-     */
-    private void updateBannerIndicator(int selectedPosition) {
-        for (int i = 0; i < llIndicator.getChildCount(); i++) {
-            ImageView dot = (ImageView) llIndicator.getChildAt(i);
-            if (i == selectedPosition) {
-                dot.setImageResource(R.drawable.bg_indicator_active);
-            } else {
-                dot.setImageResource(R.drawable.bg_indicator_inactive);
+                    if (banners != null && !banners.isEmpty()) {
+                        // Cập nhật adapter
+                        bannerAdapter.setBanners(banners);
+
+                        // Hiện ViewPager2
+                        vpBanner.setVisibility(View.VISIBLE);
+
+                        if (banners.size() >= 2) {
+                            // Liên kết TabLayout indicator
+                            tabIndicator.setVisibility(View.VISIBLE);
+                            new TabLayoutMediator(tabIndicator, vpBanner, (tab, position) -> {
+                                // Để trống, dấu chấm render qua tabBackground selector
+                            }).attach();
+
+                            // Bắt đầu auto-slide
+                            bannerHandler.postDelayed(bannerRunnable, BANNER_AUTO_SLIDE_DELAY);
+                        } else {
+                            // Chỉ có 1 banner → ẩn indicator, không auto-slide
+                            tabIndicator.setVisibility(View.GONE);
+                        }
+                    } else {
+                        // Không có banner → ẩn cả ViewPager2 và indicator
+                        vpBanner.setVisibility(View.GONE);
+                        tabIndicator.setVisibility(View.GONE);
+                    }
+                } else {
+                    Log.e(TAG, "Lỗi API banners: " + response.code());
+                }
             }
-        }
+
+            @Override
+            public void onFailure(@NonNull Call<BannerResponse> call, @NonNull Throwable t) {
+                if (!isAdded()) return;
+                Log.e(TAG, "Không thể kết nối API banners: " + t.getMessage());
+            }
+        });
     }
 
     // ======================== SẢN PHẨM NỔI BẬT ========================

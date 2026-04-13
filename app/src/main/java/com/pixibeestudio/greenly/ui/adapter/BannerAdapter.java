@@ -1,28 +1,39 @@
 package com.pixibeestudio.greenly.ui.adapter;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.pixibeestudio.greenly.R;
+import com.pixibeestudio.greenly.data.model.Banner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Adapter hiển thị danh sách banner quảng cáo trong ViewPager2.
- * Sử dụng mock data với các màu nền khác nhau để test UI.
+ * Dùng Glide để tải ảnh từ URL vào ShapeableImageView.
  */
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerViewHolder> {
 
-    private final List<Integer> bannerColors;
+    private List<Banner> banners;
 
-    public BannerAdapter(List<Integer> bannerColors) {
-        this.bannerColors = bannerColors;
+    public BannerAdapter(List<Banner> banners) {
+        this.banners = banners != null ? banners : new ArrayList<>();
+    }
+
+    /**
+     * Cập nhật danh sách banner mới và refresh giao diện.
+     */
+    public void setBanners(List<Banner> newBanners) {
+        this.banners = newBanners != null ? newBanners : new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -35,21 +46,28 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerView
 
     @Override
     public void onBindViewHolder(@NonNull BannerViewHolder holder, int position) {
-        // Gán màu nền cho banner giả lập
-        holder.imgBanner.setBackgroundColor(bannerColors.get(position));
+        Banner banner = banners.get(position);
+        // Dùng Glide load ảnh banner với placeholder và error image
+        Glide.with(holder.itemView.getContext())
+                .load(banner.getImageUrl())
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_error)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .centerCrop()
+                .into(holder.ivBanner);
     }
 
     @Override
     public int getItemCount() {
-        return bannerColors != null ? bannerColors.size() : 0;
+        return banners != null ? banners.size() : 0;
     }
 
     static class BannerViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgBanner;
+        ShapeableImageView ivBanner;
 
         BannerViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgBanner = itemView.findViewById(R.id.img_banner);
+            ivBanner = itemView.findViewById(R.id.ivBanner);
         }
     }
 }

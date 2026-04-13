@@ -1,6 +1,7 @@
 package com.pixibeestudio.greenly.data.network;
 
 import com.google.gson.JsonObject;
+import com.pixibeestudio.greenly.data.model.BannerResponse;
 import com.pixibeestudio.greenly.data.model.CartRequest;
 import com.pixibeestudio.greenly.data.model.CartResponse;
 import com.pixibeestudio.greenly.data.model.CategoryResponse;
@@ -18,6 +19,10 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
+    // --- BANNER API ---
+    @GET("api/banners")
+    Call<BannerResponse> getBanners();
+
     @GET("api/categories")
     Call<CategoryResponse> getCategories();
 
