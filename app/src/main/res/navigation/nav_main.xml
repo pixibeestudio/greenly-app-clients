@@ -372,6 +372,49 @@
     </fragment>
 
     <fragment
+        android:id="@+id/filteredProductsFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.FilteredProductsFragment"
+        android:label="Kết quả lọc"
+        tools:layout="@layout/fragment_filtered_products">
+
+        <argument
+            android:name="sort_by"
+            app:argType="string"
+            android:defaultValue="newest" />
+
+        <argument
+            android:name="category_id"
+            app:argType="integer"
+            android:defaultValue="0" />
+
+        <argument
+            android:name="category_name"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="is_discount"
+            app:argType="string"
+            android:defaultValue="false" />
+
+        <action
+            android:id="@+id/action_filteredProductsFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_filteredProductsFragment_to_cartFragment"
+            app:destination="@id/cartFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
         android:id="@+id/paymentQrFragment"
         android:name="com.pixibeestudio.greenly.ui.fragment.PaymentQrFragment"
         android:label="Thanh toán chuyển khoản"

@@ -280,7 +280,7 @@
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Giảm giá"
+                                android:text="Ưu đãi"
                                 android:textColor="@color/black"
                                 app:strokeColor="#E0E0E0"
                                 app:cornerRadius="16dp"
@@ -296,7 +296,8 @@
                                 android:text="Reset"
                                 android:textColor="@color/header_bg_green"
                                 android:minHeight="0dp"
-                                android:paddingVertical="4dp" />
+                                android:paddingVertical="4dp"
+                                android:visibility="gone" />
                         </LinearLayout>
                     </HorizontalScrollView>
                 </androidx.constraintlayout.widget.ConstraintLayout>

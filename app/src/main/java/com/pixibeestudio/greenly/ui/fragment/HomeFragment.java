@@ -83,6 +83,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     private LinearLayout layoutSearch;
     private LinearLayout searchBarSticky;
     private Button btnFilterBy, btnCategoryFilter, btnDiscountFilter, btnResetFilter;
+    private ImageButton btnSortIcon;
 
     private HomeViewModel homeViewModel;
     private CartViewModel cartViewModel;
@@ -339,6 +340,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         btnCategoryFilter = view.findViewById(R.id.btnCategoryFilter);
         btnDiscountFilter = view.findViewById(R.id.btnDiscountFilter);
         btnResetFilter = view.findViewById(R.id.btnResetFilter);
+        btnSortIcon = view.findViewById(R.id.btnSortIcon);
     }
 
     /**
@@ -368,14 +370,25 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
             });
         }
 
-        // Bắt sự kiện click mở Filter Dialog
-        View.OnClickListener showFilterListener = v -> {
-            new FilterDialogFragment().show(getChildFragmentManager(), "FilterDialog");
-        };
+        // Icon filter → mở BottomSheet đầy đủ (MODE_ALL)
+        if (btnSortIcon != null) btnSortIcon.setOnClickListener(v ->
+                FilterBottomSheetFragment.newInstance(FilterBottomSheetFragment.MODE_ALL)
+                        .show(getChildFragmentManager(), "FilterBottomSheet"));
 
-        if (btnFilterBy != null) btnFilterBy.setOnClickListener(showFilterListener);
-        if (btnCategoryFilter != null) btnCategoryFilter.setOnClickListener(showFilterListener);
-        if (btnDiscountFilter != null) btnDiscountFilter.setOnClickListener(showFilterListener);
+        // Nút "Lọc theo" → chỉ hiện khối Sort
+        if (btnFilterBy != null) btnFilterBy.setOnClickListener(v ->
+                FilterBottomSheetFragment.newInstance(FilterBottomSheetFragment.MODE_SORT_ONLY)
+                        .show(getChildFragmentManager(), "FilterBottomSheet"));
+
+        // Nút "Loại hàng" → chỉ hiện khối Category
+        if (btnCategoryFilter != null) btnCategoryFilter.setOnClickListener(v ->
+                FilterBottomSheetFragment.newInstance(FilterBottomSheetFragment.MODE_CATEGORY_ONLY)
+                        .show(getChildFragmentManager(), "FilterBottomSheet"));
+
+        // Nút "Ưu đãi" → chỉ hiện khối Discount
+        if (btnDiscountFilter != null) btnDiscountFilter.setOnClickListener(v ->
+                FilterBottomSheetFragment.newInstance(FilterBottomSheetFragment.MODE_DISCOUNT_ONLY)
+                        .show(getChildFragmentManager(), "FilterBottomSheet"));
     }
 
     // ======================== BANNER ========================

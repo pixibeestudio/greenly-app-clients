@@ -31,6 +31,14 @@ public interface ApiService {
     @GET("api/products/category/{categoryId}")
     Call<ProductResponse> getProductsByCategory(@Path("categoryId") int categoryId);
 
+    // --- LOC SAN PHAM ---
+    @GET("api/products/filter")
+    Call<ProductResponse> filterProducts(
+            @Query("sort_by") String sortBy,
+            @Query("category_id") int categoryId,
+            @Query("is_discount") String isDiscount
+    );
+
     // --- TIM KIEM SAN PHAM ---
     @GET("api/products/search")
     Call<ProductResponse> searchProducts(@Query("keyword") String keyword);

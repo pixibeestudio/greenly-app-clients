@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_bottom_sheet_rounded">
+
+    <!-- ==================== HEADER ==================== -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp">
+
+        <!-- Nút đóng (X) góc trái -->
+        <ImageButton
+            android:id="@+id/btnCloseFilter"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Đóng"
+            android:src="@drawable/ic_close"
+            android:scaleType="centerInside"
+            app:tint="@color/text_black" />
+
+        <!-- Tiêu đề giữa -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Lọc sản phẩm"
+            android:textColor="@color/text_black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Đường kẻ phân cách -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/shipper_divider" />
+
+    <!-- ==================== THANH TAB ==================== -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayoutFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/green_primary"
+        app:tabIndicatorHeight="3dp"
+        app:tabSelectedTextColor="@color/green_primary"
+        app:tabTextColor="#9E9E9E"
+        app:tabTextAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:tabRippleColor="@android:color/transparent">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lọc theo" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loại hàng" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ưu đãi" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <!-- Đường kẻ phân cách -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/shipper_divider" />
+
+    <!-- ==================== NỘI DUNG CUỘN ==================== -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsvFilter"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <!-- ========== KHỐI 1: LỌC THEO ========== -->
+            <LinearLayout
+                android:id="@+id/sectionSort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lọc theo"
+                    android:textColor="@color/text_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <RadioGroup
+                    android:id="@+id/rgSortFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/rbDefault"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Mặc định"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_black"
+                        android:paddingVertical="10dp"
+                        android:paddingStart="8dp"
+                        android:layoutDirection="rtl"
+                        android:button="@null"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/rbNewest"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Mới nhất"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_black"
+                        android:paddingVertical="10dp"
+                        android:paddingStart="8dp"
+                        android:layoutDirection="rtl"
+                        android:button="@null"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorSingle" />
+
+                    <RadioButton
+                        android:id="@+id/rbTopSales"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Bán chạy"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_black"
+                        android:paddingVertical="10dp"
+                        android:paddingStart="8dp"
+                        android:layoutDirection="rtl"
+                        android:button="@null"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorSingle" />
+
+                    <RadioButton
+                        android:id="@+id/rbPriceHigh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Giá cao nhất"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_black"
+                        android:paddingVertical="10dp"
+                        android:paddingStart="8dp"
+                        android:layoutDirection="rtl"
+                        android:button="@null"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorSingle" />
+
+                    <RadioButton
+                        android:id="@+id/rbPriceLow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Giá rẻ nhất"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_black"
+                        android:paddingVertical="10dp"
+                        android:paddingStart="8dp"
+                        android:layoutDirection="rtl"
+                        android:button="@null"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorSingle" />
+
+                </RadioGroup>
+            </LinearLayout>
+
+            <!-- Đường kẻ phân cách -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp"
+                android:background="@color/shipper_divider" />
+
+            <!-- ========== KHỐI 2: LOẠI HÀNG ========== -->
+            <LinearLayout
+                android:id="@+id/sectionCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loại hàng"
+                    android:textColor="@color/text_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <RadioGroup
+                    android:id="@+id/rgCategoryFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/rbAllCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tất cả loại hàng"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_black"
+                        android:paddingVertical="10dp"
+                        android:paddingStart="8dp"
+                        android:layoutDirection="rtl"
+                        android:button="@null"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
+                        android:checked="true" />
+
+                </RadioGroup>
+            </LinearLayout>
+
+            <!-- Đường kẻ phân cách -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp"
+                android:background="@color/shipper_divider" />
+
+            <!-- ========== KHỐI 3: ƯU ĐÃI ========== -->
+            <LinearLayout
+                android:id="@+id/sectionDiscount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ưu đãi"
+                    android:textColor="@color/text_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <CheckBox
+                    android:id="@+id/cbDiscounted"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sản phẩm đang giảm giá"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_black"
+                    android:paddingVertical="10dp"
+                    android:paddingStart="8dp"
+                    android:layoutDirection="rtl"
+                    android:button="@null"
+                    android:drawableEnd="?android:attr/listChoiceIndicatorMultiple" />
+
+                <CheckBox
+                    android:id="@+id/cbMostDiscount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Giảm nhiều nhất"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_black"
+                    android:paddingVertical="10dp"
+                    android:paddingStart="8dp"
+                    android:layoutDirection="rtl"
+                    android:button="@null"
+                    android:drawableEnd="?android:attr/listChoiceIndicatorMultiple" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Đường kẻ phân cách -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/shipper_divider" />
+
+    <!-- ==================== FOOTER ==================== -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <!-- Nút Reset (ẩn mặc định) -->
+        <TextView
+            android:id="@+id/btnReset"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_btn_gray"
+            android:gravity="center"
+            android:text="Đặt lại"
+            android:textColor="#616161"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- Nút Áp dụng -->
+        <TextView
+            android:id="@+id/btnApply"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_green"
+            android:gravity="center"
+            android:text="Áp dụng"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>
