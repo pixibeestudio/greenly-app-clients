@@ -36,9 +36,10 @@ public class CheckoutRepository {
                         int orderId = data.get("order_id").getAsInt();
                         int grandTotal = data.get("total_money").getAsInt();
                         String orderCode = data.has("order_code") ? data.get("order_code").getAsString() : "";
+                        String paymentUrl = data.has("payment_url") ? data.get("payment_url").getAsString() : "";
 
-                        android.util.Log.d("CheckoutRepository", "Đặt hàng OK - orderId=" + orderId + ", grandTotal=" + grandTotal);
-                        CheckoutResult checkoutResult = new CheckoutResult(orderId, grandTotal, orderCode);
+                        android.util.Log.d("CheckoutRepository", "Đặt hàng OK - orderId=" + orderId + ", grandTotal=" + grandTotal + ", paymentUrl=" + paymentUrl);
+                        CheckoutResult checkoutResult = new CheckoutResult(orderId, grandTotal, orderCode, paymentUrl);
                         result.setValue(Resource.success(checkoutResult));
                     } catch (Exception e) {
                         android.util.Log.e("CheckoutRepository", "Lỗi parse response đặt hàng", e);

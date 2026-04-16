@@ -427,6 +427,14 @@
             android:name="orderId"
             app:argType="integer"
             android:defaultValue="0" />
+        <argument
+            android:name="orderCode"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="paymentUrl"
+            app:argType="string"
+            android:defaultValue="" />
 
         <action
             android:id="@+id/action_paymentQrFragment_to_orderSuccessFragment"

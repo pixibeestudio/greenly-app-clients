@@ -193,10 +193,16 @@ public class CheckoutFragment extends Fragment {
                     
                     // Chia luong dieu huong theo phuong thuc thanh toan
                     if (selectedPaymentId == R.id.rbPaymentVietQR) {
-                        // Chuyen sang man hinh QR voi grandTotal va orderId tu backend
+                        // Lấy thêm orderCode và paymentUrl từ backend response
+                        String orderCodeStr = (checkoutResult != null) ? checkoutResult.getOrderCode() : "";
+                        String paymentUrlStr = (checkoutResult != null) ? checkoutResult.getPaymentUrl() : "";
+
+                        // Chuyen sang man hinh QR voi đầy đủ thông tin
                         Bundle args = new Bundle();
                         args.putInt("totalAmount", grandTotal);
                         args.putInt("orderId", orderId);
+                        args.putString("orderCode", orderCodeStr);
+                        args.putString("paymentUrl", paymentUrlStr);
                         Navigation.findNavController(requireView())
                                 .navigate(R.id.action_checkoutFragment_to_paymentQrFragment, args);
                     } else {

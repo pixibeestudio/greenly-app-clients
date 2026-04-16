@@ -8,11 +8,13 @@ public class CheckoutResult {
     private int orderId;
     private int grandTotal;
     private String orderCode;
+    private String paymentUrl;
 
-    public CheckoutResult(int orderId, int grandTotal, String orderCode) {
+    public CheckoutResult(int orderId, int grandTotal, String orderCode, String paymentUrl) {
         this.orderId = orderId;
         this.grandTotal = grandTotal;
         this.orderCode = orderCode;
+        this.paymentUrl = paymentUrl;
     }
 
     public int getOrderId() {
@@ -25,5 +27,9 @@ public class CheckoutResult {
 
     public String getOrderCode() {
         return orderCode;
+    }
+
+    public String getPaymentUrl() {
+        return paymentUrl;
     }
 }

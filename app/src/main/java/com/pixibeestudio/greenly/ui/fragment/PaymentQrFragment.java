@@ -1,13 +1,16 @@
 package com.pixibeestudio.greenly.ui.fragment;
 
-import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,53 +19,57 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.button.MaterialButton;
+import com.google.gson.JsonObject;
 import com.pixibeestudio.greenly.R;
-import com.pixibeestudio.greenly.ui.viewmodel.CheckoutViewModel;
+import com.pixibeestudio.greenly.data.network.RetrofitClient;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class PaymentQrFragment extends Fragment {
 
-    private static final String ARG_TOTAL_AMOUNT = "totalAmount";
-    private static final String ARG_ORDER_ID = "orderId";
+    private static final String TAG = "PaymentQrFragment";
+    private static final long POLLING_INTERVAL = 3000; // 3 giây
 
     private ImageButton btnBack;
     private ImageView imgQrCode;
     private TextView tvPaymentAmount;
-    private MaterialButton btnPaymentDone;
+    private TextView tvOrderCode;
+    private LinearLayout layoutWaiting;
+    private LinearLayout layoutSuccess;
 
     private int totalAmount;
     private int orderId;
-    private CheckoutViewModel viewModel;
+    private String orderCode;
+    private String paymentUrl;
 
-    /**
-     * Tạo instance của PaymentQrFragment với arguments
-     * @param totalAmount Số tiền cần thanh toán
-     * @param orderId ID của đơn hàng
-     */
-    public static PaymentQrFragment newInstance(int totalAmount, int orderId) {
-        PaymentQrFragment fragment = new PaymentQrFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_TOTAL_AMOUNT, totalAmount);
-        args.putInt(ARG_ORDER_ID, orderId);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    // Handler cho polling kiểm tra trạng thái thanh toán
+    private final Handler pollingHandler = new Handler(Looper.getMainLooper());
+    private final Runnable pollingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            checkPaymentStatus();
+        }
+    };
+    private boolean isPaymentConfirmed = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            totalAmount = getArguments().getInt(ARG_TOTAL_AMOUNT, 0);
-            orderId = getArguments().getInt(ARG_ORDER_ID, 0);
+            totalAmount = getArguments().getInt("totalAmount", 0);
+            orderId = getArguments().getInt("orderId", 0);
+            orderCode = getArguments().getString("orderCode", "");
+            paymentUrl = getArguments().getString("paymentUrl", "");
         }
     }
 
@@ -76,22 +83,22 @@ public class PaymentQrFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Khoi tao ViewModel
-        viewModel = new ViewModelProvider(this).get(CheckoutViewModel.class);
-
-        // Anh xa views
+        // Ánh xạ views
         btnBack = view.findViewById(R.id.btnBack);
         imgQrCode = view.findViewById(R.id.imgQrCode);
         tvPaymentAmount = view.findViewById(R.id.tvPaymentAmount);
-        btnPaymentDone = view.findViewById(R.id.btnPaymentDone);
+        tvOrderCode = view.findViewById(R.id.tvOrderCode);
+        layoutWaiting = view.findViewById(R.id.layoutWaiting);
+        layoutSuccess = view.findViewById(R.id.layoutSuccess);
 
-        // Hien thi so tien
+        // Hiển thị thông tin đơn hàng
         tvPaymentAmount.setText(formatCurrency(totalAmount));
+        tvOrderCode.setText(orderCode);
 
-        // Tai QR code VietQR
+        // Tải QR code từ paymentUrl
         loadQrCode();
 
-        // Chan nut Back he thong (System Back) - hien dialog thay vi quay lai Checkout
+        // Chặn nút Back hệ thống - hiện dialog
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -99,72 +106,116 @@ public class PaymentQrFragment extends Fragment {
             }
         });
 
-        // Xu ly su kien click nut Back tren Header - hien dialog thay vi popBackStack
+        // Nút Back trên Header
         btnBack.setOnClickListener(v -> showExitDialog());
 
-        btnPaymentDone.setOnClickListener(v -> {
-            // Goi API xac nhan thanh toan truoc khi dieu huong
-            ProgressDialog progressDialog = new ProgressDialog(requireContext());
-            progressDialog.setMessage("Đang xác nhận thanh toán...");
-            progressDialog.setCancelable(false);
-
-            viewModel.confirmPayment(orderId).observe(getViewLifecycleOwner(), resource -> {
-                switch (resource.status) {
-                    case LOADING:
-                        progressDialog.show();
-                        break;
-                    case SUCCESS:
-                        progressDialog.dismiss();
-                        Toast.makeText(getContext(), "Xác nhận thanh toán thành công!", Toast.LENGTH_SHORT).show();
-
-                        // Dieu huong sang OrderSuccessFragment
-                        Bundle args = new Bundle();
-                        args.putInt("orderId", orderId);
-                        args.putString("paymentMethod", "bank_transfer");
-
-                        NavController navController = Navigation.findNavController(view);
-                        navController.navigate(R.id.action_paymentQrFragment_to_orderSuccessFragment, args);
-                        break;
-                    case ERROR:
-                        progressDialog.dismiss();
-                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_LONG).show();
-                        break;
-                }
-            });
-        });
+        // Bắt đầu polling kiểm tra trạng thái thanh toán
+        startPolling();
     }
 
     /**
-     * Tao URL VietQR va load vao ImageView
+     * Tạo QR code chứa paymentUrl (link web xác nhận thanh toán)
+     * Dùng API qrserver.com để tạo ảnh QR từ URL
      */
     private void loadQrCode() {
-        String bankId = "TPBank";
-        String accountNo = "00001983982";
-        String accountName = "Greenly Store";
-        String addInfo = "Greenly Store" + orderId;
+        if (paymentUrl == null || paymentUrl.isEmpty()) {
+            Log.e(TAG, "paymentUrl trống, không thể tạo QR");
+            return;
+        }
 
-        // Mẫu URL của VietQR.io (Dùng template compact2 cho đẹp)
-        String qrUrl = "https://img.vietqr.io/image/" + bankId + "-" + accountNo
-                + "-compact2.png?amount=" + totalAmount
-                + "&addInfo=" + Uri.encode(addInfo)
-                + "&accountName=" + Uri.encode(accountName);
+        // Dùng API qrserver.com để tạo ảnh QR code từ paymentUrl
+        String qrImageUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data="
+                + Uri.encode(paymentUrl);
+
+        Log.d(TAG, "QR URL: " + qrImageUrl);
+        Log.d(TAG, "Payment URL: " + paymentUrl);
 
         Glide.with(this)
-                .load(qrUrl)
+                .load(qrImageUrl)
                 .placeholder(R.drawable.ic_default_product)
                 .error(R.drawable.ic_default_product)
                 .into(imgQrCode);
     }
 
     /**
-     * Hien thi Dialog xac nhan khi nguoi dung muon roi khoi man hinh thanh toan QR
-     * Vi gio hang da bi xoa sau khi dat hang, khong the quay lai Checkout
+     * Bắt đầu polling kiểm tra trạng thái thanh toán mỗi 3 giây
+     */
+    private void startPolling() {
+        pollingHandler.postDelayed(pollingRunnable, POLLING_INTERVAL);
+    }
+
+    /**
+     * Gọi API kiểm tra trạng thái thanh toán
+     */
+    private void checkPaymentStatus() {
+        if (!isAdded() || isPaymentConfirmed) return;
+
+        RetrofitClient.getApiService(requireContext()).checkPaymentStatus(orderId).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                if (!isAdded() || isPaymentConfirmed) return;
+
+                if (response.isSuccessful() && response.body() != null) {
+                    JsonObject body = response.body();
+                    String paymentStatus = body.has("payment_status") ? body.get("payment_status").getAsString() : "";
+
+                    Log.d(TAG, "Payment status: " + paymentStatus);
+
+                    if ("completed".equals(paymentStatus)) {
+                        // Thanh toán thành công!
+                        isPaymentConfirmed = true;
+                        onPaymentSuccess();
+                        return;
+                    }
+                }
+
+                // Chưa thanh toán → tiếp tục polling
+                pollingHandler.postDelayed(pollingRunnable, POLLING_INTERVAL);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+                if (!isAdded() || isPaymentConfirmed) return;
+                Log.e(TAG, "Lỗi kiểm tra trạng thái: " + t.getMessage());
+                // Lỗi mạng → vẫn tiếp tục polling
+                pollingHandler.postDelayed(pollingRunnable, POLLING_INTERVAL);
+            }
+        });
+    }
+
+    /**
+     * Xử lý khi thanh toán thành công: hiện trạng thái thành công,
+     * sau 2 giây tự động chuyển sang màn OrderSuccess
+     */
+    private void onPaymentSuccess() {
+        // Cập nhật UI: ẩn trạng thái chờ, hiện trạng thái thành công
+        layoutWaiting.setVisibility(View.GONE);
+        layoutSuccess.setVisibility(View.VISIBLE);
+
+        Toast.makeText(getContext(), "Thanh toán thành công!", Toast.LENGTH_SHORT).show();
+
+        // Sau 2 giây tự động chuyển sang màn thành công
+        pollingHandler.postDelayed(() -> {
+            if (!isAdded()) return;
+
+            Bundle args = new Bundle();
+            args.putInt("orderId", orderId);
+            args.putString("paymentMethod", "bank_transfer");
+
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(R.id.action_paymentQrFragment_to_orderSuccessFragment, args);
+        }, 2000);
+    }
+
+    /**
+     * Hiển thị Dialog khi người dùng muốn rời màn hình thanh toán
      */
     private void showExitDialog() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Hủy thanh toán?")
                 .setMessage("Bạn chưa hoàn thành giao dịch. Đơn hàng sẽ được lưu vào danh sách chờ thanh toán. Bạn có chắc chắn muốn rời đi và quay về Trang chủ không?")
                 .setPositiveButton("Về Trang chủ", (dialog, which) -> {
+                    pollingHandler.removeCallbacks(pollingRunnable);
                     NavController navController = Navigation.findNavController(requireView());
                     NavOptions navOptions = new NavOptions.Builder()
                             .setPopUpTo(R.id.homeFragment, true)
@@ -176,10 +227,15 @@ public class PaymentQrFragment extends Fragment {
                 .show();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Dọn dẹp handler để tránh memory leak
+        pollingHandler.removeCallbacks(pollingRunnable);
+    }
+
     /**
-     * Format so tien theo dinh dang VND
-     * @param amount So tien
-     * @return Chuoi da format (vd: 500.000 đ)
+     * Format số tiền theo định dạng VND
      */
     private String formatCurrency(int amount) {
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("vi-VN"));

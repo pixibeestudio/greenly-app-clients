@@ -81,6 +81,10 @@ public interface ApiService {
     @POST("api/orders/{id}/confirm-payment")
     Call<JsonObject> confirmPayment(@Path("id") int orderId);
 
+    // --- KIỂM TRA TRẠNG THÁI THANH TOÁN (polling) ---
+    @GET("api/payment/status/{id}")
+    Call<JsonObject> checkPaymentStatus(@Path("id") int orderId);
+
     // --- CUSTOMER ORDERS API ---
     @GET("api/my-orders")
     Call<com.pixibeestudio.greenly.data.model.OrderResponse> getMyOrders();
