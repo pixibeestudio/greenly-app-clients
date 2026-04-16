@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:contentPadding="14dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Icon vị trí -->
+        <ImageView
+            android:id="@+id/iv_location_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_location_on"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/header_bg_green" />
+
+        <!-- Tên + SĐT -->
+        <TextView
+            android:id="@+id/tv_address_name_phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tv_edit_address"
+            app:layout_constraintStart_toEndOf="@id/iv_location_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Nản  0896720844" />
+
+        <!-- Nút Chỉnh sửa -->
+        <TextView
+            android:id="@+id/tv_edit_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sửa"
+            android:textColor="@color/header_bg_green"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:padding="4dp"
+            app:layout_constraintEnd_toStartOf="@id/tv_delete_address"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Nút Xóa -->
+        <TextView
+            android:id="@+id/tv_delete_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Xóa"
+            android:textColor="#F44336"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:padding="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Địa chỉ đầy đủ -->
+        <TextView
+            android:id="@+id/tv_address_full"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:textColor="#616161"
+            android:textSize="13sp"
+            android:lineSpacingExtra="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_location_icon"
+            app:layout_constraintTop_toBottomOf="@id/tv_address_name_phone"
+            tools:text="đường chiến thắng 141 học viện kỹ thuật mật mã\nHà Nội, Phường Định Công" />
+
+        <!-- Tags: Nhãn + Mặc định -->
+        <LinearLayout
+            android:id="@+id/layout_tags"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_location_icon"
+            app:layout_constraintTop_toBottomOf="@id/tv_address_full">
+
+            <!-- Tag nhãn -->
+            <TextView
+                android:id="@+id/tv_label_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_tag_label"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
+                android:textColor="@color/header_bg_green"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                tools:text="NHÀ RIÊNG" />
+
+            <!-- Tag mặc định -->
+            <TextView
+                android:id="@+id/tv_default_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_tag_default"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
+                android:text="Mặc định"
+                android:textColor="#E65100"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

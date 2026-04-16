@@ -85,6 +85,22 @@ public interface ApiService {
     @GET("api/payment/status/{id}")
     Call<JsonObject> checkPaymentStatus(@Path("id") int orderId);
 
+    // --- SỔ ĐỊA CHỈ API ---
+    @GET("api/addresses")
+    Call<JsonObject> getAddresses();
+
+    @POST("api/addresses")
+    Call<JsonObject> createAddress(@Body JsonObject body);
+
+    @PUT("api/addresses/{id}")
+    Call<JsonObject> updateAddress(@Path("id") int id, @Body JsonObject body);
+
+    @DELETE("api/addresses/{id}")
+    Call<JsonObject> deleteAddress(@Path("id") int id);
+
+    @POST("api/addresses/{id}/set-default")
+    Call<JsonObject> setDefaultAddress(@Path("id") int id);
+
     // --- CUSTOMER ORDERS API ---
     @GET("api/my-orders")
     Call<com.pixibeestudio.greenly.data.model.OrderResponse> getMyOrders();

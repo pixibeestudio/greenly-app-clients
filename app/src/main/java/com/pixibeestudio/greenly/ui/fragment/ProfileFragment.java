@@ -126,9 +126,11 @@ public class ProfileFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_profileFragment_to_myOrdersFragment);
         });
 
-        // Nút Sổ địa chỉ
+        // Nút Sổ địa chỉ → navigate sang AddressBook với source=profile
         layoutAddress.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
+            Bundle addressArgs = new Bundle();
+            addressArgs.putString("source", "profile");
+            Navigation.findNavController(v).navigate(R.id.action_profileFragment_to_addressBookFragment, addressArgs);
         });
 
         // Nút Đánh giá sản phẩm

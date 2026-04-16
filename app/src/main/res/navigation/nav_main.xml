@@ -237,8 +237,8 @@
         tools:layout="@layout/fragment_checkout">
         
         <action
-            android:id="@+id/action_checkoutFragment_to_addAddressFragment"
-            app:destination="@id/addAddressFragment"
+            android:id="@+id/action_checkoutFragment_to_addressBookFragment"
+            app:destination="@id/addressBookFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
@@ -294,7 +294,52 @@
         android:id="@+id/addAddressFragment"
         android:name="com.pixibeestudio.greenly.ui.fragment.AddAddressFragment"
         android:label="Thêm địa chỉ"
-        tools:layout="@layout/fragment_add_address" />
+        tools:layout="@layout/fragment_add_address">
+        <argument
+            android:name="mode"
+            app:argType="string"
+            android:defaultValue="add" />
+    </fragment>
+
+    <!-- Sổ địa chỉ -->
+    <fragment
+        android:id="@+id/addressBookFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.AddressBookFragment"
+        android:label="Sổ địa chỉ"
+        tools:layout="@layout/fragment_address_book">
+        <argument
+            android:name="source"
+            app:argType="string"
+            android:defaultValue="checkout" />
+
+        <action
+            android:id="@+id/action_addressBookFragment_to_addAddressFragment"
+            app:destination="@id/addAddressFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_addressBookFragment_to_editAddressFragment"
+            app:destination="@id/editAddressFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <!-- Chỉnh sửa địa chỉ -->
+    <fragment
+        android:id="@+id/editAddressFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.EditAddressFragment"
+        android:label="Chỉnh sửa địa chỉ"
+        tools:layout="@layout/fragment_edit_address">
+        <argument
+            android:name="addressId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 
     <fragment
         android:id="@+id/profileFragment"
@@ -321,6 +366,14 @@
             app:destination="@id/loginFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_profileFragment_to_addressBookFragment"
+            app:destination="@id/addressBookFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment

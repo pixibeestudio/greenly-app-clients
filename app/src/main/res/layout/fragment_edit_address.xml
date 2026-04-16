@@ -5,19 +5,17 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- 1. Header (Cố định trên cùng) -->
+    <!-- Header -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/toolbarAddAddress"
+        android:id="@+id/toolbar_edit_address"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@android:color/white"
         android:elevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/btnBackAddAddress"
+            android:id="@+id/btn_back_edit_address"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -30,7 +28,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thêm địa chỉ mới"
+            android:text="Chỉnh sửa địa chỉ"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -40,15 +38,15 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- 2. Form nhập liệu (Trong ScrollView) -->
+    <!-- Form nhập liệu -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_bottom_edit_address"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/layoutBottomAddAddress"
-        app:layout_constraintTop_toBottomOf="@id/toolbarAddAddress">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_edit_address">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,106 +54,92 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Ô 1: Họ và tên -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:hint="Họ và tên người nhận">
-
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtNameAddress"
+                    android:id="@+id/edt_edit_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Ô 2: Số điện thoại -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:hint="Số điện thoại">
-
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtPhoneAddress"
+                    android:id="@+id/edt_edit_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="phone" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Ô 3: Tỉnh / Thành phố -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:hint="Tỉnh / Thành phố">
-
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtProvinceAddress"
+                    android:id="@+id/edt_edit_province"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Ô 4: Quận / Huyện -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:hint="Quận / Huyện">
-
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtDistrictAddress"
+                    android:id="@+id/edt_edit_district"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Ô 5: Phường / Xã -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:hint="Phường / Xã">
-
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtWardAddress"
+                    android:id="@+id/edt_edit_ward"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Ô 6: Tên đường, Tòa nhà -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:hint="Tên đường, Tòa nhà, Khu vực">
-
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtStreetAddress"
+                    android:id="@+id/edt_edit_street"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Ô 7: Số nhà -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:hint="Số nhà cụ thể">
-
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtHouseNumberAddress"
+                    android:id="@+id/edt_edit_house_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />
@@ -171,14 +155,14 @@
                 android:layout_marginBottom="8dp" />
 
             <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chip_group_label"
+                android:id="@+id/chip_group_label_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:singleSelection="true"
                 app:selectionRequired="true">
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_home"
+                    android:id="@+id/chip_home_edit"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -186,14 +170,14 @@
                     android:checked="true" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_office"
+                    android:id="@+id/chip_office_edit"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Văn phòng" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_other"
+                    android:id="@+id/chip_other_edit"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -203,9 +187,9 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- 3. Nút Lưu (Cố định ở đáy) -->
+    <!-- Nút Cập nhật -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutBottomAddAddress"
+        android:id="@+id/layout_bottom_edit_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
@@ -214,10 +198,10 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSaveAddress"
+            android:id="@+id/btn_update_address"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Lưu địa chỉ"
+            android:text="Cập nhật địa chỉ"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -225,7 +209,6 @@
             app:cornerRadius="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

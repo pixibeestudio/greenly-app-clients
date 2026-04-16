@@ -25,6 +25,14 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.pixibeestudio.greenly.R;
 
 import com.pixibeestudio.greenly.data.local.SessionManager;
+import com.pixibeestudio.greenly.data.network.RetrofitClient;
+
+import android.util.Log;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -81,7 +89,13 @@ public class CheckoutFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadShippingInfo();
+        // Nếu chưa có shipping info → thử load địa chỉ mặc định từ API
+        String existingAddress = sessionManager.getShippingAddress();
+        if (existingAddress == null || existingAddress.isEmpty()) {
+            loadDefaultAddress();
+        } else {
+            loadShippingInfo();
+        }
         // Kiem tra lai gio hang, neu trong thi chuyen ve gio hang
         if (subtotal <= 0) {
             Toast.makeText(getContext(), "Giỏ hàng trống, vui lòng thêm sản phẩm", Toast.LENGTH_SHORT).show();
@@ -107,10 +121,13 @@ public class CheckoutFragment extends Fragment {
     private void loadShippingInfo() {
         String phone = sessionManager.getShippingPhone();
         String address = sessionManager.getShippingAddress();
+        String receiverName = sessionManager.getShippingReceiverName();
         String userName = sessionManager.getUserName();
         
         if (address != null && !address.isEmpty() && phone != null && !phone.isEmpty()) {
-            String nameToDisplay = (userName != null && !userName.isEmpty()) ? userName : "Người nhận";
+            // Ưu tiên tên người nhận riêng (từ Sổ địa chỉ), rồi đến tên user
+            String nameToDisplay = (receiverName != null && !receiverName.isEmpty()) ? receiverName :
+                    (userName != null && !userName.isEmpty()) ? userName : "Người nhận";
             tvCheckoutNamePhone.setText(nameToDisplay + " - " + phone);
             tvCheckoutAddress.setText(address);
         } else {
@@ -125,7 +142,9 @@ public class CheckoutFragment extends Fragment {
         });
 
         btnEditAddress.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_checkoutFragment_to_addAddressFragment);
+            Bundle addressArgs = new Bundle();
+            addressArgs.putString("source", "checkout");
+            Navigation.findNavController(v).navigate(R.id.action_checkoutFragment_to_addressBookFragment, addressArgs);
         });
 
         rgShippingMethod.setOnCheckedChangeListener((group, checkedId) -> {
@@ -151,8 +170,11 @@ public class CheckoutFragment extends Fragment {
         }
         String phone = sessionManager.getShippingPhone();
         String address = sessionManager.getShippingAddress();
+        String receiverName = sessionManager.getShippingReceiverName();
         String userName = sessionManager.getUserName();
-        String name = (userName != null && !userName.isEmpty()) ? userName : "Khách hàng";
+        // Ưu tiên tên người nhận riêng (từ Sổ địa chỉ), rồi đến tên user
+        String name = (receiverName != null && !receiverName.isEmpty()) ? receiverName :
+                (userName != null && !userName.isEmpty()) ? userName : "Khách hàng";
         
         if (address == null || address.isEmpty() || phone == null || phone.isEmpty()) {
             Toast.makeText(getContext(), "Vui lòng thêm địa chỉ nhận hàng", Toast.LENGTH_SHORT).show();
@@ -215,6 +237,44 @@ public class CheckoutFragment extends Fragment {
                     progressDialog.dismiss();
                     Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
                     break;
+            }
+        });
+    }
+
+    /**
+     * Tự động load địa chỉ mặc định từ API khi vào Checkout lần đầu
+     */
+    private void loadDefaultAddress() {
+        RetrofitClient.getApiService(requireContext()).getAddresses().enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                if (!isAdded()) return;
+                if (response.isSuccessful() && response.body() != null) {
+                    JsonObject body = response.body();
+                    if (body.has("data") && body.get("data").isJsonArray()) {
+                        JsonArray arr = body.getAsJsonArray("data");
+                        // Tìm địa chỉ mặc định (item đầu tiên vì backend đã sort is_default DESC)
+                        if (arr.size() > 0) {
+                            JsonObject first = arr.get(0).getAsJsonObject();
+                            boolean isDefault = first.has("is_default") && first.get("is_default").getAsBoolean();
+                            if (isDefault) {
+                                String name = first.has("receiver_name") ? first.get("receiver_name").getAsString() : "";
+                                String phone = first.has("phone") ? first.get("phone").getAsString() : "";
+                                String fullAddr = first.has("full_address") ? first.get("full_address").getAsString() : "";
+                                sessionManager.saveShippingInfo(phone, fullAddr);
+                                sessionManager.saveShippingReceiverName(name);
+                            }
+                        }
+                    }
+                }
+                loadShippingInfo();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+                if (!isAdded()) return;
+                Log.e("CheckoutFragment", "Lỗi load địa chỉ mặc định: " + t.getMessage());
+                loadShippingInfo();
             }
         });
     }

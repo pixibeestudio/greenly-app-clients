@@ -17,6 +17,7 @@ public class SessionManager {
     private static final String KEY_USER_PHONE = "userPhone";
     private static final String KEY_SHIPPING_ADDRESS = "shippingAddress";
     private static final String KEY_SHIPPING_PHONE = "shippingPhone";
+    private static final String KEY_SHIPPING_RECEIVER_NAME = "shippingReceiverName";
 
     private final SharedPreferences pref;
     private final SharedPreferences.Editor editor;
@@ -95,9 +96,19 @@ public class SessionManager {
         return pref.getString(KEY_SHIPPING_ADDRESS, null);
     }
 
+    public void saveShippingReceiverName(String name) {
+        editor.putString(KEY_SHIPPING_RECEIVER_NAME, name);
+        editor.apply();
+    }
+
+    public String getShippingReceiverName() {
+        return pref.getString(KEY_SHIPPING_RECEIVER_NAME, null);
+    }
+
     public void clearShippingInfo() {
         editor.remove(KEY_SHIPPING_PHONE);
         editor.remove(KEY_SHIPPING_ADDRESS);
+        editor.remove(KEY_SHIPPING_RECEIVER_NAME);
         editor.apply();
     }
 
