@@ -374,7 +374,59 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_profileFragment_to_myReviewsFragment"
+            app:destination="@id/myReviewsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
+
+    <!-- Đánh giá sản phẩm -->
+    <fragment
+        android:id="@+id/myReviewsFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.MyReviewsFragment"
+        android:label="Đánh giá của tôi"
+        tools:layout="@layout/fragment_my_reviews">
+
+        <action
+            android:id="@+id/action_myReviewsFragment_to_writeReviewFragment"
+            app:destination="@id/writeReviewFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/writeReviewFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.WriteReviewFragment"
+        android:label="Viết đánh giá"
+        tools:layout="@layout/fragment_write_review">
+
+        <argument android:name="orderDetailId" app:argType="integer" android:defaultValue="0" />
+        <argument android:name="productId" app:argType="integer" android:defaultValue="0" />
+        <argument android:name="productName" app:argType="string" app:nullable="true" android:defaultValue="@null" />
+        <argument android:name="productImage" app:argType="string" app:nullable="true" android:defaultValue="@null" />
+        <argument android:name="quantity" app:argType="integer" android:defaultValue="1" />
+        <argument android:name="price" app:argType="float" android:defaultValue="0.0" />
+
+        <action
+            android:id="@+id/action_writeReviewFragment_to_reviewSuccessFragment"
+            app:destination="@id/reviewSuccessFragment"
+            app:popUpTo="@id/writeReviewFragment"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/reviewSuccessFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.ReviewSuccessFragment"
+        android:label="Cảm ơn"
+        tools:layout="@layout/fragment_review_success" />
 
     <fragment
         android:id="@+id/favoriteFragment"

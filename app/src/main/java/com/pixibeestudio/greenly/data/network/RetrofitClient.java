@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.io.IOException;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "http://192.168.2.200:8000/";
+    public static final String BASE_URL = "http://192.168.2.199:8000/";
     //private static final String BASE_URL = "http://10.0.2.2:8000/";
     //http://10.0.2.2:8000 là địa chỉ IP của localhost trên Android Emulator
     private static Retrofit retrofit = null;

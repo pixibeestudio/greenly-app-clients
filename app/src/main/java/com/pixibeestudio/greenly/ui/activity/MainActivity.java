@@ -86,7 +86,9 @@ public class MainActivity extends AppCompatActivity {
                         id == R.id.welcomeFragment || id == R.id.loginFragment ||
                         id == R.id.registerFragment || id == R.id.checkoutFragment ||
                         id == R.id.addAddressFragment || id == R.id.addressBookFragment ||
-                        id == R.id.editAddressFragment || id == R.id.searchFragment ||
+                        id == R.id.editAddressFragment || id == R.id.myReviewsFragment ||
+                        id == R.id.writeReviewFragment || id == R.id.reviewSuccessFragment ||
+                        id == R.id.searchFragment ||
                         id == R.id.searchResultFragment || id == R.id.favoriteFragment ||
                         id == R.id.categoryProductFragment ||
                         id == R.id.filteredProductsFragment) {

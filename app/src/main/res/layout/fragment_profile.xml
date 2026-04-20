@@ -231,7 +231,24 @@
                                 android:textColor="#333333"
                                 android:textSize="15sp"
                                 android:layout_marginStart="16dp"/>
-                                
+
+                            <!-- Badge số lượng sản phẩm chưa đánh giá -->
+                            <TextView
+                                android:id="@+id/tvPendingReviewBadge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minWidth="22dp"
+                                android:background="@drawable/bg_badge_pending_review"
+                                android:gravity="center"
+                                android:paddingHorizontal="7dp"
+                                android:paddingVertical="2dp"
+                                android:text="0"
+                                android:textColor="@android:color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="8dp"
+                                android:visibility="gone" />
+
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"

@@ -1,6 +1,7 @@
 package com.pixibeestudio.greenly.ui.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,14 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.gson.JsonObject;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.local.SessionManager;
+import com.pixibeestudio.greenly.data.network.RetrofitClient;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Fragment hiển thị thông tin Cá nhân và Menu cài đặt.
@@ -41,6 +48,7 @@ public class ProfileFragment extends Fragment {
     
     private LinearLayout btnLogoutProfile;
     private MaterialButton btnLoginPromptProfile;
+    private TextView tvPendingReviewBadge;
 
     private SessionManager sessionManager;
 
@@ -77,6 +85,47 @@ public class ProfileFragment extends Fragment {
 
         btnLogoutProfile = view.findViewById(R.id.btnLogoutProfile);
         btnLoginPromptProfile = view.findViewById(R.id.btnLoginPromptProfile);
+        tvPendingReviewBadge = view.findViewById(R.id.tvPendingReviewBadge);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Load lại badge số lượng chưa đánh giá mỗi lần quay về Profile
+        if (sessionManager != null && sessionManager.isLoggedIn()) {
+            loadPendingReviewCount();
+        }
+    }
+
+    /**
+     * Gọi API đếm số lượng sản phẩm chưa đánh giá → hiển thị badge
+     */
+    private void loadPendingReviewCount() {
+        RetrofitClient.getApiService(requireContext()).getPendingReviewCount().enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                if (!isAdded() || tvPendingReviewBadge == null) return;
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        JsonObject data = response.body().getAsJsonObject("data");
+                        int count = data.get("pending_count").getAsInt();
+                        if (count > 0) {
+                            tvPendingReviewBadge.setText(count > 99 ? "99+" : String.valueOf(count));
+                            tvPendingReviewBadge.setVisibility(View.VISIBLE);
+                        } else {
+                            tvPendingReviewBadge.setVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        Log.e("ProfileFragment", "Lỗi parse pending count: " + e.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+                Log.e("ProfileFragment", "Lỗi load pending count: " + t.getMessage());
+            }
+        });
     }
 
     private void updateUIBasedOnAuth() {
@@ -133,9 +182,9 @@ public class ProfileFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_profileFragment_to_addressBookFragment, addressArgs);
         });
 
-        // Nút Đánh giá sản phẩm
+        // Nút Đánh giá sản phẩm → navigate sang màn Đánh giá của tôi
         layoutReviews.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(v).navigate(R.id.action_profileFragment_to_myReviewsFragment);
         });
 
         // Nút Đăng xuất

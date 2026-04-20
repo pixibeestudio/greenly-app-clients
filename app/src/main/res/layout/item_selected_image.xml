@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Item ảnh đã chọn trong WriteReviewFragment - có thể là ảnh đã upload hoặc placeholder "Tải lên" -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:layout_marginEnd="8dp">
+
+    <!-- Ảnh đã chọn (mode=image) -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_selected"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:background="#F5F5F5"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent" />
+
+    <!-- Nút xóa (X) góc trên phải -->
+    <ImageView
+        android:id="@+id/btn_remove_image"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:background="@drawable/bg_circle_grey"
+        android:padding="4dp"
+        android:src="@drawable/ic_close"
+        app:tint="@android:color/white" />
+
+    <!-- Placeholder "Tải lên ảnh" (mode=add) -->
+    <LinearLayout
+        android:id="@+id/layout_add_placeholder"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/bg_dashed_border"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_camera"
+            app:tint="#9E9E9E" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tải lên hình ảnh"
+            android:textColor="#9E9E9E"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+</FrameLayout>

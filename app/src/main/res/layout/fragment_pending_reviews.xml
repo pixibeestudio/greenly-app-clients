@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F8FA">
+
+    <!-- Danh sách sản phẩm chưa đánh giá -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_pending_reviews"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingVertical="6dp"
+        tools:listitem="@layout/item_pending_review" />
+
+    <!-- Progress loading -->
+    <ProgressBar
+        android:id="@+id/progress_pending"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/header_bg_green"
+        android:visibility="gone" />
+
+    <!-- Empty state: không có sản phẩm chưa đánh giá -->
+    <LinearLayout
+        android:id="@+id/layout_empty_pending"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_leaf"
+            app:tint="#A5D6A7" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bạn không có sản phẩm nào chưa đánh giá"
+            android:textColor="#424242"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hãy tiếp tục mua sắm và trải nghiệm\ncác sản phẩm xanh sạch của Greenly"
+            android:textColor="#757575"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:layout_marginTop="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_back_to_home"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:minWidth="180dp"
+            android:text="Tiếp tục mua sắm"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/header_bg_green"
+            app:cornerRadius="22dp"
+            android:layout_marginTop="24dp" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -9,14 +9,20 @@ import com.pixibeestudio.greenly.data.model.ProductDetailResponse;
 import com.pixibeestudio.greenly.data.model.ProductResponse;
 import com.pixibeestudio.greenly.data.model.RegisterRequest;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+
+import java.util.List;
 
 public interface ApiService {
     // --- BANNER API ---
@@ -148,5 +154,34 @@ public interface ApiService {
 
     @DELETE("api/wishlist/clear")
     Call<JsonObject> clearWishlists();
+
+    // --- REVIEWS (ĐÁNH GIÁ) API ---
+    @GET("api/reviews/stats")
+    Call<JsonObject> getReviewStats();
+
+    @GET("api/reviews/pending-count")
+    Call<JsonObject> getPendingReviewCount();
+
+    @GET("api/reviews/pending")
+    Call<JsonObject> getPendingReviews();
+
+    @GET("api/reviews/my")
+    Call<JsonObject> getMyReviews();
+
+    /**
+     * Tạo review mới với upload ảnh (multipart/form-data)
+     * - order_detail_id: RequestBody
+     * - rating: RequestBody
+     * - comment: RequestBody (nullable)
+     * - images[]: List<MultipartBody.Part> (nullable, max 5)
+     */
+    @Multipart
+    @POST("api/reviews")
+    Call<JsonObject> createReview(
+            @Part("order_detail_id") RequestBody orderDetailId,
+            @Part("rating") RequestBody rating,
+            @Part("comment") RequestBody comment,
+            @Part List<MultipartBody.Part> images
+    );
 }
 
