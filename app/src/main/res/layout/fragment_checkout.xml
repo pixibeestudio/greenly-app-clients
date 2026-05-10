@@ -219,10 +219,10 @@
                             android:textSize="14sp" />
 
                         <RadioButton
-                            android:id="@+id/rbPaymentVietQR"
+                            android:id="@+id/rbPaymentMomo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Chuyển khoản (VietQR / Momo)"
+                            android:text="Thanh toán MoMo (App hoặc QR)"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
                     </RadioGroup>

@@ -253,8 +253,8 @@
             app:popExitAnim="@anim/fade_out" />
             
         <action
-            android:id="@+id/action_checkoutFragment_to_paymentQrFragment"
-            app:destination="@id/paymentQrFragment"
+            android:id="@+id/action_checkoutFragment_to_momoPaymentFragment"
+            app:destination="@id/momoPaymentFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
@@ -519,30 +519,27 @@
             app:popExitAnim="@anim/fade_out" />
     </fragment>
 
+    <!-- Man hinh thanh toan MoMo: chon mo app MoMo (deeplink) hoac quet QR -->
     <fragment
-        android:id="@+id/paymentQrFragment"
-        android:name="com.pixibeestudio.greenly.ui.fragment.PaymentQrFragment"
-        android:label="Thanh toán chuyển khoản"
-        tools:layout="@layout/fragment_payment_qr">
+        android:id="@+id/momoPaymentFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.MomoPaymentFragment"
+        android:label="Thanh toán MoMo"
+        tools:layout="@layout/fragment_momo_payment">
         <argument
-            android:name="totalAmount"
+            android:name="orderId"
             app:argType="integer"
             android:defaultValue="0" />
         <argument
-            android:name="orderId"
+            android:name="totalAmount"
             app:argType="integer"
             android:defaultValue="0" />
         <argument
             android:name="orderCode"
             app:argType="string"
             android:defaultValue="" />
-        <argument
-            android:name="paymentUrl"
-            app:argType="string"
-            android:defaultValue="" />
 
         <action
-            android:id="@+id/action_paymentQrFragment_to_orderSuccessFragment"
+            android:id="@+id/action_momoPaymentFragment_to_orderSuccessFragment"
             app:destination="@id/orderSuccessFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"

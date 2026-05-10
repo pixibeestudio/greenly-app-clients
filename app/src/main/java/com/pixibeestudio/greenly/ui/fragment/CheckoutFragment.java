@@ -186,7 +186,7 @@ public class CheckoutFragment extends Fragment {
         String shippingMethod = rgShippingMethod.getCheckedRadioButtonId() == R.id.rbShippingExpress ? "Hoa_toc" : "Nhanh";
         // Lay ID cua RadioButton duoc chon de xac dinh phuong thuc thanh toan
         int selectedPaymentId = rgPaymentMethod.getCheckedRadioButtonId();
-        String paymentMethod = (selectedPaymentId == R.id.rbPaymentVietQR) ? "banking" : "COD";
+        String paymentMethod = (selectedPaymentId == R.id.rbPaymentMomo) ? "banking" : "COD";
 
         CheckoutRequest request = new CheckoutRequest(
             name,
@@ -214,19 +214,18 @@ public class CheckoutFragment extends Fragment {
                     int grandTotal = (checkoutResult != null) ? checkoutResult.getGrandTotal() : (int)(subtotal + shippingFee);
                     
                     // Chia luong dieu huong theo phuong thuc thanh toan
-                    if (selectedPaymentId == R.id.rbPaymentVietQR) {
-                        // Lấy thêm orderCode và paymentUrl từ backend response
+                    if (selectedPaymentId == R.id.rbPaymentMomo) {
+                        // Lay them orderCode tu backend response
                         String orderCodeStr = (checkoutResult != null) ? checkoutResult.getOrderCode() : "";
-                        String paymentUrlStr = (checkoutResult != null) ? checkoutResult.getPaymentUrl() : "";
 
-                        // Chuyen sang man hinh QR voi đầy đủ thông tin
+                        // Chuyen sang man hinh thanh toan MoMo (chon app/QR)
+                        // App se goi tiep API /api/momo/create-payment de lay payUrl
                         Bundle args = new Bundle();
-                        args.putInt("totalAmount", grandTotal);
                         args.putInt("orderId", orderId);
+                        args.putInt("totalAmount", grandTotal);
                         args.putString("orderCode", orderCodeStr);
-                        args.putString("paymentUrl", paymentUrlStr);
                         Navigation.findNavController(requireView())
-                                .navigate(R.id.action_checkoutFragment_to_paymentQrFragment, args);
+                                .navigate(R.id.action_checkoutFragment_to_momoPaymentFragment, args);
                     } else {
                         // COD - Chuyen sang man hinh thanh toan thanh cong
                         Navigation.findNavController(requireView())

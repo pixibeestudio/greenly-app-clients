@@ -4,6 +4,21 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--
+        Cho phep app Greenly mo cac scheme cua MoMo (deeplink "momo://...").
+        Bat buoc tu Android 11 (API 30) tro len khi goi Intent.ACTION_VIEW.
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="momo" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
     <!-- Quyền cho tính năng Đánh giá sản phẩm: Camera + đọc ảnh -->
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Android 13+ (API 33) - quyền cụ thể cho ảnh -->
@@ -31,11 +46,29 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!--
+                Deeplink callback tu MoMo UAT.
+                Sau khi user thanh toan xong tren app MoMo, MoMo se redirect ve URL nay,
+                he thong Android se mo lai app Greenly va MainActivity nhan duoc Intent.
+                Dung scheme rieng "greenly" + host "momo-callback" de tranh xung dot.
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="momo-callback"
+                    android:scheme="greenly" />
             </intent-filter>
         </activity>
 

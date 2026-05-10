@@ -1,6 +1,9 @@
 package com.pixibeestudio.greenly.ui.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
@@ -106,5 +109,38 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Xu ly deeplink khi app duoc mo lan dau qua scheme greenly://
+        handleMomoDeeplink(getIntent());
+    }
+
+    /**
+     * Khi app dang chay (singleTask) va nhan deeplink, Android goi onNewIntent thay vi onCreate.
+     * Day la noi xu ly callback tu MoMo UAT sau khi user thanh toan xong.
+     */
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
+        super.onNewIntent(intent);
+        // Cap nhat intent moi cho activity
+        setIntent(intent);
+        handleMomoDeeplink(intent);
+    }
+
+    /**
+     * Kiem tra Intent co phai la deeplink callback tu MoMo khong.
+     * Khong can lam gi them - polling o MomoPaymentFragment se tu detect
+     * trang thai 'completed' tu backend va dieu huong sang OrderSuccessFragment.
+     * Ham nay chi de log + co the trigger UI feedback nhanh hon trong tuong lai.
+     */
+    private void handleMomoDeeplink(Intent intent) {
+        if (intent == null || intent.getData() == null) return;
+
+        Uri uri = intent.getData();
+        if ("greenly".equalsIgnoreCase(uri.getScheme())
+                && "momo-callback".equalsIgnoreCase(uri.getHost())) {
+            Log.d("MainActivity", "Nhan deeplink MoMo callback: " + uri);
+            // Polling tu MomoPaymentFragment se kiem tra status va cap nhat UI.
+            // Khong can navigate o day de tranh xung dot voi back stack hien tai.
+        }
     }
 }

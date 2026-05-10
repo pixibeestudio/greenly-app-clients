@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Logo tron mau hong MoMo -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#A50064" />
+    <stroke
+        android:width="0dp"
+        android:color="#A50064" />
+</shape>

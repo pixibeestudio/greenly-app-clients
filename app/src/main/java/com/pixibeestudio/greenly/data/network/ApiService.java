@@ -87,9 +87,25 @@ public interface ApiService {
     @POST("api/orders/{id}/confirm-payment")
     Call<JsonObject> confirmPayment(@Path("id") int orderId);
 
-    // --- KIỂM TRA TRẠNG THÁI THANH TOÁN (polling) ---
+    // --- KIỂM TRA TRẠNG THÁI THANH TOÁN (polling - generic, fallback) ---
     @GET("api/payment/status/{id}")
     Call<JsonObject> checkPaymentStatus(@Path("id") int orderId);
+
+    // --- MOMO PAYMENT API ---
+    /**
+     * Tạo giao dịch MoMo cho 1 đơn hàng đã đặt.
+     * Body: { "order_id": int, "type": "app" | "qr" }
+     * Trả về payUrl/deeplink (type=app) hoặc qr_code_url (type=qr).
+     */
+    @POST("api/momo/create-payment")
+    Call<com.pixibeestudio.greenly.data.model.MomoCreatePaymentResponse> createMomoPayment(@Body JsonObject body);
+
+    /**
+     * Polling trạng thái giao dịch MoMo theo order_id.
+     * Trả về: { success, payment_status, momo_status, momo_trans_id }
+     */
+    @GET("api/momo/status/{orderId}")
+    Call<JsonObject> getMomoStatus(@Path("orderId") int orderId);
 
     // --- SỔ ĐỊA CHỈ API ---
     @GET("api/addresses")
