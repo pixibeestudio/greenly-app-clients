@@ -48,6 +48,9 @@ dependencies {
     // OkHttp Logging Interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:5.3.2")
 
+    // ZXing core - tao QR code Bitmap local trong app (khong can goi service ngoai)
+    implementation("com.google.zxing:core:3.5.3")
+
     // Glide
     implementation("com.github.bumptech.glide:glide:5.0.5")
     implementation(libs.recyclerview)

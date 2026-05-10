@@ -8,15 +8,28 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class RetrofitClient {
-    public static final String BASE_URL = "http://192.168.2.199:8000/";
-    //private static final String BASE_URL = "http://10.0.2.2:8000/";
-    //http://10.0.2.2:8000 là địa chỉ IP của localhost trên Android Emulator
+    // ==========================================================================
+    // BASE_URL: CAU HINH QUAN TRONG
+    // ==========================================================================
+    // Khi test MoMo qua ngrok (tren thiet bi that): dung URL ngrok HTTPS.
+    // URL nay phai khop voi terminal 'ngrok http 8000' va APP_URL trong .env BE.
+    // Moi lan ngrok restart se doi URL, can update lai dong duoi + rebuild app.
+    //
+    // Khi test LAN (cung wifi voi may chay Laravel): dung http://<IP_LAN>:8000/
+    // Khi test tren Emulator: dung http://10.0.2.2:8000/
+    // ==========================================================================
+    public static final String BASE_URL = "https://visiting-unmapped-unglue.ngrok-free.dev/";
+    //public static final String BASE_URL = "http://192.168.2.199:8000/";
+    //public static final String BASE_URL = "http://10.0.2.2:8000/";
+
     private static Retrofit retrofit = null;
     // Lưu context riêng để interceptor luôn dùng được context mới nhất
     private static Context appContext = null;
@@ -28,7 +41,11 @@ public class RetrofitClient {
         }
 
         if (retrofit == null) {
-            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+            OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+                    // Tang timeout de tranh request fail khi qua ngrok (latency cao hon local)
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS);
 
             // Thêm Interceptor để tự động gắn Token
             httpClient.addInterceptor(new Interceptor() {
@@ -49,10 +66,24 @@ public class RetrofitClient {
                     // Thêm header Accept: application/json cho tất cả API
                     requestBuilder.header("Accept", "application/json");
 
+                    // Bypass trang canh bao cua ngrok free tier.
+                    // Neu thieu header nay, ngrok tra ve HTML warning page (status 200 text/html)
+                    // khien Retrofit/Gson parse loi "Expected BEGIN_OBJECT but was STRING".
+                    requestBuilder.header("ngrok-skip-browser-warning", "true");
+
+                    // User-Agent tuy bien de ngrok nhan dien la app native, khong phai browser.
+                    requestBuilder.header("User-Agent", "GreenlyAndroidApp/1.0");
+
                     Request request = requestBuilder.build();
                     return chain.proceed(request);
                 }
             });
+
+            // Logging interceptor: in ra request/response trong Logcat (tag "OkHttp")
+            // Giup debug khi test MoMo. BODY level log ca body - tat khi len production.
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            httpClient.addInterceptor(logging);
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)

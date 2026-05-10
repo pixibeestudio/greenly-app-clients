@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +34,7 @@ import com.google.gson.JsonObject;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.model.MomoCreatePaymentResponse;
 import com.pixibeestudio.greenly.data.network.RetrofitClient;
+import com.pixibeestudio.greenly.util.QRCodeGenerator;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -95,6 +97,10 @@ public class MomoPaymentFragment extends Fragment {
             checkPaymentStatus();
         }
     };
+
+    // Dem so lan polling that bai lien tiep -> giam tan suat polling khi mat ket noi.
+    // Reset ve 0 moi khi co response thanh cong tu BE.
+    private int consecutiveFailures = 0;
 
     private ProgressDialog progressDialog;
 
@@ -275,22 +281,50 @@ public class MomoPaymentFragment extends Fragment {
 
     /**
      * Luong 'qr': hien thi anh QR de may khac quet.
+     *
+     * Thu tu uu tien noi dung QR (chuan nhat dau tien):
+     *  1. deeplink momo://...   -> MoMo App nhan dien la payment intent, hien form xac nhan
+     *  2. payUrl https://...    -> MoMo App mo WebView, hien trang web (trai nghiem kem hon)
+     *  3. qrCodeUrl tu BE       -> fallback cuoi neu thieu ca 2 cai tren
+     *
+     * Tao QR Bitmap LOCAL bang ZXing thay vi goi qrserver.com de:
+     *  - Tranh loi network/timeout khi tai anh tu service ngoai
+     *  - Khong gioi han do dai data (deeplink momo:// thuong 500-1000 ky tu)
+     *  - Hien thi tuc thi, khong can cho download
      */
     private void handleQrFlow(MomoCreatePaymentResponse.Data data) {
-        String qrUrl = data.getQrCodeUrl();
-        if (qrUrl == null || qrUrl.isEmpty()) {
-            // Fallback: dung qrserver.com encode pay_url
-            String payUrl = data.getPayUrl();
-            if (payUrl == null || payUrl.isEmpty()) {
-                showError("Không nhận được URL QR từ MoMo");
-                return;
-            }
-            qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data="
-                    + Uri.encode(payUrl);
+        // Uu tien encode deeplink vao QR
+        String qrContent = data.getDeeplink();
+
+        // Neu BE khong tra deeplink, fallback sang payUrl
+        if (qrContent == null || qrContent.isEmpty()) {
+            qrContent = data.getPayUrl();
+            Log.w(TAG, "Khong co deeplink, fallback sang payUrl cho QR");
         }
 
-        Log.d(TAG, "Loading QR: " + qrUrl);
+        if (qrContent != null && !qrContent.isEmpty()) {
+            // Tao QR Bitmap LOCAL bang ZXing
+            Log.d(TAG, "Generate QR local tu noi dung do dai: " + qrContent.length());
+            Bitmap qrBitmap = QRCodeGenerator.generate(qrContent, 600);
 
+            if (qrBitmap != null) {
+                imgQrCode.setImageBitmap(qrBitmap);
+                cardQrContainer.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            Log.e(TAG, "ZXing tao QR that bai, fallback sang load qr_code_url qua Glide");
+        }
+
+        // Fallback cuoi: load qrCodeUrl tu BE bang Glide (truong hop ZXing fail
+        // hoac BE khong tra deeplink/payUrl nhung co qrCodeUrl)
+        String qrUrl = data.getQrCodeUrl();
+        if (qrUrl == null || qrUrl.isEmpty()) {
+            showError("Không nhận được dữ liệu QR từ MoMo. Vui lòng thử lại.");
+            return;
+        }
+
+        Log.d(TAG, "Fallback Glide loading QR URL: " + qrUrl);
         Glide.with(this)
             .load(qrUrl)
             .placeholder(R.drawable.ic_default_product)
@@ -323,6 +357,9 @@ public class MomoPaymentFragment extends Fragment {
                     if (!isAdded() || isPaymentConfirmed) return;
 
                     if (response.isSuccessful() && response.body() != null) {
+                        // Reset counter khi co response thanh cong tu server
+                        consecutiveFailures = 0;
+
                         JsonObject body = response.body();
                         String paymentStatus = body.has("payment_status")
                                 ? body.get("payment_status").getAsString()
@@ -348,16 +385,27 @@ public class MomoPaymentFragment extends Fragment {
                         }
                     }
 
-                    // Tiep tuc polling
+                    // Tiep tuc polling voi interval mac dinh
                     pollingHandler.postDelayed(pollingRunnable, POLLING_INTERVAL_MS);
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                     if (!isAdded() || isPaymentConfirmed) return;
-                    Log.e(TAG, "Loi polling: " + t.getMessage());
-                    // Loi mang van tiep tuc polling (co the do mat ket noi tam)
-                    pollingHandler.postDelayed(pollingRunnable, POLLING_INTERVAL_MS);
+
+                    consecutiveFailures++;
+
+                    // Mat ket noi tam thoi (vd: switch giua MoMo App va Greenly) la BINH THUONG.
+                    // Dung Log.w (warning) thay vi Log.e de tranh nhieu logcat.
+                    Log.w(TAG, "Polling network error (lan " + consecutiveFailures
+                            + "): " + t.getMessage());
+
+                    // Back-off: neu fail >= 3 lan lien tiep, gian interval len 6s
+                    // de tranh spam DNS resolve khi mat mang lau hon.
+                    long nextDelay = consecutiveFailures >= 3
+                            ? POLLING_INTERVAL_MS * 2
+                            : POLLING_INTERVAL_MS;
+                    pollingHandler.postDelayed(pollingRunnable, nextDelay);
                 }
             });
     }
