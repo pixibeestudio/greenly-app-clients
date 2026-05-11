@@ -193,10 +193,10 @@ public class ProfileFragment extends Fragment {
             sessionManager.clearSession();
             Toast.makeText(requireContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
 
-            // Khởi động lại MainActivity để tự động vào WelcomeFragment
-            android.content.Intent intent = new android.content.Intent(requireActivity(), com.pixibeestudio.greenly.ui.activity.MainActivity.class);
-            startActivity(intent);
-            requireActivity().finish();
+            // Reset navigation graph để chuyển về WelcomeFragment (không restart app)
+            if (requireActivity() instanceof com.pixibeestudio.greenly.ui.activity.MainActivity) {
+                ((com.pixibeestudio.greenly.ui.activity.MainActivity) requireActivity()).resetNavigation();
+            }
         });
 
         // Nút Đăng nhập/Đăng ký cho Guest

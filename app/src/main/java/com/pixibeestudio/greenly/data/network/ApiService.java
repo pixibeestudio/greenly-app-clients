@@ -123,6 +123,19 @@ public interface ApiService {
     @POST("api/addresses/{id}/set-default")
     Call<JsonObject> setDefaultAddress(@Path("id") int id);
 
+    // --- NOTIFICATIONS API ---
+    @GET("api/notifications")
+    Call<com.pixibeestudio.greenly.data.model.NotificationResponse> getNotifications();
+
+    @GET("api/notifications/unread-count")
+    Call<JsonObject> getUnreadNotificationCount();
+
+    @POST("api/notifications/{id}/read")
+    Call<JsonObject> markNotificationRead(@Path("id") int id);
+
+    @POST("api/notifications/read-all")
+    Call<JsonObject> markAllNotificationsRead();
+
     // --- CUSTOMER ORDERS API ---
     @GET("api/my-orders")
     Call<com.pixibeestudio.greenly.data.model.OrderResponse> getMyOrders();

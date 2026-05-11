@@ -7,9 +7,9 @@
         android:title="Trang chủ" />
 
     <item
-        android:id="@+id/messageFragment"
-        android:icon="@drawable/ic_message"
-        android:title="Tin nhắn" />
+        android:id="@+id/notificationFragment"
+        android:icon="@drawable/ic_notifications"
+        android:title="Thông báo" />
 
     <item
         android:id="@+id/cartFragment"

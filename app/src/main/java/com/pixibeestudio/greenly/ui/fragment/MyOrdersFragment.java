@@ -63,5 +63,14 @@ public class MyOrdersFragment extends Fragment {
         new TabLayoutMediator(tlMyOrders, vpMyOrders,
                 (tab, position) -> tab.setText(tabTitles[position])
         ).attach();
+
+        // Nhận argument tabIndex từ NotificationFragment (hoặc từ nơi khác)
+        if (getArguments() != null) {
+            int tabIndex = getArguments().getInt("tabIndex", 0);
+            if (tabIndex > 0 && tabIndex < tabTitles.length) {
+                // Đợi ViewPager2 layout xong mới setCurrentItem
+                vpMyOrders.post(() -> vpMyOrders.setCurrentItem(tabIndex, false));
+            }
+        }
     }
 }

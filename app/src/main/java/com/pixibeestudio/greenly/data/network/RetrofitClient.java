@@ -80,7 +80,7 @@ public class RetrofitClient {
             });
 
             // Logging interceptor: in ra request/response trong Logcat (tag "OkHttp")
-            // Giup debug khi test MoMo. BODY level log ca body - tat khi len production.
+            // Giup debug khi test MoMo. BODY level log ca body - tất khi len production.
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             httpClient.addInterceptor(logging);

@@ -1,6 +1,5 @@
 package com.pixibeestudio.greenly.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -136,10 +135,10 @@ public class LoginFragment extends Fragment {
 
                                     Toast.makeText(requireContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                                     
-                                    // Khởi động lại MainActivity để nạp đúng luồng (Customer hoặc Shipper)
-                                    Intent intent = new Intent(requireActivity(), MainActivity.class);
-                                    startActivity(intent);
-                                    requireActivity().finish();
+                                    // Reset navigation graph để nạp đúng luồng (không restart app)
+                                    if (requireActivity() instanceof MainActivity) {
+                                        ((MainActivity) requireActivity()).resetNavigation();
+                                    }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

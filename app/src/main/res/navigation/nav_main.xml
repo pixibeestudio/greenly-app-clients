@@ -198,10 +198,19 @@
     </fragment>
 
     <fragment
-        android:id="@+id/messageFragment"
-        android:name="com.pixibeestudio.greenly.ui.fragment.MessageFragment"
-        android:label="Tin nhắn"
-        tools:layout="@layout/fragment_message" />
+        android:id="@+id/notificationFragment"
+        android:name="com.pixibeestudio.greenly.ui.fragment.NotificationFragment"
+        android:label="Thông báo"
+        tools:layout="@layout/fragment_notification">
+
+        <action
+            android:id="@+id/action_notificationFragment_to_myOrdersFragment"
+            app:destination="@id/myOrdersFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
 
     <fragment
         android:id="@+id/cartFragment"
@@ -288,7 +297,12 @@
         android:id="@+id/myOrdersFragment"
         android:name="com.pixibeestudio.greenly.ui.fragment.MyOrdersFragment"
         android:label="Đơn hàng của tôi"
-        tools:layout="@layout/fragment_my_orders" />
+        tools:layout="@layout/fragment_my_orders">
+        <argument
+            android:name="tabIndex"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 
     <fragment
         android:id="@+id/addAddressFragment"
