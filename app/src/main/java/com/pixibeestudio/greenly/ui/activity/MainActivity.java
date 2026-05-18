@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navViewShipper;
     private boolean isShipper;
     private NavController.OnDestinationChangedListener destChangedListener;
+    private int lastNotificationCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,11 +159,13 @@ public class MainActivity extends AppCompatActivity {
         };
         navController.addOnDestinationChangedListener(destChangedListener);
 
-        // Tải badge count thông báo chưa đọc (chỉ cho khách hàng đã đăng nhập)
+        // Tải badge count (chỉ cho khách hàng đã đăng nhập)
         if (!isShipper && sessionManager.isLoggedIn()) {
             loadNotificationBadge();
+            loadCartBadge();
         } else {
             navViewCustomer.removeBadge(R.id.notificationFragment);
+            navViewCustomer.removeBadge(R.id.cartFragment);
         }
     }
 
@@ -201,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void updateNotificationBadge(int count) {
         if (navViewCustomer == null) return;
+        lastNotificationCount = count;
         if (count > 0) {
             BadgeDrawable badge = navViewCustomer.getOrCreateBadge(R.id.notificationFragment);
             badge.setNumber(count);
@@ -209,6 +213,61 @@ public class MainActivity extends AppCompatActivity {
         } else {
             navViewCustomer.removeBadge(R.id.notificationFragment);
         }
+    }
+
+    /**
+     * Gọi API lấy số lượng sản phẩm trong giỏ hàng và hiển thị badge.
+     */
+    public void loadCartBadge() {
+        ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
+        apiService.getCartCount().enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null
+                        && response.body().has("count")) {
+                    int count = response.body().get("count").getAsInt();
+                    updateCartBadge(count);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                // Không cần xử lý lỗi badge
+            }
+        });
+    }
+
+    /**
+     * Cập nhật badge count trên icon Giỏ hàng trong BottomNavigationView.
+     */
+    public void updateCartBadge(int count) {
+        if (navViewCustomer == null) return;
+        if (count > 0) {
+            BadgeDrawable badge = navViewCustomer.getOrCreateBadge(R.id.cartFragment);
+            badge.setNumber(count);
+            badge.setVisible(true);
+            badge.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+        } else {
+            navViewCustomer.removeBadge(R.id.cartFragment);
+        }
+    }
+
+    /**
+     * Refresh tất cả badge (notification + cart). Gọi khi quay về HomeFragment.
+     */
+    public void refreshAllBadges() {
+        SessionManager sm = new SessionManager(this);
+        if (!isShipper && sm.isLoggedIn()) {
+            loadNotificationBadge();
+            loadCartBadge();
+        }
+    }
+
+    /**
+     * Trả về notification count gần nhất (cho HomeFragment header badge).
+     */
+    public int getLastNotificationCount() {
+        return lastNotificationCount;
     }
 
     private void handleMomoDeeplink(Intent intent) {

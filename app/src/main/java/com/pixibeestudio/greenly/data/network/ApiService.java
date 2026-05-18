@@ -79,6 +79,9 @@ public interface ApiService {
     @DELETE("api/carts/clear")
     Call<JsonObject> clearCart();
 
+    @GET("api/carts/count")
+    Call<JsonObject> getCartCount();
+
     // --- CHECKOUT API ---
     @POST("api/checkout")
     Call<JsonObject> placeOrder(@Body com.pixibeestudio.greenly.data.model.CheckoutRequest request);
@@ -177,6 +180,9 @@ public interface ApiService {
     // --- WISHLIST (YÊU THÍCH) API ---
     @GET("api/wishlist")
     Call<com.pixibeestudio.greenly.data.model.WishlistResponse> getWishlists();
+
+    @GET("api/wishlist/count")
+    Call<JsonObject> getWishlistCount();
 
     @POST("api/wishlist/toggle")
     Call<JsonObject> toggleFavorite(@Body JsonObject body);

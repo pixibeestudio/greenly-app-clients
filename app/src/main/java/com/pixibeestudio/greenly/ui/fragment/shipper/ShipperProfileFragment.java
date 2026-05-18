@@ -1,6 +1,5 @@
 package com.pixibeestudio.greenly.ui.fragment.shipper;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,11 +116,20 @@ public class ShipperProfileFragment extends Fragment {
         btnAppSettings.setOnClickListener(v -> showToast("Cài đặt ứng dụng"));
 
         btnLogout.setOnClickListener(v -> {
-            sessionManager.clearSession();
-            Intent intent = new Intent(requireActivity(), MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            requireActivity().finish();
+            // Hiển thị dialog xác nhận trước khi đăng xuất
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Xác nhận đăng xuất")
+                .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
+                .setPositiveButton("Có", (dialog, which) -> {
+                    sessionManager.clearSession();
+                    Toast.makeText(requireContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
+                    // Reset navigation thay vì restart Activity
+                    if (requireActivity() instanceof MainActivity) {
+                        ((MainActivity) requireActivity()).resetNavigation();
+                    }
+                })
+                .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
+                .show();
         });
     }
 

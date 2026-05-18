@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.local.SessionManager;
+import com.pixibeestudio.greenly.ui.activity.MainActivity;
 import com.pixibeestudio.greenly.data.model.Cart;
 import com.pixibeestudio.greenly.ui.adapter.CartAdapter;
 import com.pixibeestudio.greenly.ui.viewmodel.CartViewModel;
@@ -48,6 +50,7 @@ public class CartFragment extends Fragment {
     private ConstraintLayout layoutCartBottom;
     private LinearLayout layoutCartEmpty;
     private TextView tvEmptyCartMessage;
+    private SwipeRefreshLayout swipeRefreshCart;
 
     @Nullable
     @Override
@@ -71,6 +74,7 @@ public class CartFragment extends Fragment {
             showEmptyState("Bạn chưa đăng nhập", true);
         } else {
             setupClickListeners(view);
+            setupSwipeRefresh();
             observeViewModel();
             loadCartData();
         }
@@ -91,6 +95,7 @@ public class CartFragment extends Fragment {
         layoutCartBottom = view.findViewById(R.id.layoutCartBottom);
         layoutCartEmpty = view.findViewById(R.id.layoutCartEmpty);
         tvEmptyCartMessage = view.findViewById(R.id.tvEmptyCartMessage);
+        swipeRefreshCart = view.findViewById(R.id.swipeRefreshCart);
     }
 
     private void setupRecyclerView() {
@@ -174,6 +179,18 @@ public class CartFragment extends Fragment {
         });
     }
 
+    private void setupSwipeRefresh() {
+        if (swipeRefreshCart == null) return;
+        swipeRefreshCart.setColorSchemeResources(R.color.header_bg_green);
+        swipeRefreshCart.setOnRefreshListener(() -> {
+            loadCartData();
+            // Tắt loading sau 1s
+            swipeRefreshCart.postDelayed(() -> {
+                if (swipeRefreshCart != null) swipeRefreshCart.setRefreshing(false);
+            }, 1000);
+        });
+    }
+
     private void loadCartData() {
         cartViewModel.getCarts().observe(getViewLifecycleOwner(), carts -> {
             if (carts != null && !carts.isEmpty()) {
@@ -186,6 +203,10 @@ public class CartFragment extends Fragment {
                 // Trống
                 showEmptyState("Giỏ hàng của bạn đang trống", false);
                 tvCartTitle.setText("Giỏ hàng (0)");
+            }
+            // Cập nhật cart badge trên bottom nav
+            if (requireActivity() instanceof MainActivity) {
+                ((MainActivity) requireActivity()).loadCartBadge();
             }
         });
     }

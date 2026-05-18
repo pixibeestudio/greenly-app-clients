@@ -23,6 +23,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -39,8 +40,11 @@ import com.pixibeestudio.greenly.data.model.Banner;
 import com.pixibeestudio.greenly.data.model.BannerResponse;
 import com.pixibeestudio.greenly.data.model.Product;
 import com.pixibeestudio.greenly.data.model.Category;
+import com.pixibeestudio.greenly.data.network.ApiService;
 import com.pixibeestudio.greenly.data.network.RetrofitClient;
+import com.pixibeestudio.greenly.ui.activity.MainActivity;
 
+import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,6 +96,14 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     private LinearLayout searchBarSticky;
     private Button btnFilterBy, btnCategoryFilter, btnDiscountFilter, btnResetFilter;
     private ImageButton btnSortIcon;
+
+    // Badge views (expanded header)
+    private TextView tvFavBadge, tvNotifBadge;
+    // Badge views (sticky header)
+    private TextView tvFavBadgeSticky, tvNotifBadgeSticky;
+
+    // Pull-to-refresh
+    private SwipeRefreshLayout swipeRefreshHome;
 
     private HomeViewModel homeViewModel;
     private CartViewModel cartViewModel;
@@ -161,6 +173,26 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         setupBanner();
         setupPopularProducts();
         setupTop100Products();
+
+        // Thiết lập Pull-to-Refresh
+        setupSwipeRefresh();
+
+        // Tải badge count cho header icons
+        if (sessionManager.isLoggedIn()) {
+            loadHeaderBadges();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Refresh badges mỗi lần quay về HomeFragment
+        if (sessionManager != null && sessionManager.isLoggedIn()) {
+            loadHeaderBadges();
+            if (requireActivity() instanceof MainActivity) {
+                ((MainActivity) requireActivity()).refreshAllBadges();
+            }
+        }
     }
     
     /**
@@ -345,6 +377,26 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
 
         ImageButton btnFavSticky = view.findViewById(R.id.ibFavSticky);
         if (btnFavSticky != null) btnFavSticky.setOnClickListener(favoriteClickListener);
+
+        // Badge views (expanded header)
+        tvFavBadge = view.findViewById(R.id.tvFavBadge);
+        tvNotifBadge = view.findViewById(R.id.tvNotifBadge);
+        // Badge views (sticky header)
+        tvFavBadgeSticky = view.findViewById(R.id.tvFavBadgeSticky);
+        tvNotifBadgeSticky = view.findViewById(R.id.tvNotifBadgeSticky);
+
+        // Notification click → navigate sang NotificationFragment (kế thừa bottom nav)
+        View.OnClickListener notifClickListener = v ->
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_notificationFragment);
+
+        ImageButton btnNotif = view.findViewById(R.id.ic_notification);
+        if (btnNotif != null) btnNotif.setOnClickListener(notifClickListener);
+
+        ImageButton btnNotifSticky = view.findViewById(R.id.ibNotifSticky);
+        if (btnNotifSticky != null) btnNotifSticky.setOnClickListener(notifClickListener);
+
+        // Pull-to-refresh
+        swipeRefreshHome = view.findViewById(R.id.swipeRefreshHome);
 
         // Filter Buttons
         btnFilterBy = view.findViewById(R.id.btnFilterBy);
@@ -531,6 +583,10 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         } else {
             cartViewModel.addToCart(product.getId(), 1);
             Toast.makeText(requireContext(), "Đang thêm vào giỏ...", Toast.LENGTH_SHORT).show();
+            // Cập nhật cart badge trên bottom nav (real-time)
+            if (requireActivity() instanceof MainActivity) {
+                ((MainActivity) requireActivity()).loadCartBadge();
+            }
         }
     }
 
@@ -554,6 +610,8 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         }
         // Gọi API toggle (âm thầm, không cần observe kết quả)
         favoriteViewModel.toggleFavorite(product.getId());
+        // Cập nhật favorite badge (real-time)
+        updateFavBadge(favoriteProductIds.size());
     }
 
     /**
@@ -608,6 +666,115 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     private int dpToPx(int dp) {
         float density = requireContext().getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
+    }
+
+    // ======================== PULL-TO-REFRESH ========================
+
+    /**
+     * Thiết lập SwipeRefreshLayout: khi kéo xuống sẽ reload toàn bộ dữ liệu.
+     */
+    private void setupSwipeRefresh() {
+        if (swipeRefreshHome == null) return;
+        swipeRefreshHome.setColorSchemeResources(R.color.header_bg_green);
+        swipeRefreshHome.setOnRefreshListener(() -> {
+            // Reload dữ liệu sản phẩm
+            homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+            observeData();
+            loadBannersFromApi();
+
+            // Reload badges
+            if (sessionManager.isLoggedIn()) {
+                loadHeaderBadges();
+                if (requireActivity() instanceof MainActivity) {
+                    ((MainActivity) requireActivity()).refreshAllBadges();
+                }
+            }
+
+            // Tắt icon loading sau 1.5s
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (swipeRefreshHome != null) swipeRefreshHome.setRefreshing(false);
+            }, 1500);
+        });
+    }
+
+    // ======================== HEADER BADGES ========================
+
+    /**
+     * Tải badge count cho icon Yêu thích và Thông báo trên header.
+     */
+    private void loadHeaderBadges() {
+        if (!isAdded()) return;
+        ApiService api = RetrofitClient.getApiService(requireContext());
+
+        // Favorite count
+        api.getWishlistCount().enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                if (!isAdded()) return;
+                if (response.isSuccessful() && response.body() != null && response.body().has("count")) {
+                    updateFavBadge(response.body().get("count").getAsInt());
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) { }
+        });
+
+        // Notification count
+        api.getUnreadNotificationCount().enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                if (!isAdded()) return;
+                if (response.isSuccessful() && response.body() != null && response.body().has("unread_count")) {
+                    updateNotifBadge(response.body().get("unread_count").getAsInt());
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) { }
+        });
+    }
+
+    /**
+     * Cập nhật badge số yêu thích trên cả expanded và sticky header.
+     */
+    private void updateFavBadge(int count) {
+        if (tvFavBadge != null) {
+            if (count > 0) {
+                tvFavBadge.setText(count > 99 ? "99+" : String.valueOf(count));
+                tvFavBadge.setVisibility(View.VISIBLE);
+            } else {
+                tvFavBadge.setVisibility(View.GONE);
+            }
+        }
+        if (tvFavBadgeSticky != null) {
+            if (count > 0) {
+                tvFavBadgeSticky.setText(count > 99 ? "99+" : String.valueOf(count));
+                tvFavBadgeSticky.setVisibility(View.VISIBLE);
+            } else {
+                tvFavBadgeSticky.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    /**
+     * Cập nhật badge số thông báo chưa đọc trên cả expanded và sticky header.
+     */
+    private void updateNotifBadge(int count) {
+        if (tvNotifBadge != null) {
+            if (count > 0) {
+                tvNotifBadge.setText(count > 99 ? "99+" : String.valueOf(count));
+                tvNotifBadge.setVisibility(View.VISIBLE);
+            } else {
+                tvNotifBadge.setVisibility(View.GONE);
+            }
+        }
+        if (tvNotifBadgeSticky != null) {
+            if (count > 0) {
+                tvNotifBadgeSticky.setText(count > 99 ? "99+" : String.valueOf(count));
+                tvNotifBadgeSticky.setVisibility(View.VISIBLE);
+            } else {
+                tvNotifBadgeSticky.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override

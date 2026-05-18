@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.model.Order;
@@ -29,6 +30,7 @@ public class MyOrdersPageFragment extends Fragment {
 
     private RecyclerView rvOrders;
     private LinearLayout layoutEmpty;
+    private SwipeRefreshLayout swipeRefreshOrders;
     private CustomerOrderAdapter adapter;
     private MyOrdersViewModel sharedViewModel;
 
@@ -60,6 +62,7 @@ public class MyOrdersPageFragment extends Fragment {
         
         rvOrders = view.findViewById(R.id.rvOrders);
         layoutEmpty = view.findViewById(R.id.layoutEmpty);
+        swipeRefreshOrders = view.findViewById(R.id.swipeRefreshOrders);
 
         // Khởi tạo Adapter
         adapter = new CustomerOrderAdapter(getContext(), new CustomerOrderAdapter.OnOrderClickListener() {
@@ -83,6 +86,17 @@ public class MyOrdersPageFragment extends Fragment {
 
         // Khởi tạo SharedViewModel từ Fragment cha
         sharedViewModel = new ViewModelProvider(requireParentFragment()).get(MyOrdersViewModel.class);
+
+        // Thiết lập Pull-to-Refresh
+        if (swipeRefreshOrders != null) {
+            swipeRefreshOrders.setColorSchemeResources(com.pixibeestudio.greenly.R.color.header_bg_green);
+            swipeRefreshOrders.setOnRefreshListener(() -> {
+                sharedViewModel.fetchMyOrders();
+                swipeRefreshOrders.postDelayed(() -> {
+                    if (swipeRefreshOrders != null) swipeRefreshOrders.setRefreshing(false);
+                }, 1000);
+            });
+        }
 
         // Observe dữ liệu từ SharedViewModel
         sharedViewModel.getOrdersLiveData().observe(getViewLifecycleOwner(), resource -> {

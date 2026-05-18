@@ -83,30 +83,64 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/img_avatar">
 
-                    <!-- Nút Yêu thích (Tròn, Solid 10%) -->
-                    <ImageButton
-                        android:id="@+id/ic_favorite"
+                    <!-- Nút Yêu thích (Tròn, Solid 10%) + Badge -->
+                    <FrameLayout
                         android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/circle_icon_background"
-                        android:contentDescription="Yêu thích"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_favorite_border"
-                        app:tint="@color/white" />
+                        android:layout_height="40dp">
 
-                    <!-- Nút Thông báo (Tròn, Solid 10%) -->
-                    <ImageButton
-                        android:id="@+id/ic_notification"
+                        <ImageButton
+                            android:id="@+id/ic_favorite"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/circle_icon_background"
+                            android:contentDescription="Yêu thích"
+                            android:padding="10dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_favorite_border"
+                            app:tint="@color/white" />
+
+                        <TextView
+                            android:id="@+id/tvFavBadge"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="top|end"
+                            android:background="@drawable/bg_badge_red"
+                            android:gravity="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
+                    <!-- Nút Thông báo (Tròn, Solid 10%) + Badge -->
+                    <FrameLayout
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_marginStart="12dp"
-                        android:background="@drawable/circle_icon_background"
-                        android:contentDescription="Thông báo"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_notifications"
-                        app:tint="@color/white" />
+                        android:layout_marginStart="12dp">
+
+                        <ImageButton
+                            android:id="@+id/ic_notification"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/circle_icon_background"
+                            android:contentDescription="Thông báo"
+                            android:padding="10dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_notifications"
+                            app:tint="@color/white" />
+
+                        <TextView
+                            android:id="@+id/tvNotifBadge"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="top|end"
+                            android:background="@drawable/bg_badge_red"
+                            android:gravity="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+                    </FrameLayout>
                 </LinearLayout>
 
                 <!-- 4. Thanh Tìm kiếm (Bottom) -->
@@ -204,23 +238,57 @@
                                 android:textSize="14sp" />
                         </LinearLayout>
 
-                        <ImageButton
-                            android:id="@+id/ibFavSticky"
+                        <FrameLayout
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:layout_marginStart="12dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_favorite_border"
-                            app:tint="@color/header_bg_green" />
+                            android:layout_marginStart="12dp">
 
-                        <ImageButton
-                            android:id="@+id/ibNotifSticky"
+                            <ImageButton
+                                android:id="@+id/ibFavSticky"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_favorite_border"
+                                app:tint="@color/header_bg_green" />
+
+                            <TextView
+                                android:id="@+id/tvFavBadgeSticky"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="top|end"
+                                android:background="@drawable/bg_badge_red"
+                                android:gravity="center"
+                                android:textColor="@android:color/white"
+                                android:textSize="10sp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
+                        </FrameLayout>
+
+                        <FrameLayout
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:layout_marginStart="4dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_notifications"
-                            app:tint="@color/header_bg_green" />
+                            android:layout_marginStart="4dp">
+
+                            <ImageButton
+                                android:id="@+id/ibNotifSticky"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_notifications"
+                                app:tint="@color/header_bg_green" />
+
+                            <TextView
+                                android:id="@+id/tvNotifBadgeSticky"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="top|end"
+                                android:background="@drawable/bg_badge_red"
+                                android:gravity="center"
+                                android:textColor="@android:color/white"
+                                android:textSize="10sp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
+                        </FrameLayout>
                     </LinearLayout>
 
                     <!-- Hàng 2: Scroll ngang Filter -->
@@ -306,12 +374,17 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- ===== NỘI DUNG CUỘN CHÍNH ===== -->
+    <!-- ===== NỘI DUNG CUỘN CHÍNH (với Pull-to-Refresh) ===== -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshHome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -443,5 +516,7 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -189,14 +189,22 @@ public class ProfileFragment extends Fragment {
 
         // Nút Đăng xuất
         btnLogoutProfile.setOnClickListener(v -> {
-            // Local Logout
-            sessionManager.clearSession();
-            Toast.makeText(requireContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
+            // Hiển thị dialog xác nhận trước khi đăng xuất
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Xác nhận đăng xuất")
+                .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
+                .setPositiveButton("Có", (dialog, which) -> {
+                    // Local Logout
+                    sessionManager.clearSession();
+                    Toast.makeText(requireContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
 
-            // Reset navigation graph để chuyển về WelcomeFragment (không restart app)
-            if (requireActivity() instanceof com.pixibeestudio.greenly.ui.activity.MainActivity) {
-                ((com.pixibeestudio.greenly.ui.activity.MainActivity) requireActivity()).resetNavigation();
-            }
+                    // Reset navigation graph để chuyển về WelcomeFragment (không restart app)
+                    if (requireActivity() instanceof com.pixibeestudio.greenly.ui.activity.MainActivity) {
+                        ((com.pixibeestudio.greenly.ui.activity.MainActivity) requireActivity()).resetNavigation();
+                    }
+                })
+                .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
+                .show();
         });
 
         // Nút Đăng nhập/Đăng ký cho Guest
