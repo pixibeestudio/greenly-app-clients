@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 16, 2026 at 03:13 AM
+-- Generation Time: Apr 21, 2026 at 05:20 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,28 @@ SET time_zone = "+00:00";
 --
 -- Database: `greenly_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `addresses`
+--
+
+CREATE TABLE `addresses` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `receiver_name` varchar(255) NOT NULL,
+  `phone` varchar(15) NOT NULL,
+  `province` varchar(255) NOT NULL,
+  `district` varchar(255) NOT NULL,
+  `ward` varchar(255) NOT NULL,
+  `street` varchar(255) NOT NULL,
+  `house_number` varchar(255) NOT NULL,
+  `label` enum('home','office','other') NOT NULL DEFAULT 'home',
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -219,6 +241,25 @@ CREATE TABLE `order_details` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `otp_codes`
+--
+
+CREATE TABLE `otp_codes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `code_hash` varchar(255) NOT NULL,
+  `type` enum('login','reset_password') NOT NULL,
+  `attempts` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+  `expires_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `used_at` timestamp NULL DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `password_reset_tokens`
 --
 
@@ -294,10 +335,13 @@ CREATE TABLE `product_images` (
 CREATE TABLE `reviews` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `order_detail_id` bigint(20) UNSIGNED DEFAULT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
   `rating` tinyint(3) UNSIGNED NOT NULL DEFAULT 5 COMMENT 'Số sao: 1 đến 5',
   `status` enum('pending','approved','hidden') NOT NULL DEFAULT 'pending',
   `comment` text DEFAULT NULL COMMENT 'Nội dung đánh giá',
+  `images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`images`)),
   `admin_reply` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -376,6 +420,13 @@ CREATE TABLE `wishlists` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `addresses`
+--
+ALTER TABLE `addresses`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `addresses_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `banners`
@@ -463,6 +514,15 @@ ALTER TABLE `order_details`
   ADD KEY `order_details_batch_id_foreign` (`batch_id`);
 
 --
+-- Indexes for table `otp_codes`
+--
+ALTER TABLE `otp_codes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `otp_codes_email_type_used_at_index` (`email`,`type`,`used_at`),
+  ADD KEY `otp_codes_email_index` (`email`),
+  ADD KEY `otp_codes_type_index` (`type`);
+
+--
 -- Indexes for table `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
@@ -496,8 +556,10 @@ ALTER TABLE `product_images`
 --
 ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `reviews_order_detail_id_unique` (`order_detail_id`),
   ADD KEY `reviews_user_id_foreign` (`user_id`),
-  ADD KEY `reviews_product_id_foreign` (`product_id`);
+  ADD KEY `reviews_product_id_foreign` (`product_id`),
+  ADD KEY `reviews_order_id_foreign` (`order_id`);
 
 --
 -- Indexes for table `sessions`
@@ -531,6 +593,12 @@ ALTER TABLE `wishlists`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `addresses`
+--
+ALTER TABLE `addresses`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `banners`
@@ -587,6 +655,12 @@ ALTER TABLE `order_details`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `otp_codes`
+--
+ALTER TABLE `otp_codes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
@@ -633,6 +707,12 @@ ALTER TABLE `wishlists`
 --
 
 --
+-- Constraints for table `addresses`
+--
+ALTER TABLE `addresses`
+  ADD CONSTRAINT `addresses_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `batches`
 --
 ALTER TABLE `batches`
@@ -677,6 +757,8 @@ ALTER TABLE `product_images`
 -- Constraints for table `reviews`
 --
 ALTER TABLE `reviews`
+  ADD CONSTRAINT `reviews_order_detail_id_foreign` FOREIGN KEY (`order_detail_id`) REFERENCES `order_details` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reviews_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `reviews_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `reviews_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 

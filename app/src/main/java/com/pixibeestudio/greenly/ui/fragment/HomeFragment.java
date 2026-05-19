@@ -29,6 +29,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bumptech.glide.Glide;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.tabs.TabLayout;
@@ -107,6 +108,11 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     // Pull-to-refresh
     private SwipeRefreshLayout swipeRefreshHome;
 
+    // Skeleton loading
+    private ShimmerFrameLayout shimmerHome;
+    private View nestedScrollContent;
+    private boolean isDataLoaded = false;
+
     // Màn hình mất kết nối
     private View layoutNoConnection;
 
@@ -122,7 +128,12 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
     private ProductHorizontalAdapter popularAdapter;
     private ProductHorizontalAdapter discountAdapter;
     private ProductHorizontalAdapter top100Adapter;
+    private ProductHorizontalAdapter recommendationAdapter;
     private BannerAdapter bannerAdapter;
+
+    // Khối gợi ý cho bạn
+    private RecyclerView rvRecommendations;
+    private LinearLayout layoutRecommendations;
 
     private static final String TAG = "HomeFragment";
 
@@ -205,6 +216,11 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         }
         showContentState();
 
+        // Hiện skeleton loading khi chưa có data
+        if (!isDataLoaded) {
+            showSkeleton();
+        }
+
         // Tải badge count cho header icons
         if (sessionManager.isLoggedIn()) {
             loadHeaderBadges();
@@ -227,6 +243,33 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         if (layoutNoConnection != null) layoutNoConnection.setVisibility(View.GONE);
         if (swipeRefreshHome != null) swipeRefreshHome.setVisibility(View.VISIBLE);
         if (appBarLayout != null) appBarLayout.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Hiện skeleton loading (shimmer animation) khi đang tải dữ liệu.
+     */
+    private void showSkeleton() {
+        if (shimmerHome != null) {
+            shimmerHome.setVisibility(View.VISIBLE);
+            shimmerHome.startShimmer();
+        }
+        if (nestedScrollContent != null) {
+            nestedScrollContent.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Ẩn skeleton loading, hiện nội dung thật.
+     */
+    private void hideSkeleton() {
+        if (shimmerHome != null) {
+            shimmerHome.stopShimmer();
+            shimmerHome.setVisibility(View.GONE);
+        }
+        if (nestedScrollContent != null) {
+            nestedScrollContent.setVisibility(View.VISIBLE);
+        }
+        isDataLoaded = true;
     }
 
     @Override
@@ -319,13 +362,15 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
             }
         });
 
-        // Tất cả sản phẩm (Grid)
+        // Tất cả sản phẩm (Grid) - khi data đến thì ẩn skeleton
         homeViewModel.getProductsLiveData().observe(getViewLifecycleOwner(), products -> {
             if (products != null && !products.isEmpty()) {
                 allProductsAdapter = new ProductGridAdapter(products, this);
                 allProductsAdapter.setFavoriteListener(this);
                 allProductsAdapter.setFavoriteIds(favoriteProductIds);
                 rvAllProducts.setAdapter(allProductsAdapter);
+                // Ẩn skeleton khi dữ liệu chính đã load xong
+                hideSkeleton();
             }
         });
 
@@ -380,6 +425,24 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
                 if (popularAdapter != null) popularAdapter.setFavoriteIds(favoriteProductIds);
                 if (discountAdapter != null) discountAdapter.setFavoriteIds(favoriteProductIds);
                 if (top100Adapter != null) top100Adapter.setFavoriteIds(favoriteProductIds);
+                if (recommendationAdapter != null) recommendationAdapter.setFavoriteIds(favoriteProductIds);
+            });
+        }
+
+        // Gợi ý cho bạn (chỉ khi đã đăng nhập)
+        if (sessionManager.isLoggedIn()) {
+            homeViewModel.getRecommendationsLiveData().observe(getViewLifecycleOwner(), products -> {
+                if (products != null && !products.isEmpty()) {
+                    layoutRecommendations.setVisibility(View.VISIBLE);
+                    rvRecommendations.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                    recommendationAdapter = new ProductHorizontalAdapter(products, this);
+                    recommendationAdapter.setSectionType(ProductHorizontalAdapter.SECTION_FOR_YOU);
+                    recommendationAdapter.setFavoriteListener(this);
+                    recommendationAdapter.setFavoriteIds(favoriteProductIds);
+                    rvRecommendations.setAdapter(recommendationAdapter);
+                } else {
+                    layoutRecommendations.setVisibility(View.GONE);
+                }
             });
         }
     }
@@ -394,6 +457,8 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         rvPopularProducts = view.findViewById(R.id.rv_popular_products);
         rvDiscountProducts = view.findViewById(R.id.rv_discount_products);
         rvTop100Products = view.findViewById(R.id.rv_top100_products);
+        rvRecommendations = view.findViewById(R.id.rv_recommendations);
+        layoutRecommendations = view.findViewById(R.id.layoutRecommendations);
         rvAllProducts = view.findViewById(R.id.rv_all_products);
         
         // Profile Views
@@ -446,6 +511,10 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
 
         // Pull-to-refresh
         swipeRefreshHome = view.findViewById(R.id.swipeRefreshHome);
+
+        // Skeleton loading
+        shimmerHome = view.findViewById(R.id.shimmerHome);
+        nestedScrollContent = view.findViewById(R.id.nestedScrollContent);
 
         // Filter Buttons
         btnFilterBy = view.findViewById(R.id.btnFilterBy);
@@ -726,7 +795,8 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         if (swipeRefreshHome == null) return;
         swipeRefreshHome.setColorSchemeResources(R.color.header_bg_green);
         swipeRefreshHome.setOnRefreshListener(() -> {
-            // Reload dữ liệu sản phẩm
+            // Reload dữ liệu sản phẩm (không cần skeleton khi pull-to-refresh)
+            isDataLoaded = true;
             homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
             observeData();
             loadBannersFromApi();
@@ -831,5 +901,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         super.onDestroyView();
         // Hủy auto-slide khi Fragment bị hủy để tránh memory leak
         bannerHandler.removeCallbacks(bannerRunnable);
+        // Dừng shimmer animation
+        if (shimmerHome != null) shimmerHome.stopShimmer();
     }
 }

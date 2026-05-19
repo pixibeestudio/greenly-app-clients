@@ -177,6 +177,16 @@ public interface ApiService {
     @GET("api/shipper/wallet-profile")
     Call<com.pixibeestudio.greenly.data.model.WalletProfileResponse> getWalletProfile();
 
+    // --- RECOMMENDATION (GỢI Ý SẢN PHẨM) API ---
+    @GET("api/products/{id}/similar")
+    Call<ProductResponse> getSimilarProducts(@Path("id") int productId);
+
+    @GET("api/products/{id}/bought-together")
+    Call<ProductResponse> getBoughtTogetherProducts(@Path("id") int productId);
+
+    @GET("api/recommendations/for-you")
+    Call<ProductResponse> getRecommendationsForYou();
+
     // --- WISHLIST (YÊU THÍCH) API ---
     @GET("api/wishlist")
     Call<com.pixibeestudio.greenly.data.model.WishlistResponse> getWishlists();

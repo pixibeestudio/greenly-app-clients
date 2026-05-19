@@ -136,6 +136,89 @@ public class ProductRepository {
         return data;
     }
 
+    // ==================== GỢI Ý SẢN PHẨM (RECOMMENDER) ====================
+
+    /**
+     * Lấy danh sách sản phẩm tương tự (Content-Based).
+     */
+    public MutableLiveData<List<Product>> getSimilarProducts(int productId) {
+        MutableLiveData<List<Product>> data = new MutableLiveData<>();
+
+        RetrofitClient.getApiService(context).getSimilarProducts(productId).enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    data.setValue(response.body().getData());
+                } else {
+                    Log.e(TAG, "Lỗi API SP tương tự: " + response.code());
+                    data.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                Log.e(TAG, "Lỗi mạng SP tương tự: " + t.getMessage());
+                data.setValue(null);
+            }
+        });
+
+        return data;
+    }
+
+    /**
+     * Lấy danh sách sản phẩm thường mua kèm (Co-occurrence).
+     */
+    public MutableLiveData<List<Product>> getBoughtTogetherProducts(int productId) {
+        MutableLiveData<List<Product>> data = new MutableLiveData<>();
+
+        RetrofitClient.getApiService(context).getBoughtTogetherProducts(productId).enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    data.setValue(response.body().getData());
+                } else {
+                    Log.e(TAG, "Lỗi API SP mua kèm: " + response.code());
+                    data.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                Log.e(TAG, "Lỗi mạng SP mua kèm: " + t.getMessage());
+                data.setValue(null);
+            }
+        });
+
+        return data;
+    }
+
+    /**
+     * Lấy danh sách gợi ý cá nhân hóa cho user (Personalized).
+     */
+    public MutableLiveData<List<Product>> getRecommendationsForYou() {
+        MutableLiveData<List<Product>> data = new MutableLiveData<>();
+
+        RetrofitClient.getApiService(context).getRecommendationsForYou().enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    data.setValue(response.body().getData());
+                } else {
+                    Log.e(TAG, "Lỗi API gợi ý cho bạn: " + response.code());
+                    data.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                Log.e(TAG, "Lỗi mạng gợi ý cho bạn: " + t.getMessage());
+                data.setValue(null);
+            }
+        });
+
+        return data;
+    }
+
     public MutableLiveData<Product> getProductDetail(int id) {
         MutableLiveData<Product> data = new MutableLiveData<>();
 

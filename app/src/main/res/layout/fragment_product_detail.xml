@@ -558,7 +558,61 @@
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
-                <!-- KHỐI 3: Mô tả sản phẩm -->
+                <!-- KHỐI 3: Thường mua kèm (Co-occurrence) -->
+                <LinearLayout
+                    android:id="@+id/layoutBoughtTogether"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🛒 Thường mua kèm"
+                        android:textColor="#1B5E20"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvBoughtTogether"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clipToPadding="false"
+                        android:paddingHorizontal="4dp" />
+
+                </LinearLayout>
+
+                <!-- KHỐI 4: Sản phẩm tương tự (Content-Based) -->
+                <LinearLayout
+                    android:id="@+id/layoutSimilarProducts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💡 Sản phẩm tương tự"
+                        android:textColor="#1B5E20"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvSimilarProducts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clipToPadding="false"
+                        android:paddingHorizontal="4dp" />
+
+                </LinearLayout>
+
+                <!-- KHỐI 5: Mô tả sản phẩm -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

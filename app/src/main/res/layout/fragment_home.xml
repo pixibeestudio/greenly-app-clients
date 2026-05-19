@@ -381,10 +381,23 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <!-- Skeleton Loading (hiện khi đang tải dữ liệu) -->
+    <include
+        layout="@layout/layout_home_skeleton"
+        android:id="@+id/shimmerHome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -495,7 +508,35 @@
                 android:clipToPadding="false"
                 android:paddingHorizontal="12dp" />
 
-            <!-- 6. Tất cả sản phẩm (Grid 2 cột) -->
+            <!-- 6. Gợi ý cho bạn (Recommender System) -->
+            <LinearLayout
+                android:id="@+id/layoutRecommendations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="20dp"
+                    android:text="💡 Gợi ý cho bạn"
+                    android:textColor="#1B5E20"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_recommendations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="12dp" />
+
+            </LinearLayout>
+
+            <!-- 7. Tất cả sản phẩm (Grid 2 cột) -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -516,6 +557,8 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    </FrameLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

@@ -88,20 +88,22 @@
 
             </LinearLayout>
 
-            <!-- Phần Placeholder Gợi ý sản phẩm -->
+            <!-- Phần Gợi ý sản phẩm (Recommender System) -->
             <LinearLayout
+                android:id="@+id/layoutOrderRecommendations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="16dp">
+                android:paddingTop="16dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="Gợi ý thêm cho bạn"
-                    android:textColor="@color/black"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="💡 Gợi ý thêm cho bạn"
+                    android:textColor="#1B5E20"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -109,9 +111,8 @@
                     android:id="@+id/rvSuggestedProducts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    tools:itemCount="2"
-                    tools:listitem="@layout/item_product" />
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="12dp" />
 
             </LinearLayout>
 

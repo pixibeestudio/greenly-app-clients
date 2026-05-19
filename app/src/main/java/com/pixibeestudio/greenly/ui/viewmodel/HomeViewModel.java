@@ -20,6 +20,7 @@ public class HomeViewModel extends AndroidViewModel {
     private LiveData<List<Category>> categoriesLiveData;
     private LiveData<List<Product>> productsLiveData;
     private LiveData<List<Product>> discountedProductsLiveData;
+    private LiveData<List<Product>> recommendationsLiveData;
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
@@ -46,5 +47,15 @@ public class HomeViewModel extends AndroidViewModel {
             discountedProductsLiveData = productRepository.getDiscountedProducts();
         }
         return discountedProductsLiveData;
+    }
+
+    /**
+     * Gợi ý sản phẩm cá nhân hóa cho user (Recommender System).
+     */
+    public LiveData<List<Product>> getRecommendationsLiveData() {
+        if (recommendationsLiveData == null) {
+            recommendationsLiveData = productRepository.getRecommendationsForYou();
+        }
+        return recommendationsLiveData;
     }
 }

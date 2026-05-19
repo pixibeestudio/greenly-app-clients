@@ -38,6 +38,9 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
     public static final String SECTION_NEWEST = "newest";
     public static final String SECTION_DISCOUNT = "discount";
     public static final String SECTION_TOP_SALES = "top_sales";
+    public static final String SECTION_FOR_YOU = "for_you";
+    public static final String SECTION_SIMILAR = "similar";
+    public static final String SECTION_BOUGHT_TOGETHER = "bought_together";
 
     private final List<Product> products;
     private final OnProductAddCartListener listener;
@@ -119,14 +122,24 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
                     args.putString("sort_by", "top_sales");
                     args.putString("is_discount", "false");
                 } else {
-                    // SECTION_NEWEST
+                    // SECTION_NEWEST, SECTION_FOR_YOU, SECTION_SIMILAR, ...
                     args.putString("sort_by", "newest");
                     args.putString("is_discount", "false");
                 }
                 args.putInt("category_id", 0);
                 args.putString("category_name", "");
-                Navigation.findNavController(v).navigate(
-                        R.id.action_homeFragment_to_filteredProductsFragment, args);
+
+                // Xác định đúng navigation action dựa vào context hiện tại
+                try {
+                    Navigation.findNavController(v).navigate(
+                            R.id.action_homeFragment_to_filteredProductsFragment, args);
+                } catch (Exception e) {
+                    // Nếu đang ở fragment khác (vd: ProductDetail), navigate về filteredProducts
+                    try {
+                        Navigation.findNavController(v).navigate(
+                                R.id.filteredProductsFragment, args);
+                    } catch (Exception ignored) {}
+                }
             });
             return;
         }

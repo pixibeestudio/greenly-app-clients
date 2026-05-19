@@ -25,11 +25,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.local.SessionManager;
+import com.pixibeestudio.greenly.data.model.ProductResponse;
+import com.pixibeestudio.greenly.data.network.RetrofitClient;
 import com.pixibeestudio.greenly.ui.activity.MainActivity;
+import com.pixibeestudio.greenly.ui.adapter.ProductHorizontalAdapter;
 import com.pixibeestudio.greenly.utils.NetworkUtils;
 import com.pixibeestudio.greenly.data.model.Cart;
 import com.pixibeestudio.greenly.ui.adapter.CartAdapter;
 import com.pixibeestudio.greenly.ui.viewmodel.CartViewModel;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -53,6 +60,8 @@ public class CartFragment extends Fragment {
     private TextView tvEmptyCartMessage;
     private SwipeRefreshLayout swipeRefreshCart;
     private View layoutNoConnection;
+    private LinearLayout layoutCartRecommendations;
+    private RecyclerView rvCartRecommendations;
 
     @Nullable
     @Override
@@ -120,6 +129,8 @@ public class CartFragment extends Fragment {
         tvEmptyCartMessage = view.findViewById(R.id.tvEmptyCartMessage);
         swipeRefreshCart = view.findViewById(R.id.swipeRefreshCart);
         btnContinueShopping = view.findViewById(R.id.btnContinueShopping);
+        layoutCartRecommendations = view.findViewById(R.id.layoutCartRecommendations);
+        rvCartRecommendations = view.findViewById(R.id.rvCartRecommendations);
     }
 
     private void setupRecyclerView() {
@@ -258,6 +269,10 @@ public class CartFragment extends Fragment {
                 cartAdapter.setCartList(carts);
                 tvCartTitle.setText("Giỏ hàng (" + carts.size() + ")");
                 cartViewModel.calculateTotals(carts);
+                // Tải gợi ý dựa trên SP đầu tiên trong giỏ
+                if (carts.get(0).getProduct() != null) {
+                    loadCartRecommendations(carts.get(0).getProduct().getId());
+                }
             } else {
                 // Trống
                 showEmptyState("Giỏ hàng của bạn đang trống", false);
@@ -289,6 +304,42 @@ public class CartFragment extends Fragment {
         btnClearCart.setVisibility(View.VISIBLE);
         btnContinueShopping.setVisibility(View.VISIBLE);
         layoutCartEmpty.setVisibility(View.GONE);
+    }
+
+    /**
+     * Tải gợi ý SP 'Có thể bạn cần thêm' dựa trên SP trong giỏ (bought-together).
+     */
+    private void loadCartRecommendations(int productId) {
+        RetrofitClient.getApiService(requireContext()).getBoughtTogetherProducts(productId)
+                .enqueue(new Callback<ProductResponse>() {
+                    @Override
+                    public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                        if (!isAdded()) return;
+                        if (response.isSuccessful() && response.body() != null
+                                && response.body().isSuccess()
+                                && response.body().getData() != null
+                                && !response.body().getData().isEmpty()) {
+                            layoutCartRecommendations.setVisibility(View.VISIBLE);
+                            rvCartRecommendations.setLayoutManager(
+                                    new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                            ProductHorizontalAdapter adapter = new ProductHorizontalAdapter(
+                                    response.body().getData(), product -> {
+                                        cartViewModel.addToCart(product.getId(), 1);
+                                        Toast.makeText(getContext(), "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                                        loadCartData();
+                                    });
+                            adapter.setSectionType(ProductHorizontalAdapter.SECTION_BOUGHT_TOGETHER);
+                            rvCartRecommendations.setAdapter(adapter);
+                        } else {
+                            layoutCartRecommendations.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ProductResponse> call, Throwable t) {
+                        if (isAdded()) layoutCartRecommendations.setVisibility(View.GONE);
+                    }
+                });
     }
 
     private void showEmptyState(String message, boolean isGuest) {

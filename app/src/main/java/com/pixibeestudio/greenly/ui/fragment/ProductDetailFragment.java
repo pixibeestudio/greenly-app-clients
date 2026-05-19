@@ -17,17 +17,26 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.button.MaterialButton;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.model.Product;
+import com.pixibeestudio.greenly.data.model.ProductResponse;
+import com.pixibeestudio.greenly.data.network.RetrofitClient;
+import com.pixibeestudio.greenly.ui.adapter.ProductHorizontalAdapter;
 import com.pixibeestudio.greenly.ui.adapter.ProductImageSliderAdapter;
 import com.pixibeestudio.greenly.data.local.SessionManager;
 import com.pixibeestudio.greenly.data.model.WishlistItem;
 import com.pixibeestudio.greenly.ui.viewmodel.CartViewModel;
 import com.pixibeestudio.greenly.ui.viewmodel.FavoriteViewModel;
 import com.pixibeestudio.greenly.ui.viewmodel.ProductDetailViewModel;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -66,6 +75,12 @@ public class ProductDetailFragment extends Fragment {
     
     private TextView tvDescriptionDetail;
     private TextView tvToggleDescriptionDetail;
+
+    // Gợi ý sản phẩm
+    private LinearLayout layoutBoughtTogether;
+    private RecyclerView rvBoughtTogether;
+    private LinearLayout layoutSimilarProducts;
+    private RecyclerView rvSimilarProducts;
 
     private int productId = -1;
     private int currentQuantity = 1;
@@ -124,6 +139,7 @@ public class ProductDetailFragment extends Fragment {
         if (layoutNoConnection != null) layoutNoConnection.setVisibility(View.GONE);
         loadProductDetail();
         loadFavoriteStatus();
+        loadRecommendations();
     }
 
     private void initViews(View view) {
@@ -154,6 +170,12 @@ public class ProductDetailFragment extends Fragment {
         
         tvDescriptionDetail = view.findViewById(R.id.tvDescriptionDetail);
         tvToggleDescriptionDetail = view.findViewById(R.id.tvToggleDescriptionDetail);
+
+        // Gợi ý sản phẩm
+        layoutBoughtTogether = view.findViewById(R.id.layoutBoughtTogether);
+        rvBoughtTogether = view.findViewById(R.id.rvBoughtTogether);
+        layoutSimilarProducts = view.findViewById(R.id.layoutSimilarProducts);
+        rvSimilarProducts = view.findViewById(R.id.rvSimilarProducts);
         
         tvQuantity.setText(String.valueOf(currentQuantity));
     }
@@ -386,6 +408,83 @@ public class ProductDetailFragment extends Fragment {
         } else {
             btnDetailFavorite.setImageResource(R.drawable.ic_favorite_border);
             btnDetailFavorite.setImageTintList(ColorStateList.valueOf(Color.parseColor("#9E9E9E")));
+        }
+    }
+
+    // ==================== GỢI Ý SẢN PHẨM (RECOMMENDER SYSTEM) ====================
+
+    /**
+     * Tải dữ liệu gợi ý SP tương tự và thường mua kèm.
+     */
+    private void loadRecommendations() {
+        if (productId == -1) return;
+
+        // 1. Sản phẩm tương tự (Content-Based)
+        RetrofitClient.getApiService(requireContext()).getSimilarProducts(productId)
+                .enqueue(new Callback<ProductResponse>() {
+                    @Override
+                    public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                        if (!isAdded()) return;
+                        if (response.isSuccessful() && response.body() != null
+                                && response.body().isSuccess()
+                                && response.body().getData() != null
+                                && !response.body().getData().isEmpty()) {
+                            layoutSimilarProducts.setVisibility(View.VISIBLE);
+                            rvSimilarProducts.setLayoutManager(
+                                    new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                            ProductHorizontalAdapter adapter = new ProductHorizontalAdapter(
+                                    response.body().getData(), ProductDetailFragment.this::onRecommendAddCart);
+                            adapter.setSectionType(ProductHorizontalAdapter.SECTION_SIMILAR);
+                            rvSimilarProducts.setAdapter(adapter);
+                        } else {
+                            layoutSimilarProducts.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ProductResponse> call, Throwable t) {
+                        if (isAdded()) layoutSimilarProducts.setVisibility(View.GONE);
+                    }
+                });
+
+        // 2. Thường mua kèm (Co-occurrence)
+        RetrofitClient.getApiService(requireContext()).getBoughtTogetherProducts(productId)
+                .enqueue(new Callback<ProductResponse>() {
+                    @Override
+                    public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                        if (!isAdded()) return;
+                        if (response.isSuccessful() && response.body() != null
+                                && response.body().isSuccess()
+                                && response.body().getData() != null
+                                && !response.body().getData().isEmpty()) {
+                            layoutBoughtTogether.setVisibility(View.VISIBLE);
+                            rvBoughtTogether.setLayoutManager(
+                                    new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                            ProductHorizontalAdapter adapter = new ProductHorizontalAdapter(
+                                    response.body().getData(), ProductDetailFragment.this::onRecommendAddCart);
+                            adapter.setSectionType(ProductHorizontalAdapter.SECTION_BOUGHT_TOGETHER);
+                            rvBoughtTogether.setAdapter(adapter);
+                        } else {
+                            layoutBoughtTogether.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ProductResponse> call, Throwable t) {
+                        if (isAdded()) layoutBoughtTogether.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    /**
+     * Xử lý sự kiện thêm giỏ hàng từ danh sách gợi ý.
+     */
+    private void onRecommendAddCart(Product product) {
+        if (sessionManager.isGuestMode()) {
+            showGuestLoginPopup();
+        } else {
+            cartViewModel.addToCart(product.getId(), 1);
+            Toast.makeText(getContext(), "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -67,6 +67,9 @@ dependencies {
     // ViewPager2 cho Banner
     implementation("androidx.viewpager2:viewpager2:1.1.0")
 
+    // Facebook Shimmer (Skeleton Loading)
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+
     // MPAndroidChart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 

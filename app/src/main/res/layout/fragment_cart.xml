@@ -105,28 +105,33 @@
                 app:strokeColor="@color/header_bg_green"
                 app:strokeWidth="1dp" />
 
-            <!-- Gợi ý sản phẩm -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"
-                android:text="Có thể bạn thích"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
+            <!-- Gợi ý sản phẩm (Recommender System) -->
+            <LinearLayout
+                android:id="@+id/layoutCartRecommendations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:background="@drawable/bg_group_menu"
-                android:padding="16dp"
-                android:text="Chức năng Gợi ý sản phẩm đang được phát triển..."
-                android:textAlignment="center"
-                android:textColor="#757575"
-                android:textSize="14sp" />
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="💡 Có thể bạn cần thêm"
+                    android:textColor="#1B5E20"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCartRecommendations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="12dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
