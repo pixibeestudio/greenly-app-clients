@@ -34,10 +34,16 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final int TYPE_PRODUCT = 0;
     private static final int TYPE_VIEW_MORE = 1;
 
+    // Loại khối sản phẩm để xác định navigate "Xem thêm" đúng section
+    public static final String SECTION_NEWEST = "newest";
+    public static final String SECTION_DISCOUNT = "discount";
+    public static final String SECTION_TOP_SALES = "top_sales";
+
     private final List<Product> products;
     private final OnProductAddCartListener listener;
     private OnFavoriteToggleListener favoriteListener;
     private Set<Integer> favoriteIds = new HashSet<>();
+    private String sectionType = SECTION_NEWEST;
 
     // Interface cho sự kiện thêm vào giỏ hàng
     public interface OnProductAddCartListener {
@@ -52,6 +58,13 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
     public ProductHorizontalAdapter(List<Product> products, OnProductAddCartListener listener) {
         this.products = products;
         this.listener = listener;
+    }
+
+    /**
+     * Thiết lập loại khối sản phẩm để "Xem thêm" navigate đúng.
+     */
+    public void setSectionType(String sectionType) {
+        this.sectionType = sectionType;
     }
 
     public void setFavoriteListener(OnFavoriteToggleListener listener) {
@@ -95,6 +108,28 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        // Xử lý click nút "Xem thêm"
+        if (holder instanceof ViewMoreViewHolder) {
+            holder.itemView.setOnClickListener(v -> {
+                Bundle args = new Bundle();
+                if (SECTION_DISCOUNT.equals(sectionType)) {
+                    args.putString("sort_by", "newest");
+                    args.putString("is_discount", "true");
+                } else if (SECTION_TOP_SALES.equals(sectionType)) {
+                    args.putString("sort_by", "top_sales");
+                    args.putString("is_discount", "false");
+                } else {
+                    // SECTION_NEWEST
+                    args.putString("sort_by", "newest");
+                    args.putString("is_discount", "false");
+                }
+                args.putInt("category_id", 0);
+                args.putString("category_name", "");
+                Navigation.findNavController(v).navigate(
+                        R.id.action_homeFragment_to_filteredProductsFragment, args);
+            });
+            return;
+        }
         if (holder instanceof ProductViewHolder && position < products.size()) {
             ProductViewHolder productHolder = (ProductViewHolder) holder;
             Product product = products.get(position);
@@ -285,6 +320,14 @@ public class ProductHorizontalAdapter extends RecyclerView.Adapter<RecyclerView.
     static class ViewMoreViewHolder extends RecyclerView.ViewHolder {
         ViewMoreViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Click "Xem thêm" sẽ được xử lý trong onBindViewHolder
         }
+    }
+
+    /**
+     * Lấy section type hiện tại.
+     */
+    public String getSectionType() {
+        return sectionType;
     }
 }

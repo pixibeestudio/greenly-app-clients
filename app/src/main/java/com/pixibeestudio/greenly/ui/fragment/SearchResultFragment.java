@@ -3,6 +3,7 @@ package com.pixibeestudio.greenly.ui.fragment;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -10,6 +11,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.content.Context;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,7 +46,10 @@ public class SearchResultFragment extends Fragment
     private ImageButton btnBack;
     private EditText edtSearch;
     private RecyclerView rvSearchResults;
+    private LinearLayout layoutEmptySearch;
+    private TextView tvFilterAll, tvFilterPrice, tvFilterNewest, tvFilterTopSales;
     private String searchQuery = "";
+    private String currentSort = "all";
 
     private SearchViewModel viewModel;
     private FavoriteViewModel favoriteViewModel;
@@ -74,6 +80,11 @@ public class SearchResultFragment extends Fragment
         btnBack = view.findViewById(R.id.btnBack);
         edtSearch = view.findViewById(R.id.edtSearch);
         rvSearchResults = view.findViewById(R.id.rvSearchResults);
+        layoutEmptySearch = view.findViewById(R.id.layoutEmptySearch);
+        tvFilterAll = view.findViewById(R.id.tvFilterAll);
+        tvFilterPrice = view.findViewById(R.id.tvFilterPrice);
+        tvFilterNewest = view.findViewById(R.id.tvFilterNewest);
+        tvFilterTopSales = view.findViewById(R.id.tvFilterTopSales);
 
         // Cau hinh RecyclerView Grid 2 cot
         rvSearchResults.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -89,6 +100,12 @@ public class SearchResultFragment extends Fragment
             NavController navController = Navigation.findNavController(view);
             navController.popBackStack();
         });
+
+        // Thiết lập sự kiện click cho các nút lọc
+        setupFilterListeners();
+
+        // Thiết lập click cho icon kính lúp (drawableEnd) trong EditText
+        setupSearchIconClick();
 
         // Bat su kien tim kiem lai tu EditText
         edtSearch.setOnEditorActionListener((v, actionId, event) -> {
@@ -139,22 +156,102 @@ public class SearchResultFragment extends Fragment
     }
 
     /**
+     * Thiết lập click cho các nút lọc: Tất cả, Giá, Mới nhất, Bán chạy.
+     */
+    private void setupFilterListeners() {
+        View.OnClickListener filterClick = v -> {
+            // Reset trạng thái tất cả nút
+            resetFilterButtons();
+
+            // Active nút được chọn
+            TextView selected = (TextView) v;
+            selected.setBackgroundResource(R.drawable.bg_filter_active);
+            selected.setTextColor(getResources().getColor(android.R.color.white, null));
+
+            // Xác định loại sort
+            int id = v.getId();
+            if (id == R.id.tvFilterAll) {
+                currentSort = "all";
+            } else if (id == R.id.tvFilterPrice) {
+                currentSort = "price_asc";
+            } else if (id == R.id.tvFilterNewest) {
+                currentSort = "newest";
+            } else if (id == R.id.tvFilterTopSales) {
+                currentSort = "top_sales";
+            }
+
+            // Tìm kiếm lại với sort mới
+            if (!searchQuery.isEmpty()) {
+                performSearch(searchQuery);
+            }
+        };
+
+        tvFilterAll.setOnClickListener(filterClick);
+        tvFilterPrice.setOnClickListener(filterClick);
+        tvFilterNewest.setOnClickListener(filterClick);
+        tvFilterTopSales.setOnClickListener(filterClick);
+    }
+
+    /**
+     * Reset trạng thái các nút lọc về inactive.
+     */
+    private void resetFilterButtons() {
+        tvFilterAll.setBackgroundResource(R.drawable.bg_filter_inactive);
+        tvFilterAll.setTextColor(getResources().getColor(android.R.color.black, null));
+        tvFilterPrice.setBackgroundResource(R.drawable.bg_filter_inactive);
+        tvFilterPrice.setTextColor(getResources().getColor(android.R.color.black, null));
+        tvFilterNewest.setBackgroundResource(R.drawable.bg_filter_inactive);
+        tvFilterNewest.setTextColor(getResources().getColor(android.R.color.black, null));
+        tvFilterTopSales.setBackgroundResource(R.drawable.bg_filter_inactive);
+        tvFilterTopSales.setTextColor(getResources().getColor(android.R.color.black, null));
+    }
+
+    /**
+     * Thiết lập click cho icon kính lúp (drawableEnd) trong EditText.
+     */
+    private void setupSearchIconClick() {
+        edtSearch.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                // Kiểm tra click vào vùng drawableEnd
+                if (edtSearch.getCompoundDrawables()[2] != null) {
+                    int drawableWidth = edtSearch.getCompoundDrawables()[2].getBounds().width();
+                    if (event.getRawX() >= (edtSearch.getRight() - drawableWidth - edtSearch.getPaddingEnd())) {
+                        // Thực hiện tìm kiếm
+                        String query = edtSearch.getText().toString().trim();
+                        if (!query.isEmpty()) {
+                            searchQuery = query;
+                            searchHistoryManager.addSearchQuery(query);
+                            performSearch(query);
+                            // Ẩn bàn phím
+                            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            if (imm != null) imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
+                        }
+                        return true;
+                    }
+                }
+            }
+            return false;
+        });
+    }
+
+    /**
      * Goi API tim kiem va observe ket qua
      */
     private void performSearch(String keyword) {
-        viewModel.searchProducts(keyword);
+        viewModel.searchProducts(keyword, currentSort);
         viewModel.getSearchResultsLiveData().observe(getViewLifecycleOwner(), products -> {
             if (products != null && !products.isEmpty()) {
                 // Co ket qua -> cap nhat adapter
+                rvSearchResults.setVisibility(View.VISIBLE);
+                layoutEmptySearch.setVisibility(View.GONE);
                 adapter = new ProductGridAdapter(products, this);
                 adapter.setFavoriteListener(this);
                 adapter.setFavoriteIds(favoriteProductIds);
                 rvSearchResults.setAdapter(adapter);
             } else {
-                // Khong co ket qua
-                adapter = new ProductGridAdapter(new ArrayList<>(), this);
-                rvSearchResults.setAdapter(adapter);
-                Toast.makeText(getContext(), "Không tìm thấy sản phẩm nào", Toast.LENGTH_SHORT).show();
+                // Khong co ket qua -> hien empty state
+                rvSearchResults.setVisibility(View.GONE);
+                layoutEmptySearch.setVisibility(View.VISIBLE);
             }
         });
     }

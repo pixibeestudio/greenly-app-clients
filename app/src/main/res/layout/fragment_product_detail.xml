@@ -674,4 +674,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Màn hình mất kết nối (overlay, ẩn mặc định) -->
+    <include
+        layout="@layout/layout_no_connection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

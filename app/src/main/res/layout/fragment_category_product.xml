@@ -182,4 +182,44 @@
         app:layout_constraintTop_toBottomOf="@id/dividerFilter"
         tools:listitem="@layout/item_product_grid" />
 
+    <!-- Empty State khi danh mục không có sản phẩm -->
+    <LinearLayout
+        android:id="@+id/layoutEmptyCategory"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dividerFilter">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_search"
+            app:tint="#BDBDBD" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Chưa có sản phẩm nào"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Danh mục này hiện chưa có sản phẩm.\nHãy quay lại sau nhé!"
+            android:textColor="#757575"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

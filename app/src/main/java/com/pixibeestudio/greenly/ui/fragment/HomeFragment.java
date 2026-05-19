@@ -57,6 +57,8 @@ import com.pixibeestudio.greenly.ui.viewmodel.FavoriteViewModel;
 import com.pixibeestudio.greenly.ui.viewmodel.HomeViewModel;
 import com.pixibeestudio.greenly.data.model.WishlistItem;
 
+import com.pixibeestudio.greenly.utils.NetworkUtils;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -104,6 +106,9 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
 
     // Pull-to-refresh
     private SwipeRefreshLayout swipeRefreshHome;
+
+    // Màn hình mất kết nối
+    private View layoutNoConnection;
 
     private HomeViewModel homeViewModel;
     private CartViewModel cartViewModel;
@@ -156,7 +161,16 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
 
         // Ánh xạ các view
         initViews(view);
-        
+
+        // Ánh xạ layout mất kết nối
+        layoutNoConnection = view.findViewById(R.id.layoutNoConnection);
+        if (layoutNoConnection != null) {
+            View btnRetry = layoutNoConnection.findViewById(R.id.btnRetry);
+            if (btnRetry != null) {
+                btnRetry.setOnClickListener(v -> loadAllData());
+            }
+        }
+
         // Cập nhật giao diện theo trạng thái đăng nhập
         updateUIBasedOnAuth();
         
@@ -177,10 +191,42 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         // Thiết lập Pull-to-Refresh
         setupSwipeRefresh();
 
+        // Kiểm tra kết nối mạng và tải dữ liệu
+        loadAllData();
+    }
+
+    /**
+     * Kiểm tra mạng và tải dữ liệu. Nếu mất mạng hiện màn hình "Không thể kết nối".
+     */
+    private void loadAllData() {
+        if (!NetworkUtils.isNetworkAvailable(getContext())) {
+            showNoConnectionState();
+            return;
+        }
+        showContentState();
+
         // Tải badge count cho header icons
         if (sessionManager.isLoggedIn()) {
             loadHeaderBadges();
         }
+    }
+
+    /**
+     * Hiển thị màn hình mất kết nối, ẩn nội dung chính.
+     */
+    private void showNoConnectionState() {
+        if (layoutNoConnection != null) layoutNoConnection.setVisibility(View.VISIBLE);
+        if (swipeRefreshHome != null) swipeRefreshHome.setVisibility(View.GONE);
+        if (appBarLayout != null) appBarLayout.setVisibility(View.GONE);
+    }
+
+    /**
+     * Hiển thị nội dung chính, ẩn màn hình mất kết nối.
+     */
+    private void showContentState() {
+        if (layoutNoConnection != null) layoutNoConnection.setVisibility(View.GONE);
+        if (swipeRefreshHome != null) swipeRefreshHome.setVisibility(View.VISIBLE);
+        if (appBarLayout != null) appBarLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -287,6 +333,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
         homeViewModel.getDiscountedProductsLiveData().observe(getViewLifecycleOwner(), discountedProducts -> {
             if (discountedProducts != null && !discountedProducts.isEmpty()) {
                 discountAdapter = new ProductHorizontalAdapter(discountedProducts, this);
+                discountAdapter.setSectionType(ProductHorizontalAdapter.SECTION_DISCOUNT);
                 discountAdapter.setFavoriteListener(this);
                 discountAdapter.setFavoriteIds(favoriteProductIds);
                 rvDiscountProducts.setAdapter(discountAdapter);
@@ -300,6 +347,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
                 sorted.sort((p1, p2) -> Integer.compare(p2.getId(), p1.getId()));
                 List<Product> newest = sorted.subList(0, Math.min(10, sorted.size()));
                 popularAdapter = new ProductHorizontalAdapter(newest, this);
+                popularAdapter.setSectionType(ProductHorizontalAdapter.SECTION_NEWEST);
                 popularAdapter.setFavoriteListener(this);
                 popularAdapter.setFavoriteIds(favoriteProductIds);
                 rvPopularProducts.setAdapter(popularAdapter);
@@ -311,6 +359,7 @@ public class HomeFragment extends Fragment implements ProductGridAdapter.OnProdu
             if (products != null && !products.isEmpty()) {
                 List<Product> top10 = products.subList(0, Math.min(10, products.size()));
                 top100Adapter = new ProductHorizontalAdapter(top10, this);
+                top100Adapter.setSectionType(ProductHorizontalAdapter.SECTION_TOP_SALES);
                 top100Adapter.setFavoriteListener(this);
                 top100Adapter.setFavoriteIds(favoriteProductIds);
                 rvTop100Products.setAdapter(top100Adapter);

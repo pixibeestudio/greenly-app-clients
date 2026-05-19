@@ -25,6 +25,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.ui.activity.MainActivity;
 import com.pixibeestudio.greenly.data.local.SessionManager;
+import com.pixibeestudio.greenly.utils.NetworkUtils;
 import com.pixibeestudio.greenly.data.model.ErrorResponse;
 import com.pixibeestudio.greenly.data.model.LoginResponse;
 import com.pixibeestudio.greenly.ui.viewmodel.AuthViewModel;
@@ -99,6 +100,12 @@ public class LoginFragment extends Fragment {
             tilEmailLogin.setErrorEnabled(false);
             tilPasswordLogin.setError(null);
             tilPasswordLogin.setErrorEnabled(false);
+
+            // Kiểm tra kết nối mạng trước khi gọi API
+            if (!NetworkUtils.isNetworkAvailable(requireContext())) {
+                Toast.makeText(requireContext(), "Không có kết nối internet. Vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             btnLoginMain.setEnabled(false); // Vô hiệu hóa nút
 

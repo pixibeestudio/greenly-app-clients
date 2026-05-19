@@ -64,12 +64,13 @@
         app:layout_constraintBottom_toTopOf="@id/layoutCartBottom"
         app:layout_constraintTop_toBottomOf="@id/toolbarCart">
 
-    <!-- Khu vực nội dung giỏ hàng (Khi có hàng) -->
+    <!-- Khu vực nội dung giỏ hàng (Khi có hàng) - ẩn mặc định, hiện khi có data -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/layoutCartContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -84,6 +85,25 @@
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
                 android:paddingTop="8dp" />
+
+            <!-- Nút Tiếp tục mua sắm (hiện khi có >= 1 sản phẩm) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnContinueShopping"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Tiếp tục mua sắm"
+                android:textColor="@color/header_bg_green"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_arrow_back"
+                app:iconGravity="textStart"
+                app:iconTint="@color/header_bg_green"
+                app:strokeColor="@color/header_bg_green"
+                app:strokeWidth="1dp" />
 
             <!-- Gợi ý sản phẩm -->
             <TextView
@@ -113,7 +133,7 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- Khung tính tiền & Thanh toán (Bottom) -->
+    <!-- Khung tính tiền & Thanh toán (Bottom) - ẩn mặc định, hiện khi có data -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutCartBottom"
         android:layout_width="match_parent"
@@ -122,6 +142,7 @@
         android:elevation="8dp"
         android:paddingHorizontal="16dp"
         android:paddingVertical="12dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
@@ -266,5 +287,13 @@
             app:cornerRadius="12dp" />
 
     </LinearLayout>
+
+    <!-- Màn hình mất kết nối (overlay, ẩn mặc định) -->
+    <include
+        layout="@layout/layout_no_connection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

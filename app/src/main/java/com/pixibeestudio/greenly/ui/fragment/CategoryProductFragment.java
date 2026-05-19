@@ -42,6 +42,7 @@ public class CategoryProductFragment extends Fragment
     private ImageButton btnBack, btnSearch;
     private TextView tvCategoryTitle;
     private RecyclerView rvCategoryProducts;
+    private View layoutEmptyCategory;
 
     // Filter tags
     private TextView tvFilterAll, tvFilterPriceAsc, tvFilterPriceDesc, tvFilterNewest, tvFilterTopSales;
@@ -103,6 +104,7 @@ public class CategoryProductFragment extends Fragment
         btnSearch = view.findViewById(R.id.btnSearch);
         tvCategoryTitle = view.findViewById(R.id.tvCategoryTitle);
         rvCategoryProducts = view.findViewById(R.id.rvCategoryProducts);
+        layoutEmptyCategory = view.findViewById(R.id.layoutEmptyCategory);
 
         // Filter tags
         tvFilterAll = view.findViewById(R.id.tvFilterAll);
@@ -240,7 +242,9 @@ public class CategoryProductFragment extends Fragment
                 originalProducts = new ArrayList<>();
                 adapter = new ProductGridAdapter(new ArrayList<>(), this);
                 rvCategoryProducts.setAdapter(adapter);
-                Toast.makeText(getContext(), "Không có sản phẩm trong danh mục này", Toast.LENGTH_SHORT).show();
+                // Hiển thị empty state trên màn hình
+                rvCategoryProducts.setVisibility(View.GONE);
+                if (layoutEmptyCategory != null) layoutEmptyCategory.setVisibility(View.VISIBLE);
             }
         });
     }

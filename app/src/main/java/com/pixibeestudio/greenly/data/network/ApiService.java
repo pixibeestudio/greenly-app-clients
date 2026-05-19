@@ -52,7 +52,7 @@ public interface ApiService {
 
     // --- TIM KIEM SAN PHAM ---
     @GET("api/products/search")
-    Call<ProductResponse> searchProducts(@Query("keyword") String keyword);
+    Call<ProductResponse> searchProducts(@Query("keyword") String keyword, @Query("sort_by") String sortBy);
 
     @GET("api/products/{id}")
     Call<ProductDetailResponse> getProductDetail(@Path("id") int id);

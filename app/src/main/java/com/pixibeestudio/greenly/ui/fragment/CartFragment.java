@@ -26,6 +26,7 @@ import com.google.android.material.button.MaterialButton;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.local.SessionManager;
 import com.pixibeestudio.greenly.ui.activity.MainActivity;
+import com.pixibeestudio.greenly.utils.NetworkUtils;
 import com.pixibeestudio.greenly.data.model.Cart;
 import com.pixibeestudio.greenly.ui.adapter.CartAdapter;
 import com.pixibeestudio.greenly.ui.viewmodel.CartViewModel;
@@ -45,12 +46,13 @@ public class CartFragment extends Fragment {
     private ImageButton btnBackCart, btnClearCart;
     private TextView tvCartTitle, tvSubtotalCart, tvGrandTotalCart, tvShippingCart;
     private RecyclerView rvCartItems;
-    private MaterialButton btnCheckoutCart, btnEmptyCartAction;
+    private MaterialButton btnCheckoutCart, btnEmptyCartAction, btnContinueShopping;
     private NestedScrollView layoutCartContent;
     private ConstraintLayout layoutCartBottom;
     private LinearLayout layoutCartEmpty;
     private TextView tvEmptyCartMessage;
     private SwipeRefreshLayout swipeRefreshCart;
+    private View layoutNoConnection;
 
     @Nullable
     @Override
@@ -69,15 +71,36 @@ public class CartFragment extends Fragment {
         initViews(view);
         setupRecyclerView();
         checkArgumentsAndSetupBack();
-        
+
+        // Ánh xạ layout mất kết nối
+        layoutNoConnection = view.findViewById(R.id.layoutNoConnection);
+        if (layoutNoConnection != null) {
+            View btnRetry = layoutNoConnection.findViewById(R.id.btnRetry);
+            if (btnRetry != null) {
+                btnRetry.setOnClickListener(v -> checkAndLoadCart());
+            }
+        }
+
         if (sessionManager.isGuestMode()) {
             showEmptyState("Bạn chưa đăng nhập", true);
         } else {
             setupClickListeners(view);
             setupSwipeRefresh();
             observeViewModel();
-            loadCartData();
+            checkAndLoadCart();
         }
+    }
+
+    /**
+     * Kiểm tra mạng và tải giỏ hàng.
+     */
+    private void checkAndLoadCart() {
+        if (!NetworkUtils.isNetworkAvailable(getContext())) {
+            if (layoutNoConnection != null) layoutNoConnection.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (layoutNoConnection != null) layoutNoConnection.setVisibility(View.GONE);
+        loadCartData();
     }
 
     private void initViews(View view) {
@@ -96,12 +119,27 @@ public class CartFragment extends Fragment {
         layoutCartEmpty = view.findViewById(R.id.layoutCartEmpty);
         tvEmptyCartMessage = view.findViewById(R.id.tvEmptyCartMessage);
         swipeRefreshCart = view.findViewById(R.id.swipeRefreshCart);
+        btnContinueShopping = view.findViewById(R.id.btnContinueShopping);
     }
 
     private void setupRecyclerView() {
         cartAdapter = new CartAdapter(new CartAdapter.OnCartItemListener() {
             @Override
             public void onIncrease(Cart cart) {
+                // TH01: Kiểm tra số lượng tồn kho trước khi tăng
+                int stock = 0;
+                if (cart.getProduct() != null) {
+                    stock = cart.getProduct().getStockQuantity();
+                }
+                if (stock > 0 && cart.getQuantity() >= stock) {
+                    // Đã đạt giới hạn tồn kho
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle("Không thể thêm")
+                            .setMessage("Số lượng trong kho chỉ còn " + stock + " sản phẩm. Bạn đã đạt giới hạn số lượng có thể mua.")
+                            .setPositiveButton("Đã hiểu", null)
+                            .show();
+                    return;
+                }
                 cartViewModel.updateCart(cart.getId(), cart.getQuantity() + 1).observe(getViewLifecycleOwner(), success -> {
                     if (success) loadCartData();
                 });
@@ -113,6 +151,22 @@ public class CartFragment extends Fragment {
                     cartViewModel.updateCart(cart.getId(), cart.getQuantity() - 1).observe(getViewLifecycleOwner(), success -> {
                         if (success) loadCartData();
                     });
+                } else {
+                    // TH02: Số lượng = 1, hỏi xác nhận xóa sản phẩm
+                    String productName = cart.getProduct() != null ? cart.getProduct().getName() : "sản phẩm này";
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle("Xóa sản phẩm")
+                            .setMessage("Bạn có muốn xóa \"" + productName + "\" khỏi giỏ hàng không?")
+                            .setPositiveButton("Có", (dialog, which) -> {
+                                cartViewModel.deleteCartItem(cart.getId()).observe(getViewLifecycleOwner(), success -> {
+                                    if (success) {
+                                        Toast.makeText(requireContext(), "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
+                                        loadCartData();
+                                    }
+                                });
+                            })
+                            .setNegativeButton("Không", null)
+                            .show();
                 }
             }
 
@@ -177,6 +231,11 @@ public class CartFragment extends Fragment {
             bundle.putDouble("subtotal", currentSubtotal);
             Navigation.findNavController(v).navigate(R.id.action_cartFragment_to_checkoutFragment, bundle);
         });
+
+        // Nút "Tiếp tục mua sắm" → quay về trang chủ
+        btnContinueShopping.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_cartFragment_to_homeFragment);
+        });
     }
 
     private void setupSwipeRefresh() {
@@ -228,6 +287,7 @@ public class CartFragment extends Fragment {
         layoutCartContent.setVisibility(View.VISIBLE);
         layoutCartBottom.setVisibility(View.VISIBLE);
         btnClearCart.setVisibility(View.VISIBLE);
+        btnContinueShopping.setVisibility(View.VISIBLE);
         layoutCartEmpty.setVisibility(View.GONE);
     }
 
@@ -235,6 +295,7 @@ public class CartFragment extends Fragment {
         layoutCartContent.setVisibility(View.GONE);
         layoutCartBottom.setVisibility(View.GONE);
         btnClearCart.setVisibility(View.GONE);
+        btnContinueShopping.setVisibility(View.GONE);
         layoutCartEmpty.setVisibility(View.VISIBLE);
         
         tvEmptyCartMessage.setText(message);

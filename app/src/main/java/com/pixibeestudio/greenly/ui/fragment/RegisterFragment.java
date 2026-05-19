@@ -20,6 +20,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pixibeestudio.greenly.R;
 import com.pixibeestudio.greenly.data.model.ErrorResponse;
 import com.pixibeestudio.greenly.ui.viewmodel.AuthViewModel;
+import com.pixibeestudio.greenly.utils.NetworkUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,12 @@ public class RegisterFragment extends Fragment {
 
             // Xóa lỗi cũ
             clearErrors();
+
+            // Kiểm tra kết nối mạng trước khi gọi API
+            if (!NetworkUtils.isNetworkAvailable(requireContext())) {
+                Toast.makeText(requireContext(), "Không có kết nối internet. Vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             btnRegisterMain.setEnabled(false); // Vô hiệu hóa nút trong lúc chờ API
             

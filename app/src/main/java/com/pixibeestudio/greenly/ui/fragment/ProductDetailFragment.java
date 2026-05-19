@@ -32,6 +32,8 @@ import com.pixibeestudio.greenly.ui.viewmodel.ProductDetailViewModel;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 
+import com.pixibeestudio.greenly.utils.NetworkUtils;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +75,7 @@ public class ProductDetailFragment extends Fragment {
     private SessionManager sessionManager;
     private Product currentProduct;
     private boolean isFavorite = false;
+    private View layoutNoConnection;
 
     @Nullable
     @Override
@@ -97,6 +100,28 @@ public class ProductDetailFragment extends Fragment {
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
         favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
         sessionManager = new SessionManager(requireContext());
+
+        // Ánh xạ layout mất kết nối
+        layoutNoConnection = view.findViewById(R.id.layoutNoConnection);
+        if (layoutNoConnection != null) {
+            View btnRetry = layoutNoConnection.findViewById(R.id.btnRetry);
+            if (btnRetry != null) {
+                btnRetry.setOnClickListener(v -> checkAndLoadData());
+            }
+        }
+
+        checkAndLoadData();
+    }
+
+    /**
+     * Kiểm tra mạng và tải dữ liệu sản phẩm.
+     */
+    private void checkAndLoadData() {
+        if (!NetworkUtils.isNetworkAvailable(getContext())) {
+            if (layoutNoConnection != null) layoutNoConnection.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (layoutNoConnection != null) layoutNoConnection.setVisibility(View.GONE);
         loadProductDetail();
         loadFavoriteStatus();
     }
@@ -306,6 +331,28 @@ public class ProductDetailFragment extends Fragment {
             }
             isExpanded[0] = !isExpanded[0];
         });
+
+        // 4. Kiểm tra tồn kho - vô hiệu hóa nút thêm giỏ nếu hết hàng
+        if (product.getStockQuantity() <= 0) {
+            disableAddToCartControls();
+        }
+    }
+
+    /**
+     * Vô hiệu hóa các nút thêm vào giỏ, tăng/giảm số lượng khi sản phẩm hết tồn kho.
+     */
+    private void disableAddToCartControls() {
+        // Vô hiệu hóa nút Thêm vào giỏ
+        btnAddToCart.setEnabled(false);
+        btnAddToCart.setText("Hết hàng");
+        btnAddToCart.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#BDBDBD")));
+
+        // Vô hiệu hóa nút tăng/giảm số lượng
+        btnIncreaseQty.setEnabled(false);
+        btnDecreaseQty.setEnabled(false);
+        btnIncreaseQty.setAlpha(0.4f);
+        btnDecreaseQty.setAlpha(0.4f);
+        tvQuantity.setAlpha(0.4f);
     }
 
     /**

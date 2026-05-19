@@ -225,18 +225,44 @@
         app:layout_constraintTop_toBottomOf="@id/dividerFilter"
         tools:listitem="@layout/item_product_grid" />
 
-    <!-- Thông báo không tìm thấy sản phẩm (ẩn mặc định) -->
-    <TextView
-        android:id="@+id/tvEmptyFilter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Không tìm thấy sản phẩm phù hợp"
-        android:textColor="#9E9E9E"
-        android:textSize="16sp"
+    <!-- Empty State khi không có sản phẩm phù hợp -->
+    <LinearLayout
+        android:id="@+id/layoutEmptyFilter"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dividerFilter" />
+        app:layout_constraintTop_toBottomOf="@id/dividerFilter">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_search"
+            app:tint="#BDBDBD" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Không tìm thấy sản phẩm phù hợp"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Thử thay đổi bộ lọc hoặc tìm kiếm\nvới từ khoá khác nhé!"
+            android:textColor="#757575"
+            android:textSize="14sp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

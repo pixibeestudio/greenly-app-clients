@@ -78,10 +78,10 @@ public class ProductRepository {
         return data;
     }
 
-    public MutableLiveData<List<Product>> searchProducts(String keyword) {
+    public MutableLiveData<List<Product>> searchProducts(String keyword, String sortBy) {
         MutableLiveData<List<Product>> data = new MutableLiveData<>();
 
-        RetrofitClient.getApiService(context).searchProducts(keyword).enqueue(new Callback<ProductResponse>() {
+        RetrofitClient.getApiService(context).searchProducts(keyword, sortBy).enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {

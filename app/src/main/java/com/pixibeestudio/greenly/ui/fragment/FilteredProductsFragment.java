@@ -57,7 +57,7 @@ public class FilteredProductsFragment extends Fragment
     // === RecyclerView & Empty State ===
     private RecyclerView rvFilteredProducts;
     private ProductGridAdapter adapter;
-    private TextView tvEmptyFilter;
+    private View layoutEmptyFilter;
 
     // === ViewModel & Session ===
     private CartViewModel cartViewModel;
@@ -146,7 +146,7 @@ public class FilteredProductsFragment extends Fragment
 
         // RecyclerView & Empty State
         rvFilteredProducts = view.findViewById(R.id.rvFilteredProducts);
-        tvEmptyFilter = view.findViewById(R.id.tvEmptyFilter);
+        layoutEmptyFilter = view.findViewById(R.id.layoutEmptyFilter);
     }
 
     /**
@@ -298,18 +298,18 @@ public class FilteredProductsFragment extends Fragment
     private void observeFilteredProducts() {
         filterViewModel.getFilteredProductsLiveData().observe(getViewLifecycleOwner(), products -> {
             if (products != null && !products.isEmpty()) {
-                // Có sản phẩm → hiện RecyclerView, ẩn empty text
+                // Có sản phẩm → hiện RecyclerView, ẩn empty state
                 rvFilteredProducts.setVisibility(View.VISIBLE);
-                tvEmptyFilter.setVisibility(View.GONE);
+                layoutEmptyFilter.setVisibility(View.GONE);
 
                 adapter = new ProductGridAdapter(products, this);
                 adapter.setFavoriteListener(this);
                 adapter.setFavoriteIds(favoriteProductIds);
                 rvFilteredProducts.setAdapter(adapter);
             } else {
-                // Không có sản phẩm → ẩn RecyclerView, hiện empty text
+                // Không có sản phẩm → ẩn RecyclerView, hiện empty state
                 rvFilteredProducts.setVisibility(View.GONE);
-                tvEmptyFilter.setVisibility(View.VISIBLE);
+                layoutEmptyFilter.setVisibility(View.VISIBLE);
             }
         });
     }

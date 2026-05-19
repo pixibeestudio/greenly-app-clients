@@ -27,11 +27,12 @@ public class SearchViewModel extends AndroidViewModel {
     }
 
     /**
-     * Goi API tim kiem san pham theo tu khoa.
+     * Goi API tim kiem san pham theo tu khoa va sap xep.
      * @param keyword Tu khoa tim kiem
+     * @param sortBy Kieu sap xep (all, price_asc, newest, top_sales)
      */
-    public void searchProducts(String keyword) {
-        searchResultsLiveData = repository.searchProducts(keyword);
+    public void searchProducts(String keyword, String sortBy) {
+        searchResultsLiveData = repository.searchProducts(keyword, sortBy);
     }
 
     /**
